@@ -1,0 +1,74 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.Models.ExamAttendee>
+
+@{
+    ViewBag.Title = "الملتحقون الذين يحتاجون إلى تصحيح";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";  
+
+}
+
+<!-- حاوية رئيسية بتنسيق مرن ومركزة -->
+<div class="container py-5 text-right" dir="rtl">
+    <div class="card shadow-lg p-4 rounded-4 border-0">
+        <h2 class="card-title text-center text-primary mb-4">
+            الامتحان: @ViewBag.ExamTitle
+        </h2>
+        <h4 class="card-subtitle text-muted text-center mb-4">
+            قائمة الملتحقين الذين يحتاجون إلى تصحيح يدوي
+        </h4>
+
+        <!-- التحقق من وجود بيانات لعرضها -->
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th scope="col">اسم المحامي</th>
+                            <th scope="col">رقم الهوية</th>
+                            <th scope="col">رقم الجوال</th>
+                            <th scope="col">حالة الاختبار</th>
+                            <th scope="col">العمليات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Lawyer.FullName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.LawyerIdNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.MobileNumber)</td>
+                                <td>
+                                    <!-- التحقق من حالة اكتمال الاختبار -->
+                                    @if (item.ExamResult != null && item.IsCompleted)
+                                    {
+                                        <span class="badge bg-success">مكتمل</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark">غير مكتمل</span>
+                                    }
+                                </td>
+                                <td>
+                                    <!-- رابط يؤدي إلى صفحة التصحيح اليدوي للملتحق المحدد -->
+                                    @Html.ActionLink("تصحيح يدوي", "ManualGrading", "AdminResult", new { examAttendeeId = item.Id }, new { @class = "btn btn-sm btn-primary" })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <!-- رسالة في حالة عدم وجود ملتحقين يحتاجون إلى تصحيح -->
+            <div class="alert alert-info text-center" role="alert">
+                لا يوجد ملتحقون يحتاجون إلى تصحيح يدوي لهذا الاختبار.
+            </div>
+        }
+
+        <!-- رابط للعودة إلى صفحة الاختبارات -->
+        <div class="mt-4 text-center">
+            @Html.ActionLink("العودة إلى قائمة الاختبارات", "Index", null, new { @class = "btn btn-secondary" })
+        </div>
+    </div>
+</div>

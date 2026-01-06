@@ -1,0 +1,88 @@
+﻿@model LawyersSyndicatePortal.Models.VerifyPhoneNumberViewModel
+@{
+    ViewBag.Title = "التحقق من رقم الهاتف";
+}
+
+<style>
+    body {
+        background-color: #E8F0F7; /* تطبيق خلفية الصفحة من ملف التخطيط */
+        font-family: 'Cairo', sans-serif; /* تطبيق خط Cairo من ملف التخطيط */
+    }
+
+    .container {
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 30px;
+    }
+
+    h2, h4, h5 {
+        color: #343a40;
+        text-align: right; /* محاذاة لليمين للنصوص العربية */
+    }
+
+    hr {
+        border-top: 1px solid #dee2e6;
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        text-align: right; /* محاذاة لليمين للتسميات */
+        display: block; /* لجعل التسمية تأخذ سطرًا كاملاً */
+        margin-bottom: .5rem;
+    }
+
+    .form-control {
+        border-radius: 5px; /* حواف مستديرة لحقول الإدخال */
+    }
+
+    .btn {
+        border-radius: 5px; /* حواف مستديرة للأزرار */
+    }
+
+    .text-danger {
+        color: #dc3545 !important; /* لون أحمر لرسائل الخطأ */
+        text-align: right; /* محاذاة لليمين لرسائل الخطأ */
+        list-style-type: none; /* إزالة النقاط من قائمة الأخطاء */
+        padding-right: 0; /* إزالة الحشوة الافتراضية للقائمة */
+    }
+
+    .alert {
+        text-align: right; /* محاذاة لليمين للتنبيهات */
+    }
+</style>
+
+<div class="container py-5" dir="rtl">
+    <div class="card">
+        <h2 class="mb-4">@ViewBag.Title</h2>
+
+        @using (Html.BeginForm("VerifyPhoneNumber", "Manage", FormMethod.Post, new { @class = "row g-3", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("phoneNumber", @Model.PhoneNumber)
+            <h4>أدخل رمز التحقق</h4>
+            @if (!string.IsNullOrEmpty(ViewBag.Status))
+            {
+                <h5 class="text-info text-right mb-3">@ViewBag.Status</h5>
+            }
+            <hr />
+            @Html.ValidationSummary("", new { @class = "text-danger mb-3" })
+            <div class="col-12 mb-3">
+                @Html.LabelFor(m => m.Code, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.Code, new { @class = "form-control" })
+            </div>
+            <div class="col-12 mt-4 text-right">
+                <input type="submit" class="btn btn-primary" value="إرسال" />
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

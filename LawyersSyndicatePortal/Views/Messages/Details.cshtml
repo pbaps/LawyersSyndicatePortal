@@ -1,0 +1,104 @@
+﻿@model LawyersSyndicatePortal.Models.Message
+
+@{
+    ViewBag.Title = "تفاصيل الرسالة";
+    // تحديد الـ Layout بناءً على دور المستخدم
+    Layout = User.IsInRole("Admin") ? "~/Views/Shared/_AdminLayout.cshtml" : "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="container py-5" dir="rtl">
+    <h2 class="text-right mb-4">@ViewBag.Title</h2>
+    <hr />
+
+    @* Success/Error Message *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-right" role="alert">
+            @Html.Raw(TempData["SuccessMessage"])
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-right" role="alert">
+            @Html.Raw(TempData["ErrorMessage"])
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white text-right">
+            <h5 class="mb-0">معلومات الرسالة/التعميم</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.SenderUser.FullName)</dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.SenderUser.FullName)
+                    <small class="text-muted">(@Html.DisplayFor(model => model.SenderUser.IdNumber))</small>
+                </dd>
+
+                @if (!Model.IsAdminBroadcast)
+                {
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.ReceiverUser.FullName)</dt>
+                    <dd class="col-sm-9">
+                        @Html.DisplayFor(model => model.ReceiverUser.FullName)
+                        <small class="text-muted">(@Html.DisplayFor(model => model.ReceiverUser.IdNumber))</small>
+                    </dd>
+                }
+
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Subject)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Subject)</dd>
+
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.SentDate)</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.SentDate)</dd>
+
+                <dt class="col-sm-3">نوع الرسالة</dt>
+                <dd class="col-sm-9">@(Model.IsAdminBroadcast ? "تعميم إداري" : "رسالة خاصة")</dd>
+
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Body)</dt>
+                <dd class="col-sm-9">
+                    <div class="card bg-light p-3 border rounded">
+                        @Html.Raw(Model.Body) @* استخدام Html.Raw لعرض محتوى HTML إذا كان موجوداً في الـ Body *@
+                    </div>
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-right">
+            @* زر الرد - يظهر فقط إذا لم تكن الرسالة تعميم إداري وإذا كان المستخدم الحالي هو المستلم/المرسل *@
+
+            @* زر الرجوع - يوجه إلى صندوق الوارد المناسب (للمسؤول أو المستخدم) *@
+            @if (User.IsInRole("Admin"))
+            {
+                @Html.ActionLink("العودة إلى صندوق وارد الإدارة", "AdminInbox", null, new { @class = "btn btn-secondary" })
+                @Html.ActionLink("العودة إلى التعميمات", "AdminBroadcasts", null, new { @class = "btn btn-info me-2" })
+
+
+
+                if (!Model.IsAdminBroadcast && (Model.ReceiverId == User.Identity.GetUserId() || Model.SenderId == User.Identity.GetUserId()))
+                {
+                    @Html.ActionLink("الرد على الرسالة", "Reply", new { id = Model.Id }, new { @class = "btn btn-success me-2" })
+                }
+            }
+            else
+            {
+                @Html.ActionLink("العودة إلى صندوق الوارد", "Inbox", null, new { @class = "btn btn-secondary" })
+                @Html.ActionLink("العودة إلى التعميمات", "UserBroadcasts", null, new { @class = "btn btn-info me-2" })
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            // Hide success/error messages after 5 seconds
+            window.setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 5000); // 5 seconds
+        });
+    </script>
+}

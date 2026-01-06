@@ -1,0 +1,203 @@
+﻿ 
+@model LawyersSyndicatePortal.ViewModels.ColleagueReportViewModel
+@using System.Web.Mvc.Html
+@using System.Globalization
+@using System.Linq
+
+@*
+    المسار: LawyersSyndicatePortal/Views/ColleagueReports/Index.cshtml
+    هذه الصفحة مسؤولة عن التقارير والاستعلامات الخاصة بزملاء المهنة (شهداء، معتقلين، مصابين).
+    تسمح للمسؤولين بالبحث ديناميكيًا واختيار الأعمدة وتصدير النتائج إلى Excel.
+*@
+
+@{
+    ViewBag.Title = "تقارير الزملاء";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    // قائمة بأنواع التقارير المتاحة
+    var reportTypesList = new List<SelectListItem>
+{
+        new SelectListItem { Value = "", Text = "كل التقارير" },
+        new SelectListItem { Value = "Martyr", Text = "شهداء" },
+        new SelectListItem { Value = "Detained", Text = "معتقلين" },
+        new SelectListItem { Value = "Injured", Text = "مصابين" }
+    };
+
+    // تهيئة قائمة الأعمدة المتاحة
+    var availableColumns = new List<LawyersSyndicatePortal.ViewModels.ColleagueReportViewModel.ReportColumn>
+{
+        new LawyersSyndicatePortal.ViewModels.ColleagueReportViewModel.ReportColumn { ColumnName = "LawyerFullName", DisplayName = "اسم المحامي (المخبر)" , IsSelected = false },
+        new LawyersSyndicatePortal.ViewModels.ColleagueReportViewModel.ReportColumn { ColumnName = "LawyerIdNumber", DisplayName = "رقم هوية المحامي (المخبر)" , IsSelected = false },
+        new LawyersSyndicatePortal.ViewModels.ColleagueReportViewModel.ReportColumn { ColumnName = "ColleagueFullName", DisplayName = "اسم الزميل (الحالة)", IsSelected = true },
+        new LawyersSyndicatePortal.ViewModels.ColleagueReportViewModel.ReportColumn { ColumnName = "MobileNumber", DisplayName = "رقم التواصل" , IsSelected = true },
+        new LawyersSyndicatePortal.ViewModels.ColleagueReportViewModel.ReportColumn { ColumnName = "ReportType", DisplayName = "نوع التقرير" , IsSelected = true },
+    };
+    Model.AvailableColumns = availableColumns;
+}
+
+<div class="container-fluid py-4">
+
+    @* عنوان الصفحة الرئيسي *@
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-primary mb-4 text-right" dir="rtl">
+                <i class="fas fa-file-alt ml-2"></i> @ViewBag.Title
+            </h2>
+        </div>
+    </div>
+
+    @* لوحة البحث والمرشحات *@
+    <div class="card shadow-sm mb-4" dir="rtl">
+        <div class="card-header bg-white">
+            <h5 class="card-title mb-0 text-right">
+                <i class="fas fa-filter ml-2"></i> مرشحات البحث
+            </h5>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Search", "ColleagueReports", FormMethod.Post, new { id = "searchForm", @class = "row g-3" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @* حقول البحث *@
+                <div class="col-md-6 col-lg-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.FullName, htmlAttributes: new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.FullName, new { @class = "form-control text-right" })
+                        @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ReportType, htmlAttributes: new { @class = "form-label" })
+                        @Html.DropDownListFor(model => model.ReportType, reportTypesList, new { @class = "form-select text-right" })
+                        @Html.ValidationMessageFor(model => model.ReportType, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ReportDateStart, htmlAttributes: new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.ReportDateStart, new { @class = "form-control text-right", type = "date" })
+                        @Html.ValidationMessageFor(model => model.ReportDateStart, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ReportDateEnd, htmlAttributes: new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.ReportDateEnd, new { @class = "form-control text-right", type = "date" })
+                        @Html.ValidationMessageFor(model => model.ReportDateEnd, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                @* اختيار الأعمدة  *@
+                <div class="col-12 mt-3">
+                    <h6 class="text-right">
+                        <i class="fas fa-columns ml-2"></i> اختر الأعمدة المراد عرضها في التقرير:
+                    </h6>
+                    <div class="row" id="columnsSelection">
+                        @for (int i = 0; i < Model.AvailableColumns.Count; i++)
+                        {
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <div class="form-check form-switch form-check-inline text-right">
+                                    @Html.CheckBoxFor(m => m.AvailableColumns[i].IsSelected, new { @class = "form-check-input", role = "switch", id = $"column-{i}" })
+                                    @Html.HiddenFor(m => m.AvailableColumns[i].ColumnName)
+                                    @Html.HiddenFor(m => m.AvailableColumns[i].DisplayName)
+
+                                    <label class="form-check-label mr-2" for="column-@i">
+                                        @Model.AvailableColumns[i].DisplayName
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+
+                @* أزرار الإجراءات *@
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary" id="searchBtn">
+                        <i class="fas fa-search ml-2"></i> بحث
+                    </button>
+                    <button type="button" class="btn btn-success" id="exportExcelBtn">
+                        <i class="fas fa-file-excel ml-2"></i> تصدير إلى Excel
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="clearBtn">
+                        <i class="fas fa-eraser ml-2"></i> مسح الحقول
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+
+
+
+    @* حاوية عرض نتائج البحث *@
+    <div id="reportResultsContainer">
+        @* سيتم تحديث هذا الجزء ديناميكيًا عبر AJAX *@
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // معالجة زر "بحث" عبر AJAX
+            $("#searchForm").submit(function (e) {
+                e.preventDefault(); // منع الإرسال الافتراضي للنموذج
+                var form = $(this);
+                var url = form.attr("action");
+                var requestData = form.serialize();
+
+                $("#reportResultsContainer").html('<div class="text-center mt-5"><i class="fas fa-spinner fa-spin fa-3x text-primary"></i><h4 class="mt-3 text-secondary">جاري البحث...</h4></div>');
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: requestData,
+                    success: function (result) {
+                        $("#reportResultsContainer").html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        $("#reportResultsContainer").html('<div class="alert alert-danger text-center mt-5" role="alert"><i class="fas fa-exclamation-triangle ml-2"></i> حدث خطأ أثناء البحث. يرجى المحاولة مرة أخرى.</div>');
+                        console.error("Error fetching search results:", error);
+                    }
+                });
+            });
+
+            // معالجة زر "تصدير إلى Excel"
+            $("#exportExcelBtn").click(function () {
+                var form = $("#searchForm");
+                var exportUrl = '@Url.Action("ExportToExcel", "ColleagueReports")';
+
+                // إنشاء نموذج مؤقت جديد لإرسال البيانات لعملية التصدير
+                var tempForm = $('<form action="' + exportUrl + '" method="post" target="_blank"></form>');
+
+                // نسخ جميع حقول النموذج الأصلي إلى النموذج المؤقت
+                var dataArray = form.serializeArray();
+                $.each(dataArray, function (index, item) {
+                    tempForm.append($('<input type="hidden">').attr('name', item.name).val(item.value));
+                });
+
+                // إضافة رمز الأمان (AntiForgeryToken)
+                tempForm.append($('@Html.AntiForgeryToken()'));
+
+                // إضافة النموذج المؤقت إلى الجسم وإرساله
+                $('body').append(tempForm);
+                tempForm.submit();
+
+                // إزالة النموذج المؤقت بعد الإرسال
+                tempForm.remove();
+            });
+
+            // معالجة زر "مسح الحقول"
+            $("#clearBtn").click(function () {
+                $("#searchForm")[0].reset();
+                $("#columnsSelection input[type='checkbox']").prop('checked', false);
+                $("#reportResultsContainer").empty();
+            });
+        });
+    </script>
+}

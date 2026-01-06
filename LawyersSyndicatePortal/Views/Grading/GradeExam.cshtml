@@ -1,0 +1,108 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.Models.Answer>
+
+@{
+    ViewBag.Title = "تصحيح الامتحان: " + ViewBag.ExamTitle;
+}
+
+<div class="container mx-auto p-6">
+    <h2 class="text-3xl font-bold mb-6 text-gray-800">تصحيح الامتحان: @ViewBag.ExamTitle</h2>
+
+    @if (!Model.Any())
+    {
+        <p class="text-gray-600">لا توجد إجابات تتطلب تصحيحًا يدويًا لهذا الامتحان.</p>
+    }
+    else
+    {
+        <div class="bg-white shadow-md rounded-lg p-6 space-y-8">
+            @foreach (var answer in Model)
+            {
+                <div class="p-4 border rounded-lg bg-gray-50">
+                    <div class="mb-4">
+                        <p class="font-bold text-gray-800">السؤال:</p>
+                        @* تم تغيير `QuestionText` إلى `Text` لتصحيح الخطأ بناءً على نموذج Question *@
+                        <p class="text-gray-700">@Html.Raw(answer.Question.Text)</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="font-bold text-gray-800">إجابة الطالب:</p>
+                        <p class="text-gray-700">@Html.Raw(answer.UserAnswer)</p>
+                    </div>
+
+                    <form id="grading-form-@answer.Id" class="flex flex-col md:flex-row items-start md:items-end space-y-4 md:space-y-0 md:space-x-4" data-answer-id="@answer.Id">
+                        <div class="w-full md:w-auto">
+                            <label for="score-@answer.Id" class="block text-sm font-bold text-gray-700">الدرجة المكتسبة (من @answer.Question.Score):</label>
+                            <input type="number" id="score-@answer.Id" name="score" min="0" max="@answer.Question.Score" class="mt-1 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        </div>
+                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline w-full md:w-auto">
+                            حفظ الدرجة
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<script>
+    document.querySelectorAll('form[id^="grading-form-"]').forEach(form => {
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const answerId = this.getAttribute('data-answer-id');
+            const score = this.querySelector('input[name="score"]').value;
+
+            try {
+                const response = await fetch('@Url.Action("SubmitGrade", "Grading")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: `answerId=${answerId}&score=${score}`
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    // بدلًا من alert، يمكن استخدام واجهة مستخدم مخصصة لإظهار رسالة النجاح
+                    // alert('تم حفظ الدرجة بنجاح!');
+                    const formContainer = this.closest('.p-4');
+                    formContainer.innerHTML = `
+                        <div class="flex items-center space-x-2 text-green-600 font-semibold">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2l4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>تم حفظ الدرجة بنجاح!</span>
+                        </div>
+                    `;
+                    // إزالة الإجابة بعد فترة زمنية أو تركها مع الرسالة
+                    setTimeout(() => formContainer.remove(), 2000);
+                } else {
+                    // بدلًا من alert، يمكن استخدام واجهة مستخدم مخصصة لإظهار رسالة الخطأ
+                    // alert('حدث خطأ أثناء حفظ الدرجة.');
+                     const formContainer = this.closest('.p-4');
+                     const errorMessage = document.createElement('div');
+                     errorMessage.className = "flex items-center space-x-2 text-red-600 font-semibold mt-4";
+                     errorMessage.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>حدث خطأ أثناء حفظ الدرجة.</span>
+                     `;
+                     formContainer.appendChild(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                // بدلًا من alert، يمكن استخدام واجهة مستخدم مخصصة
+                // alert('حدث خطأ غير متوقع.');
+                const formContainer = this.closest('.p-4');
+                const errorMessage = document.createElement('div');
+                errorMessage.className = "flex items-center space-x-2 text-red-600 font-semibold mt-4";
+                errorMessage.innerHTML = `
+                   <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                   </svg>
+                   <span>حدث خطأ غير متوقع.</span>
+                `;
+                formContainer.appendChild(errorMessage);
+            }
+        });
+    });
+</script>

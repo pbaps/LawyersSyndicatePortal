@@ -1,0 +1,344 @@
+﻿/* Path: LawyersSyndicatePortal\Content\SiteStyles.css */
+
+/* استيراد خط Cairo من Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+/* تنسيقات عامة للجسم والخطوط */
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: #f3f4f6; /* لون خلفية فاتح */
+    color: #374151; /* لون نص أساسي */
+    direction: rtl; /* اتجاه النص من اليمين لليسار */
+    text-align: right; /* محاذاة النص لليمين افتراضياً */
+}
+
+/* تنسيقات عامة للعناوين */
+h1, h2, h3, h4, h5, h6 {
+    color: #1f2937; /* لون أغمق للعناوين */
+    font-weight: 700; /* خط سميك */
+}
+
+/* تنسيقات الأزرار العامة */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem; /* rounded-lg */
+    font-weight: 700; /* font-bold */
+    color: #ffffff; /* text-white */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+    transition: all 0.3s ease-in-out; /* transition duration-300 */
+    outline: none; /* focus:outline-none */
+    text-decoration: none; /* إزالة خط التسطير الافتراضي للروابط */
+    white-space: nowrap; /* منع انقسام النص في الأزرار */
+    transform: perspective(1px) translateZ(0); /* For smoother animation */
+    position: relative;
+    overflow: hidden;
+}
+
+    .btn:before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(0);
+        transition-property: transform;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-out;
+    }
+
+    .btn:hover:before {
+        transform: scale(1);
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    }
+
+/* ألوان الأزرار المحددة */
+.btn-primary {
+    background-color: #3b82f6; /* blue-500 */
+}
+
+    .btn-primary:hover {
+        background-color: #2563eb; /* blue-700 */
+    }
+
+    .btn-primary:focus {
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:ring-blue-500 */
+    }
+
+.btn-success {
+    background-color: #22c55e; /* green-500 */
+}
+
+    .btn-success:hover {
+        background-color: #16a34a; /* green-700 */
+    }
+
+    .btn-success:focus {
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.5); /* focus:ring-green-500 */
+    }
+
+.btn-info {
+    background-color: #a855f7; /* purple-500 */
+}
+
+    .btn-info:hover {
+        background-color: #9333ea; /* purple-700 */
+    }
+
+    .btn-info:focus {
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.5); /* focus:ring-purple-500 */
+    }
+
+.btn-danger {
+    background-color: #ef4444; /* red-500 */
+}
+
+    .btn-danger:hover {
+        background-color: #dc2626; /* red-700 */
+    }
+
+    .btn-danger:focus {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.5); /* focus:ring-red-500 */
+    }
+
+.btn-secondary {
+    background-color: #6b7280; /* gray-500 */
+    color: #ffffff;
+}
+
+    .btn-secondary:hover {
+        background-color: #4b5563; /* gray-700 */
+    }
+
+    .btn-secondary:focus {
+        box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.5); /* focus:ring-gray-500 */
+    }
+
+/* Small button size */
+.btn-sm {
+    padding: 0.5rem 1rem; /* Smaller padding */
+    font-size: 0.875rem; /* Smaller font size */
+}
+
+/* تنسيقات الأيقونات داخل الأزرار */
+.btn i {
+    margin-left: 0.5rem; /* مسافة بين الأيقونة والنص (تم تعديلها لـ RTL) */
+    margin-right: 0;
+}
+
+/* تنسيقات البطاقات (Cards) */
+.card {
+    background-color: #ffffff;
+    border-radius: 0.75rem; /* rounded-lg */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    padding: 1.5rem; /* p-6 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    transform: none;
+    border-top-width: 4px; /* border-t-4 */
+}
+
+    .card:hover {
+        transform: scale(1.03); /* hover:scale-105 */
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* hover:shadow-xl */
+    }
+
+    /* ألوان حدود البطاقات */
+    .card.border-blue {
+        border-top-color: #3b82f6; /* blue-500 */
+    }
+
+    .card.border-green {
+        border-top-color: #22c55e; /* green-500 */
+    }
+
+    .card.border-purple {
+        border-top-color: #a855f7; /* purple-500 */
+    }
+
+    .card.border-red {
+        border-top-color: #ef4444; /* red-500 */
+    }
+
+/* تنسيقات الأيقونات داخل البطاقات */
+.card-icon {
+    font-size: 3.5rem; /* text-5xl */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+/* تنسيقات النصوص داخل البطاقات */
+.card-title {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    color: #1f2937; /* gray-800 */
+    margin-bottom: 0.75rem; /* mb-3 */
+}
+
+.card-description {
+    color: #4b5563; /* gray-600 */
+    margin-bottom: 1rem; /* mb-4 */
+    font-size: 0.875rem; /* text-sm */
+}
+
+/* تنسيقات الرسائل المؤقتة (TempData) */
+.alert {
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    border-width: 1px;
+    margin-bottom: 1.5rem;
+    text-align: right; /* لضمان محاذاة النص لليمين */
+}
+
+.alert-success {
+    background-color: #d1fae5; /* green-100 */
+    border-color: #34d399; /* green-400 */
+    color: #065f46; /* green-700 */
+}
+
+.alert-error {
+    background-color: #fee2e2; /* red-100 */
+    border-color: #f87171; /* red-400 */
+    color: #991b1b; /* red-700 */
+}
+
+.alert-info {
+    background-color: #dbeafe; /* blue-100 */
+    border-color: #60a5fa; /* blue-400 */
+    color: #1e40af; /* blue-700 */
+}
+
+/* تنسيقات الجداول (إذا كنت تريد تنسيقاً موحداً للجداول) */
+.table-container {
+    overflow-x: auto;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb; /* إضافة حدود خفيفة للجدول بأكمله */
+}
+
+    .table-container table {
+        min-width: 100%;
+        line-height: normal;
+        border-collapse: collapse; /* دمج الحدود */
+    }
+
+    .table-container th {
+        padding: 0.75rem 1.25rem;
+        background-color: #e5e7eb; /* لون خلفية أغمق للعناوين */
+        text-align: right;
+        font-size: 0.875rem; /* زيادة حجم الخط قليلاً */
+        font-weight: 700;
+        color: #374151;
+        border-bottom: 2px solid #d1d5db; /* حدود سفلية أكثر وضوحاً */
+    }
+
+    .table-container td {
+        padding: 1rem 1.25rem; /* زيادة المسافة الداخلية */
+        border-bottom: 1px solid #f3f4f6; /* حدود سفلية أخف */
+        background-color: #ffffff;
+        font-size: 0.875rem;
+        color: #4b5563;
+        text-align: right;
+    }
+
+    .table-container .title-cell {
+        font-weight: 600;
+        color: #1f2937; /* جعل عنوان الاختبار أكثر بروزًا */
+    }
+
+    .table-container tbody tr:hover {
+        background-color: #f3f4f6; /* تأثير تحويم أكثر وضوحاً */
+    }
+
+/* تنسيقات حقول الإدخال */
+.form-control {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow */
+    appearance: none;
+    border-width: 1px;
+    border-radius: 0.5rem; /* rounded-lg */
+    width: 100%; /* w-full */
+    padding: 0.5rem 0.75rem; /* py-2 px-3 */
+    color: #374151; /* text-gray-700 */
+    line-height: 1.25; /* leading-tight */
+    outline: none; /* focus:outline-none */
+}
+
+    .form-control:focus {
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* focus:shadow-outline */
+    }
+
+/* Badges for status */
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px; /* full rounded */
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-success {
+    background-color: #d1fae5; /* green-100 */
+    color: #065f46; /* green-700 */
+}
+
+.badge-danger {
+    background-color: #fee2e2; /* red-100 */
+    color: #991b1b; /* red-700 */
+}
+
+/* Action buttons with only icons */
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem; /* حجم أكبر قليلاً */
+    height: 2.25rem; /* حجم أكبر قليلاً */
+    border-radius: 50%; /* لجعل الأيقونات دائرية */
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+    .action-btn:hover {
+        background-color: #f3f4f6;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-btn i {
+        margin: 0;
+        font-size: 1rem; /* حجم الأيقونات */
+    }
+
+    /* ألوان أيقونات الإجراءات المحددة */
+    .action-btn.edit i {
+        color: #1d4ed8; /* Blue-800 for edit */
+    }
+
+    .action-btn.details i {
+        color: #047857; /* Green-800 for details */
+    }
+
+    .action-btn.delete i {
+        color: #b91c1c; /* Red-800 for delete */
+    }
+
+    .action-btn.attendees i {
+        color: #7e22ce; /* Purple-800 for attendees */
+    }
+
+    .action-btn.questions i {
+        color: #b45309; /* Amber-800 for questions */
+    }

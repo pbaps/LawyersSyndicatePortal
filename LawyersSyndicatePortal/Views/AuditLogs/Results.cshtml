@@ -1,0 +1,97 @@
+﻿@model LawyersSyndicatePortal.ViewModels.DisplayResultsViewModel
+
+@{
+    ViewBag.Title = "نتائج الاختبار";
+}
+
+<style>
+    .custom-badge-success {
+        color: #fff;
+        background-color: #28a745;
+        border-radius: .25rem;
+        padding: .25em .4em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+    }
+
+    .custom-badge-danger {
+        color: #fff;
+        background-color: #dc3545;
+        border-radius: .25rem;
+        padding: .25em .4em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+    }
+</style>
+
+<h2 class="text-center my-4">نتائج اختبار: @Model.ExamTitle</h2>
+
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>نتائج الحاضرين</h3>
+        </div>
+        <div class="card-body">
+            @if (!Model.AttendeesResults.Any())
+            {
+                <div class="alert alert-info text-center" role="alert">
+                    لا توجد نتائج لعرضها لهذا الاختبار.
+                </div>
+            }
+            else
+            {
+                <table class="table table-hover table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>رقم الهوية</th>
+                            <th>اسم المحامي</th>
+                            <th>الدرجة التي حصل عليها</th>
+                            <th>الدرجة الكلية</th>
+                            <th>هل نجح؟</th>
+                            <th>اكتمل التصحيح؟</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var result in Model.AttendeesResults)
+                        {
+                            <tr>
+                                <td>@result.LawyerIdNumber</td>
+                                <td>@result.LawyerFullName</td>
+                                <td>@result.TotalScoreAchieved</td>
+                                <td>@result.TotalExamScore</td>
+                                <td>
+                                    @if (result.IsPassed)
+                                    {
+                                        <span class="custom-badge-success">ناجح</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="custom-badge-danger">راسب</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (result.IsGradingComplete)
+                                    {
+                                        <span class="custom-badge-success">نعم</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="custom-badge-danger">لا</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

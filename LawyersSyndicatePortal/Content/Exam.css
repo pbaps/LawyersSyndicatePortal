@@ -1,0 +1,160 @@
+﻿ 
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+/* التنسيقات الأساسية للصفحة */
+body {
+    background-color: #f0f2f5;
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+/* تحسين التخطيط باستخدام Flexbox */
+.exam-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+/* تنسيقات الشاشات الكبيرة (لأجهزة سطح المكتب) */
+@media (min-width: 992px) {
+    .exam-page {
+        flex-direction: row;
+    }
+}
+
+/* مساحة المحتوى الرئيسية للأسئلة */
+.main-content {
+    flex: 3;
+    min-width: 0;
+}
+
+/* الشريط الجانبي للتوقيت */
+.sidebar {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+}
+
+/* بطاقة السؤال */
+.question-card {
+    background-color: #ffffff;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    transition: transform 0.3s ease;
+    margin-bottom: 2rem;
+}
+
+    /* إخفاء البطاقات غير النشطة */
+    .question-card:not(.active) {
+        display: none;
+    }
+
+/* صندوق التوقيت */
+.timer-box {
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    border: 2px solid;
+}
+
+    .timer-box h5 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #555;
+    }
+
+    .timer-box .time {
+        font-size: 2.5rem;
+        font-weight: 700;
+    }
+
+/* تنسيق توقيت الاختبار باللون الأحمر */
+#exam-timer-box {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+/* تنسيق توقيت السؤال باللون الأزرق */
+#question-timer-box {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+/* أزرار التنقل */
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+    .nav-buttons button {
+        background-color: #007bff;
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        .nav-buttons button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .nav-buttons button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+/* زر إنهاء الاختبار */
+.submit-button {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+    .submit-button:hover {
+        background-color: #218838;
+    }
+
+/* تنسيقات الصور */
+.img-fluid {
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 1rem;
+}
+
+/* تنسيقات خيارات الإجابة */
+.form-check-label {
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+/* تنسيق رسالة التنبيه المخصصة */
+#custom-alert-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffc107;
+    color: #333;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-weight: bold;
+    z-index: 1050;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: none;
+    text-align: center;
+}

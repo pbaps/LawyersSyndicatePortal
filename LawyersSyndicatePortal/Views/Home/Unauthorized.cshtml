@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "خطأ في الصلاحيات";
+    
+}
+
+<!--
+    هذه الصفحة تم تصميمها لتعمل مع الـ Layout الرئيسي للمستخدمين
+    وتستخدم فئات Bootstrap 5 للحفاظ على التناسق في التصميم.
+-->
+<div class="container d-flex flex-column align-items-center justify-content-center my-5">
+    <div class="card p-5 shadow-lg border rounded-5 text-center" style="max-width: 700px; width: 100%;">
+        <div class="text-danger mb-4">
+            <!-- أيقونة قفل SVG للتعبير عن الوصول غير المصرح به -->
+            <svg class="mx-auto" style="width: 112px; height: 112px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-11V7a4 4 0 00-8 0v4m-2 0h12v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z"></path>
+            </svg>
+        </div>
+        <h1 class="display-3 fw-bold text-danger mb-2">وصول غير مصرح به  </h1>
+        <h2 class="h3 fw-bold text-primary mb-4">لا يوجد لديك صلاحيات لهذه الصفحة      </h2>
+        <p class="text-muted leading-relaxed mb-4">
+            عذراً، لا تمتلك الصلاحيات اللازمة للوصول إلى هذه الصفحة.
+            <br />
+            للوصول، يجب أن يكون لديك دور محدد في النظام.
+        </p>
+        <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3">
+            <a href="#" onclick="history.back(); return false;" class="btn btn-primary btn-lg rounded-pill px-4">
+                <i class="fa-solid fa-arrow-right-to-bracket fa-rotate-180 me-2"></i>
+                العودة للخلف
+            </a>
+            <a href="@Url.Action("ComposeToAdmin", "Messages")" class="btn btn-outline-secondary btn-lg rounded-pill px-4">
+                <i class="fa-solid fa-headset me-2"></i>
+                تواصل مع الدعم
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,197 @@
+﻿@model LawyersSyndicatePortal.ViewModels.OfficeDetailViewModel
+@using System.Web.Security
+
+@{
+    ViewBag.Title = "تعديل تفاصيل المكتب";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="dashboard-wrapper">
+    <h2 class="page-title">
+        تعديل تفاصيل المكتب
+    </h2>
+
+    @* Success and Error Messages Section *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-card-glow alert-success-glow mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert-card-glow alert-danger-glow mb-4" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card-lux">
+        <div class="card-header-lux">
+            <h5 class="card-title-lux mb-0">
+                <i class="fas fa-building me-2"></i>
+                تعديل تفاصيل المكتب
+            </h5>
+        </div>
+        <div class="card-body-lux">
+            @using (Html.BeginForm("EditOfficeDetails", "MyProfile", FormMethod.Post, new { @class = "row g-3" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger col-12" })
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="col-md-6">
+                    <label for="OfficeName" class="form-label">@Html.DisplayNameFor(model => model.OfficeName)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-signature"></i></span>
+                        @Html.EditorFor(model => model.OfficeName, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.OfficeName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-12">
+                    <label for="OfficeAddress" class="form-label">@Html.DisplayNameFor(model => model.OfficeAddress)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                        @Html.TextAreaFor(model => model.OfficeAddress, new { @class = "form-control", rows = 5 })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.OfficeAddress, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6">
+                    <label for="PropertyType" class="form-label">@Html.DisplayNameFor(model => model.PropertyType)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-home"></i></span>
+                        @Html.DropDownListFor(model => model.PropertyType, Model.PropertyTypes, "الرجاء الاختيار", new { @class = "form-control" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.PropertyType, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6">
+                    <label for="PropertyStatus" class="form-label">@Html.DisplayNameFor(model => model.PropertyStatus)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-clipboard-check"></i></span>
+                        @Html.DropDownListFor(model => model.PropertyStatus, Model.PropertyStatuses, "الرجاء الاختيار", new { @class = "form-control" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.PropertyStatus, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-4 mt-4">
+                    <div class="form-check form-switch">
+                        @Html.EditorFor(model => model.HasPartners, new { htmlAttributes = new { @class = "form-check-input", id = "hasPartners" } })
+                        <label for="hasPartners" class="form-check-label control-label">@Html.DisplayNameFor(model => model.HasPartners)</label>
+                        @Html.ValidationMessageFor(model => model.HasPartners, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div id="partnersSection" class="col-12" style="@(Model.HasPartners ? "" : "display:none;")">
+                    <div class="card-lux mt-3">
+                        <div class="card-header-lux">
+                            <h5 class="card-title-lux mb-0">
+                                <i class="fas fa-handshake me-2"></i>
+                                تفاصيل الشركاء
+                            </h5>
+                        </div>
+                        <div class="card-body-lux">
+                            <div class="row g-3 align-items-center mb-3">
+                                <label for="NumberOfPartners" class="col-md-2 form-label mb-0">@Html.DisplayNameFor(model => model.NumberOfPartners)</label>
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.NumberOfPartners, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.NumberOfPartners, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div id="partnersContainer">
+                                @if (Model.Partners != null)
+                                {
+                                    for (int i = 0; i < Model.Partners.Count; i++)
+                                    {
+                                        @Html.Partial("_PartnerFields", Model.Partners[i], new ViewDataDictionary { { "index", i } })
+                                    }
+                                }
+                            </div>
+                            <div class="text-end mt-3">
+                                <button type="button" id="addPartnerBtn" class="btn btn-outline-primary"><i class="fas fa-plus-circle me-2"></i>إضافة شريك</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg me-2"><i class="fas fa-save me-2"></i>حفظ</button>
+                    @Html.ActionLink("العودة إلى الملف الشخصي", "Index", "MyProfile", null, new { @class = "btn btn-outline-secondary btn-lg" })
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            var addPartnerUrl = '@Url.Action("AddPartnerField", "MyProfile")';
+
+            function reindexDynamicItems(containerId, prefixName) {
+                $('#' + containerId + ' .dynamic-item').each(function (i) {
+                    $(this).attr('data-index', i);
+                    $(this).find('.card-header-lux .card-title-lux').text('تفاصيل الشريك رقم ' + (i + 1));
+                    $(this).find(':input').each(function () {
+                        var currentName = $(this).attr('name');
+                        if (currentName) {
+                            var newName = currentName.replace(new RegExp(prefixName + '\\[\\d+\\]'), prefixName + '[' + i + ']');
+                            $(this).attr('name', newName);
+                        }
+                        var currentId = $(this).attr('id');
+                        if (currentId) {
+                            var newId = currentId.replace(new RegExp(prefixName + '_\\d+__'), prefixName + '_' + i + '__');
+                            $(this).attr('id', newId);
+                        }
+                    });
+                });
+                var form = $('form');
+                form.removeData('validator');
+                form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse(form);
+            }
+
+            $('#hasPartners').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#partnersSection').show();
+                } else {
+                    $('#partnersSection').hide();
+                    $('#partnersContainer').empty();
+                }
+            }).change();
+
+            $('#addPartnerBtn').click(function () {
+                var newIndex = $('#partnersContainer .dynamic-item').length;
+                $.ajax({
+                    url: addPartnerUrl,
+                    type: 'POST',
+                    data: { index: newIndex },
+                    dataType: 'html',
+                    success: function (partialView) {
+                        $('#partnersContainer').append(partialView);
+                        reindexDynamicItems('partnersContainer', 'Partners');
+                        $.validator.unobtrusive.parse($('#partnersContainer'));
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error (AddPartnerField):", status, error);
+                        console.error("Response Text (AddPartnerField):", xhr.responseText);
+                    }
+                });
+            });
+
+            $('#partnersContainer').on('click', '.removePartner', function () {
+                $(this).closest('.dynamic-item').remove();
+                reindexDynamicItems('partnersContainer', 'Partners');
+            });
+
+            reindexDynamicItems('partnersContainer', 'Partners');
+        });
+    </script>
+}

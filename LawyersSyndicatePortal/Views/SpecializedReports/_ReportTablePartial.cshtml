@@ -1,0 +1,71 @@
+﻿@model LawyersSyndicatePortal.ViewModels.NewLawyerReportResultViewModel
+@using System.Reflection
+@using System.Linq
+
+@*
+    هذا هو الجزء (Partial View) المسؤول عن عرض نتائج التقرير في جدول.
+    يتم تحديثه بشكل ديناميكي عبر AJAX.
+*@
+
+@if (Model != null && Model.Lawyers.Any())
+{
+    @*
+        استخدام Bootstrap 5 لجدول متجاوب وأنيق.
+        - table-striped: لإضافة ألوان خلفية متناوبة للصفوف.
+        - table-hover: لإضافة تأثير عند تمرير الماوس على الصفوف.
+        - table-bordered: لإضافة حدود حول الجدول.
+        - caption-top: لوضع عنوان الجدول في الأعلى.
+    *@
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered caption-top">
+            <caption class="text-right">عدد النتائج: @Model.Lawyers.Count()</caption>
+            <thead class="bg-primary text-white">
+                <tr>
+                    @*
+                        عرض عناوين الأعمدة التي اختارها المستخدم.
+                        يتم تكرار الأعمدة الموجودة في قائمة SelectedColumns من الـ ViewModel.
+                    *@
+                    @foreach (var col in Model.SelectedColumns)
+                    {
+                        <th>@col.DisplayName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @*
+                    عرض بيانات كل محامي في صف منفصل.
+                *@
+                @foreach (var item in Model.Lawyers)
+                {
+                    <tr>
+                        @*
+                            تكرار الأعمدة مرة أخرى لجلب القيمة المقابلة لكل عمود.
+                        *@
+                        @foreach (var col in Model.SelectedColumns)
+                        {
+                            <td>
+                                @*
+                                    هذا هو التصحيح الرئيسي:
+                                    - تم التأكد من أن الكود يبدأ بعلامة '@' ليتم تفسيره بواسطة Razor.
+                                    - يقوم `item.GetType().GetProperty(col.ColumnName)` بجلب الخاصية ديناميكياً.
+                                    - `?.GetValue(item, null)` يجلب قيمة هذه الخاصية من كائن 'item' بأمان.
+                                    - إذا كانت القيمة `null`، فلن يظهر أي شيء في الخلية.
+                                *@
+                                @(item.GetType().GetProperty(col.ColumnName)?.GetValue(item, null))
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+      </div>
+        }
+        else
+        {
+        @*
+            عرض رسالة تحذير إذا لم يتم العثور على نتائج.
+        *@
+        <div class="alert alert-warning text-center" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> لا توجد نتائج مطابقة لمعايير البحث المحددة.
+        </div>
+        }

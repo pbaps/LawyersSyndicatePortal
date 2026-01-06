@@ -1,0 +1,24 @@
+﻿@model LawyersSyndicatePortal.Models.RoleViewModel
+
+@{
+    ViewBag.Title = "حذف الدور";
+}
+
+<h2 class="text-right text-danger">حذف الدور</h2>
+<hr />
+<h4 class="text-right">هل أنت متأكد أنك تريد حذف هذا الدور؟</h4>
+
+<div class="card text-right" dir="rtl">
+    <div class="card-body">
+        <h5 class="card-title">@Html.DisplayFor(model => model.Name)</h5>
+    </div>
+</div>
+
+@using (Html.BeginForm("Delete", "Roles", FormMethod.Post, new { @class = "mt-3 text-right" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+
+    <input type="submit" value="تأكيد الحذف" class="btn btn-danger" />
+    @Html.ActionLink("إلغاء", "Index", null, new { @class = "btn btn-secondary ml-2" })
+}

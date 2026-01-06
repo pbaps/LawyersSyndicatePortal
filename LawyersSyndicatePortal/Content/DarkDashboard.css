@@ -1,0 +1,28 @@
+﻿/*
+ * ملف سمة داكنة
+ */
+:root {
+    --bg-primary: #1a1a2e; /* خلفية داكنة */
+    --navbar-bg: #1f1f3a; /* أغمق قليلاً لشريط التنقل */
+    --card-bg: #20203a; /* أزرق داكن للبطاقات */
+    --primary-color: #00bcd4; /* لون أساسي أزرق سماوي */
+    --secondary-color: #3e3e6f; /* بنفسجي داكن لللمسات الجمالية */
+    --text-dark: #f4f4f4; /* أبيض نقي للنص الرئيسي */
+    --text-muted: #a0a0a0; /* رمادي فاتح للنص الثانوي */
+    --text-light: #f4f4f4; /* أبيض نقي للنص الفاتح */
+    --border-color: #3e3e6f; /* حدود بنفسجية داكنة */
+    --box-shadow-subtle: 0 8px 25px rgba(0, 0, 0, 0.3);
+    --box-shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.45);
+    --border-radius-lg: 15px;
+    --primary-color-focus-ring: rgba(0, 188, 212, 0.4);
+}
+
+/* أنماط خاصة بالسمة الداكنة */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-dark);
+}
+
+.navbar-lux {
+    background-color: var(--navbar-bg);
+}

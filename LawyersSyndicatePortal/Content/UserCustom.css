@@ -1,0 +1,74 @@
+﻿/* تنسيقات CSS مخصصة لهذا الـ Layout الخاص بالمستخدمين */
+body {
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+    background-color: #f0f2f5; /* لون خلفية عصري */
+    padding-top: 70px;
+}
+
+.card {
+    border-radius: 12px; /* حواف مستديرة للبطاقات */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* ظل أكثر وضوحًا */
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0;
+    padding: 1rem 1.5rem;
+}
+
+.bg-primary {
+    background-color: #007bff !important; /* لون أساسي أزرق */
+}
+
+.form-label {
+    font-weight: 600; /* جعل تسمية الحقول أكثر وضوحًا */
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.form-control, .form-select {
+    border-radius: 8px; /* حواف مستديرة للحقول */
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    transition: all 0.3s ease-in-out;
+    text-align: right;
+    direction: rtl;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+    }
+
+.input-group-text {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    color: #495057;
+    border-radius: 8px 0 0 8px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+
+.btn-outline-secondary {
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* فرض اتجاه النص في حقول النموذج ليكون من اليمين إلى اليسار */
+.form-control {
+    text-align: right;
+}

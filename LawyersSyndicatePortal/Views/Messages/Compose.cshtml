@@ -1,0 +1,81 @@
+﻿@model LawyersSyndicatePortal.ViewModels.SendMessageViewModel
+
+@{
+    ViewBag.Title = "إنشاء رسالة جديدة";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // استخدام الـ Layout الخاص بالمسؤولين
+}
+
+<div class="container py-5" dir="rtl">
+    <h2 class="text-right mb-4">@ViewBag.Title</h2>
+    <hr />
+
+    @* Success/Error Message *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-right" role="alert">
+            @Html.Raw(TempData["SuccessMessage"])
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-right" role="alert">
+            @Html.Raw(TempData["ErrorMessage"])
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white text-right">
+            <h5 class="mb-0">إرسال رسالة خاصة</h5>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Compose", "Messages", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @* Hidden field for RecipientType, always "Specific" for this form *@
+                @Html.HiddenFor(model => model.RecipientType, new { @value = "Specific" })
+
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.ReceiverIdNumber, new { @class = "form-label" })
+                    @Html.DropDownListFor(model => model.ReceiverIdNumber, Model.AvailableReceivers, "اختر مستلم الرسالة", new { @class = "form-select", required = "required" })
+                    @Html.ValidationMessageFor(model => model.ReceiverIdNumber, "", new { @class = "text-danger" })
+                    <small class="form-text text-muted">اختر المستلم من القائمة المنسدلة.</small>
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.Subject, new { @class = "form-label" })
+                    @Html.TextBoxFor(model => model.Subject, new { @class = "form-control", required = "required", placeholder = "أدخل موضوع الرسالة" })
+                    @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="mb-3">
+                    @Html.LabelFor(model => model.Body, new { @class = "form-label" })
+                    @Html.TextAreaFor(model => model.Body, new { @class = "form-control", rows = 8, required = "required", placeholder = "اكتب نص الرسالة هنا..." })
+                    @Html.ValidationMessageFor(model => model.Body, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary me-2"><i class="fas fa-paper-plane"></i> إرسال الرسالة</button>
+                    @Html.ActionLink("إلغاء", "AdminInbox", null, new { @class = "btn btn-secondary" })
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+ 
+    <script>
+        $(document).ready(function () {
+            // Hide success/error messages after 5 seconds
+            window.setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 5000); // 5 seconds
+        });
+    </script>
+}

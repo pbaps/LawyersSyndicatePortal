@@ -1,0 +1,56 @@
+﻿@model LawyersSyndicatePortal.Models.PbaContract
+
+@{
+    ViewBag.Title = "حذف العقد";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-danger text-white text-center">
+                    <h3 class="font-weight-light my-4">@ViewBag.Title</h3>
+                </div>
+                <div class="card-body text-center">
+                    <h4 class="text-danger my-3">هل أنت متأكد من أنك تريد حذف هذا العقد؟</h4>
+                    <hr />
+                    <dl class="row dl-horizontal text-right">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.EmployeeName)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.EmployeeName)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.ReceiptNumber)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.ReceiptNumber)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.FileName)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.FileName)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.LawyerName)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.LawyerName)
+                        </dd>
+                    </dl>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="form-actions no-color mt-4">
+                            <input type="submit" value="حذف" class="btn btn-danger btn-lg" />
+                            @Html.ActionLink("العودة إلى القائمة", "Index", null, new { @class = "btn btn-secondary btn-lg ml-2" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

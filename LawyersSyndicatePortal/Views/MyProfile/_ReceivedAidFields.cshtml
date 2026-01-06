@@ -1,0 +1,43 @@
+﻿@model LawyersSyndicatePortal.ViewModels.ReceivedAidViewModel
+
+@{
+    var index = ViewData["index"] != null ? (int)ViewData["index"] : 0;
+    var prefix = $"ReceivedAids[{index}]";
+    ViewData.TemplateInfo.HtmlFieldPrefix = prefix;
+    var availableAidTypes = ViewData["AvailableAidTypes"] as List<SelectListItem>;
+}
+
+<div class="col-12 dynamic-item mb-3">
+    <div class="card-lux">
+        <div class="card-header-lux d-flex justify-content-between align-items-center">
+            <h6 class="card-title-lux mb-0">المساعدة المستلمة رقم @(index + 1)</h6>
+            <button type="button" class="btn btn-sm btn-danger remove-aid-item">
+                <i class="fas fa-trash-alt me-2"></i>إزالة
+            </button>
+        </div>
+        <div class="card-body-lux">
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.GeneralInfoId)
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="@(prefix)_AidType" class="form-label control-label">@Html.DisplayNameFor(model => model.AidType)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-hand-holding-usd"></i></span>
+                        @Html.DropDownListFor(model => model.AidType, availableAidTypes, "الرجاء الاختيار", new { @class = "form-control" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.AidType, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6">
+                    <label for="@(prefix)_ReceivedDate" class="form-label control-label">@Html.DisplayNameFor(model => model.ReceivedDate)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                        @Html.TextBoxFor(model => model.ReceivedDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ReceivedDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

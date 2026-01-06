@@ -1,0 +1,40 @@
+﻿@model LawyersSyndicatePortal.Models.CreateRoleViewModel
+
+@{
+    ViewBag.Title = "إنشاء دور جديد";
+}
+
+<h2 class="text-right">إنشاء دور جديد</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        @using (Html.BeginForm("Create", "Roles", FormMethod.Post, new { @class = "text-right", role = "form", dir = "rtl" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <div class="col-md-offset-3 col-md-9">
+                        <input type="submit" value="إنشاء" class="btn btn-success" />
+                        @Html.ActionLink("العودة للقائمة", "Index", null, new { @class = "btn btn-secondary ml-2" })
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

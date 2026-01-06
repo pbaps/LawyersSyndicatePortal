@@ -1,0 +1,75 @@
+﻿@model LawyersSyndicatePortal.ViewModels.UserProfileViewModel
+
+@{
+    ViewBag.Title = "ملف تعريفي للمستخدم";
+    Layout = "~/Views/Shared/_UserLayout.cshtml"; // أو أي Layout مناسب للمستخدمين
+}
+
+<h2>ملف تعريفي للمستخدم</h2>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">معلومات المستخدم الأساسية</h3>
+    </div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.FullName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.FullName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IdNumber)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.IdNumber)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CreationDate)
+            </dd>
+        </dl>
+    </div>
+</div>
+
+@if (Model.IsLinkedToLawyer)
+{
+    <p>
+        <div class="alert alert-info" role="alert">
+            أنت مرتبط بملف محامٍ. يمكنك عرض أو تعديل ملف تعريف المحامي الخاص بك.
+        </div>
+        @Html.ActionLink("الانتقال إلى ملف تعريف المحامي", "Index", "MyProfile", null, new { @class = "btn btn-primary" })
+    </p>
+}
+else
+{
+   
+        <div class="alert alert-warning" role="alert">
+            ملف تعريف المحامي الخاص بك غير موجود أو غير مرتبط بعد.
+        </div>
+        @* يمكنك إضافة زر هنا للسماح للمستخدم ببدء عملية إنشاء ملف تعريف المحامي إذا كان ذلك ممكناً *@
+               
+            }
+
+            <div>
+                @Html.ActionLink("العودة إلى الصفحة الرئيسية", "Index", "Home")
+            </div>

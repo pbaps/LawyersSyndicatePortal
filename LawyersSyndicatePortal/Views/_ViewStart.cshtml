@@ -1,0 +1,59 @@
+﻿@{
+    // تحديد الـ Layout الافتراضي بناءً على دور المستخدم
+    // وتحديد الـ Layout بناءً على الكنترولر الحالي في حال لم يكن المستخدم مسجلاً دخوله أو كان دوره غير محدد.
+
+    string controllerName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+
+    // قائمة بالكنترولرات التي يجب أن تستخدم AdminLayout بغض النظر عن الدور (لضمان العرض الصحيح)
+    // ولكن تذكر أن الوصول الفعلي للكنترولر لا يزال محميًا بسمة [Authorize(Roles = "Admin")]
+    var adminControllers = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+{
+        "Admin",
+        "Reports",
+        "Lawyers",
+        "Users",
+        "Messages" // إذا كان MessagesController يحتوي على أقسام إدارية
+    };
+
+    // قائمة بالكنترولرات التي يجب أن تستخدم CorrectorLayout
+    var correctorControllers = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+{
+        "Corrector"
+        // يمكنك إضافة أي كنترولرات أخرى خاصة بالمصححين هنا
+    };
+
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+    bool isAdmin = User.IsInRole("Admin");
+    bool isCorrector = User.IsInRole("Corrector");
+    string userName = isAuthenticated ? User.Identity.Name : "Not Authenticated";
+
+    System.Diagnostics.Debug.WriteLine($"--- _ViewStart Debug Info ---");
+    System.Diagnostics.Debug.WriteLine($"User Name: {userName}");
+    System.Diagnostics.Debug.WriteLine($"Is Authenticated: {isAuthenticated}");
+    System.Diagnostics.Debug.WriteLine($"Is in Admin Role: {isAdmin}");
+    System.Diagnostics.Debug.WriteLine($"Is in Corrector Role: {isCorrector}");
+    System.Diagnostics.Debug.WriteLine($"Current Controller Name: {controllerName}");
+
+    if (User.Identity is System.Security.Claims.ClaimsPrincipal claimsPrincipal)
+    {
+        System.Diagnostics.Debug.WriteLine($"Claims for {userName}:");
+        foreach (var claim in claimsPrincipal.Claims)
+        {
+            System.Diagnostics.Debug.WriteLine($"  Claim Type: {claim.Type}, Claim Value: {claim.Value}");
+        }
+    }
+    System.Diagnostics.Debug.WriteLine($"--- End _ViewStart Debug Info ---");
+
+    if (isAdmin || adminControllers.Contains(controllerName))
+    {
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    else if (isCorrector || correctorControllers.Contains(controllerName))
+    {
+        Layout = "~/Views/Shared/_LayoutCorrector.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_UserLayout.cshtml";
+    }
+}

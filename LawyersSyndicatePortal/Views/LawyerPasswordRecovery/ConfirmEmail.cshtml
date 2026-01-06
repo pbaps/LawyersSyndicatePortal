@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "تأكيد البريد الإلكتروني";
+    Layout = "~/Views/Shared/_PublicLayout.cshtml"; // تأكد من أن هذا هو اسم ملف الـ Layout الصحيح
+}
+
+<div class="card p-4 shadow-sm" style="max-width: 600px; margin: auto;">
+    <div class="card-header text-center bg-primary text-white rounded-top">
+        <h3 class="my-2"><i class="fa-solid fa-envelope-circle-check me-2"></i> تأكيد البريد الإلكتروني</h3>
+    </div>
+    <div class="card-body text-center">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <p class="lead mb-4">
+            البريد الإلكتروني المسجل في ملفك الشخصي هو:
+            <br />
+            <strong class="text-primary fs-5">@ViewBag.EmailAddress</strong>
+        </p>
+
+        <p>
+            هل هذا هو بريدك الإلكتروني الصحيح؟
+        </p>
+
+        @using (Html.BeginForm("SendResetLink", "LawyerPasswordRecovery", FormMethod.Post, new { @class = "d-inline" }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="userId" value="@ViewBag.UserId" />
+            <button type="submit" class="btn btn-success btn-lg me-2">
+                <i class="fa-solid fa-paper-plane me-2"></i> نعم، أرسل رابط إعادة التعيين
+            </button>
+        }
+
+        <a href="@Url.Action("UpdateEmail", new { id = ViewBag.UserId })" class="btn btn-warning btn-lg">
+            <i class="fa-solid fa-pen-to-square me-2"></i> لا، أرغب بتعديله
+        </a>
+    </div>
+</div>

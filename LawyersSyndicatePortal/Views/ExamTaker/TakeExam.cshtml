@@ -1,0 +1,303 @@
+﻿@model LawyersSyndicatePortal.ViewModels.ExamViewModel
+
+@{
+    ViewBag.Title = "صفحة الاختبار";
+}
+
+<style>
+    /*
+    * Custom styling for the Exam View
+    * This CSS is used to enhance the look and feel of the page.
+    */
+
+    body {
+        background-color: #f0f2f5; /* A soft, light gray background */
+ 
+    }
+
+    .card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-5px); /* Lift the card slightly on hover */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+    .side-card {
+        background-color: #fff;
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .exam-header {
+        background-color: #343a40;
+        color: #fff;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        padding: 2.5rem 1.5rem;
+    }
+
+        .exam-header h1 {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+    .exam-body {
+        background-color: #fff;
+        padding: 2.5rem;
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+    }
+
+    /* Timer card styling */
+    .timer-card .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Alert Styling */
+    .styled-alert {
+        border-radius: 0.75rem;
+        border: none;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+        .styled-alert.alert-warning {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .styled-alert.alert-info {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+    .question-option .form-check-label {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .question-option:hover .form-check-label {
+        font-weight: bold;
+        transform: translateX(-5px);
+        color: #0d6efd;
+    }
+</style>
+
+<div class="container py-5">
+    <!-- Main Exam Card Wrapper -->
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="exam-header text-center">
+            <h1 class="h3 fw-bold mb-1">@Model.Exam.Title</h1>
+            <p class="mb-0 text-muted">أهلاً بك، @Model.Lawyer.FullName</p>
+        </div>
+        <div class="exam-body">
+            <!-- Main Content Area: Timers/Notices and Questions side-by-side -->
+            <div class="row gx-4">
+                <!-- IMPORTANT CHANGE: Consolidated Side Panel -->
+                <!-- This side column now contains all timers and important notices. -->
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="card side-card p-4">
+                        <h6 class="text-center text-muted mb-3 fw-bold">حالة الاختبار</h6>
+
+                        <!-- Exam Info Section -->
+                        <!-- This section has been moved from the main body into the side card. -->
+                        <div class="row align-items-center mb-3 text-center g-2">
+                            <div class="col-12 mb-2">
+                                <div class="card bg-light border-0 rounded-3 timer-card">
+                                    <div class="card-body py-2">
+                                        <h5 class="card-title mb-0 h6">السؤال الحالي</h5>
+                                        <p class="card-text fw-bold h4 text-primary">@Model.CurrentQuestionNumber من @Model.TotalQuestions</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Overall Exam Timer -->
+                            <div class="col-12 mb-2">
+                                <div class="card bg-light border-0 rounded-3 timer-card">
+                                    <div class="card-body py-2">
+                                        <h5 class="card-title mb-0 h6">وقت الاختبار الكلي</h5>
+                                        <p class="card-text fw-bold h4 text-danger"><span id="examTimeRemaining"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Per-Question Timer -->
+                            <div class="col-12">
+                                <div class="card bg-light border-0 rounded-3 timer-card">
+                                    <div class="card-body py-2">
+                                        <h5 class="card-title mb-0 h6">وقت السؤال المتبقي</h5>
+                                        <p class="card-text fw-bold h4 text-info"><span id="questionTimeRemaining"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Important Notices -->
+                        <div class="mb-3">
+                            <h6 class="text-center text-muted mt-4 mb-3 fw-bold">تنبيهات هامة</h6>
+                            <div id="examTimerAlert" class="styled-alert alert-warning text-center" role="alert">
+                                <i class="bi bi-info-circle-fill"></i>
+                                <small class="fw-bold">
+                                    ملاحظة: سيتم إرسال إجاباتك تلقائياً عند انتهاء الوقت المحدد للاختبار.
+                                </small>
+                            </div>
+                            <div id="questionTimerAlert" class="styled-alert alert-info text-center" role="alert">
+                                <i class="bi bi-info-circle-fill"></i>
+                                <small class="fw-bold">
+                                    ملاحظة: سيتم تخطي السؤال الحالي تلقائياً عند انتهاء وقته.
+                                </small>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Question Card and Form -->
+                <div class="col-lg-8">
+                    <div class="card mb-4 border-primary rounded-3">
+                        <div class="card-body">
+                            <h5 class="card-title text-muted mb-3">السؤال:</h5>
+                            <h4 class="card-text fw-bold">@Model.Question.Text</h4>
+                        </div>
+                    </div>
+
+                    <!-- Form for submitting answers -->
+                    @if (Model.Question.QuestionType == LawyersSyndicatePortal.Models.QuestionType.MultipleChoice)
+                    {
+                        using (Html.BeginForm("SubmitAnswer", "ExamTaker", FormMethod.Post, new { id = "examForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("examId", Model.Exam.Id)
+                            @Html.Hidden("questionId", Model.Question.Id)
+
+                            <div class="form-group mb-4">
+                                @foreach (var option in Model.Question.Options)
+                                {
+                                    <div class="card rounded-3 mb-2 question-option">
+                                        <div class="card-body py-2">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <input class="form-check-input" type="radio" name="selectedOptionId" id="option_@option.Id" value="@option.Id" required>
+                                                </div>
+                                                <div class="col">
+                                                    <label class="form-check-label w-100 py-1" for="option_@option.Id">
+                                                        @option.Text
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">إرسال الإجابة</button>
+                        }
+                    }
+                    else
+                    {
+                        using (Html.BeginForm("SubmitAnswer", "ExamTaker", FormMethod.Post, new { id = "examForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.Hidden("examId", Model.Exam.Id)
+                            @Html.Hidden("questionId", Model.Question.Id)
+
+                            <div class="form-group mb-4">
+                                <label for="userAnswer" class="form-label h6">إجابتك:</label>
+                                <textarea id="userAnswer" name="userAnswer" class="form-control" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg w-100 fw-bold">إرسال الإجابة</button>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        (function() {
+            var examTimerInterval;
+            var questionTimerInterval;
+
+            // NOTE: This value is hardcoded as per the previous request.
+            const TIME_PER_QUESTION_SECONDS = 60;
+
+            var examTimeRemaining = @Model.TimeRemainingSeconds;
+            var questionTimeRemaining = TIME_PER_QUESTION_SECONDS;
+
+            var examTimeElement = document.getElementById('examTimeRemaining');
+            var questionTimeElement = document.getElementById('questionTimeRemaining');
+            var examForm = document.getElementById('examForm');
+            var examAlert = document.getElementById('examTimerAlert');
+            var questionAlert = document.getElementById('questionTimerAlert');
+
+            function formatTime(seconds) {
+                if (seconds < 0) return "00:00";
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }
+
+            function updateExamTimer() {
+                if (examTimeRemaining > 0) {
+                    examTimeRemaining--;
+                    examTimeElement.innerText = formatTime(examTimeRemaining);
+
+                    if (examTimeRemaining <= 60 && !examAlert.classList.contains('alert-danger')) {
+                        examAlert.classList.remove('alert-warning');
+                        examAlert.classList.add('alert-danger');
+                    }
+                } else {
+                    clearInterval(examTimerInterval);
+                    clearInterval(questionTimerInterval);
+                    examTimeElement.innerText = "00:00";
+                    examAlert.classList.remove('alert-warning');
+                    examAlert.classList.add('alert-danger');
+                    examAlert.querySelector('small').innerText = "انتهى الوقت! سيتم إرسال الاختبار الآن تلقائياً.";
+
+                    if (examForm) {
+                        examForm.submit();
+                    }
+                }
+            }
+
+            function updateQuestionTimer() {
+                if (questionTimeRemaining > 0) {
+                    questionTimeRemaining--;
+                    questionTimeElement.innerText = formatTime(questionTimeRemaining);
+                } else {
+                    clearInterval(questionTimerInterval);
+                    questionTimeElement.innerText = "00:00";
+                    questionAlert.querySelector('small').innerText = "انتهى وقت السؤال! سيتم تخطيه الآن.";
+
+                    if (examForm) {
+                        examForm.submit();
+                    }
+                }
+            }
+
+            window.onload = function() {
+                if (examTimeElement) {
+                    examTimeElement.innerText = formatTime(examTimeRemaining);
+                }
+                if (questionTimeElement) {
+                    questionTimeElement.innerText = formatTime(questionTimeRemaining);
+                }
+
+                examTimerInterval = setInterval(updateExamTimer, 1000);
+                questionTimerInterval = setInterval(updateQuestionTimer, 1000);
+            };
+
+            document.querySelectorAll('.question-option input[type="radio"]').forEach(function(radio) {
+                radio.addEventListener('change', function() {
+                    document.querySelectorAll('.question-option').forEach(function(card) {
+                        card.classList.remove('bg-light', 'border-primary');
+                    });
+                    this.closest('.question-option').classList.add('bg-light', 'border-primary');
+                });
+            });
+        })();
+    </script>
+}

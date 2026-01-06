@@ -1,0 +1,44 @@
+﻿@model LawyersSyndicatePortal.Models.IndexViewModel
+@{
+    ViewBag.Title = "إدارة الحساب";
+}
+
+<div class="container py-5" dir="rtl">
+    <div class="card-lux">
+        <div class="card-header-lux">
+            <h5 class="card-title-lux mb-0"><i class="fas fa-user-cog me-2"></i>@ViewBag.Title</h5>
+        </div>
+        <div class="card-body-lux">
+            @* رسالة الحالة (نجاح/خطأ) *@
+            @if (!string.IsNullOrEmpty(ViewBag.StatusMessage))
+            {
+                <div class="alert @(ViewBag.StatusMessage.Contains("Error") ? "alert-danger" : "alert-success") alert-dismissible fade show text-right" role="alert">
+                    @ViewBag.StatusMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <h4 class="mb-3">تغيير إعدادات حسابك</h4>
+            <hr />
+
+            <div class="row mb-3 g-2 align-items-center">
+                <div class="col-md-4 col-sm-12 text-md-right text-sm-start">
+                    <strong class="form-label">كلمة المرور:</strong>
+                </div>
+                <div class="col-md-8 col-sm-12 text-md-right text-sm-start">
+                    @if (Model.HasPassword)
+                    {
+                        @Html.ActionLink("تغيير كلمة المرور", "ChangePassword", null, new { @class = "btn btn-info" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("إنشاء كلمة مرور", "SetPassword", null, new { @class = "btn btn-primary" })
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+}

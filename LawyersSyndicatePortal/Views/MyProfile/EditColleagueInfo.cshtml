@@ -1,0 +1,245 @@
+﻿@model LawyersSyndicatePortal.ViewModels.ColleagueInfoViewModel
+@using System.Web.Security
+
+@{
+    ViewBag.Title = "تعديل معلومات الزملاء";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="dashboard-wrapper">
+    <h2 class="page-title">
+        تعديل معلومات الزملاء
+    </h2>
+
+    @* Success and Error Messages Section *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-card-glow alert-success-glow mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert-card-glow alert-danger-glow mb-4" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card-lux">
+        <div class="card-header-lux">
+            <h5 class="card-title-lux mb-0"><i class="fas fa-user-tie me-2"></i>تعديل معلومات الزملاء</h5>
+        </div>
+        <div class="card-body-lux">
+            @using (Html.BeginForm("EditColleagueInfo", "MyProfile", FormMethod.Post, new { @class = "row g-3" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger col-12" })
+                @Html.HiddenFor(model => model.Id) @* للحفاظ على معرف السجل إذا كان موجوداً *@
+
+                <div class="col-4 mt-3">
+                    <div class="form-check form-switch d-flex align-items-center">
+                        <label for="knowsOfMartyrColleagues" class="form-check-label control-label mb-0 me-2">@Html.DisplayNameFor(model => model.KnowsOfMartyrColleagues)</label>
+                        @Html.EditorFor(model => model.KnowsOfMartyrColleagues, new { htmlAttributes = new { @class = "form-check-input", id = "knowsOfMartyrColleagues" } })
+                        @Html.ValidationMessageFor(model => model.KnowsOfMartyrColleagues, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div id="martyrColleaguesSection" class="col-12" style="@(Model.KnowsOfMartyrColleagues ? "" : "display:none;")">
+                    <div class="card-lux mt-3">
+                        <div class="card-header-lux">
+                            <h5 class="card-title-lux mb-0">تفاصيل الزملاء الشهداء</h5>
+                        </div>
+                        <div class="card-body-lux" id="martyrColleaguesContainer">
+                            @if (Model.MartyrColleagues != null)
+                            {
+                                for (int i = 0; i < Model.MartyrColleagues.Count; i++)
+                                {
+                                    @Html.Partial("_MartyrColleagueFields", Model.MartyrColleagues[i], new ViewDataDictionary { { "index", i } })
+                                }
+                            }
+                        </div>
+                        <div class="card-footer-lux text-end">
+                            <button type="button" id="addMartyrColleagueBtn" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus-circle me-2"></i>إضافة زميل شهيد</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4 mt-3">
+                    <div class="form-check form-switch d-flex align-items-center">
+                        <label for="knowsOfDetainedColleagues" class="form-check-label control-label mb-0 me-2">@Html.DisplayNameFor(model => model.KnowsOfDetainedColleagues)</label>
+                        @Html.EditorFor(model => model.KnowsOfDetainedColleagues, new { htmlAttributes = new { @class = "form-check-input", id = "knowsOfDetainedColleagues" } })
+                        @Html.ValidationMessageFor(model => model.KnowsOfDetainedColleagues, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div id="detainedColleaguesSection" class="col-12" style="@(Model.KnowsOfDetainedColleagues ? "" : "display:none;")">
+                    <div class="card-lux mt-3">
+                        <div class="card-header-lux">
+                            <h5 class="card-title-lux mb-0">تفاصيل الزملاء المعتقلين</h5>
+                        </div>
+                        <div class="card-body-lux" id="detainedColleaguesContainer">
+                            @if (Model.DetainedColleagues != null)
+                            {
+                                for (int i = 0; i < Model.DetainedColleagues.Count; i++)
+                                {
+                                    @Html.Partial("_DetainedColleagueFields", Model.DetainedColleagues[i], new ViewDataDictionary { { "index", i } })
+                                }
+                            }
+                        </div>
+                        <div class="card-footer-lux text-end">
+                            <button type="button" id="addDetainedColleagueBtn" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus-circle me-2"></i>إضافة زميل معتقل</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4 mt-3">
+                    <div class="form-check form-switch d-flex align-items-center">
+                        <label for="knowsOfInjuredColleagues" class="form-check-label control-label mb-0 me-2">@Html.DisplayNameFor(model => model.KnowsOfInjuredColleagues)</label>
+                        @Html.EditorFor(model => model.KnowsOfInjuredColleagues, new { htmlAttributes = new { @class = "form-check-input", id = "knowsOfInjuredColleagues" } })
+                        @Html.ValidationMessageFor(model => model.KnowsOfInjuredColleagues, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div id="injuredColleaguesSection" class="col-12" style="@(Model.KnowsOfInjuredColleagues ? "" : "display:none;")">
+                    <div class="card-lux mt-3">
+                        <div class="card-header-lux">
+                            <h5 class="card-title-lux mb-0">تفاصيل الزملاء المصابين</h5>
+                        </div>
+                        <div class="card-body-lux" id="injuredColleaguesContainer">
+                            @if (Model.InjuredColleagues != null)
+                            {
+                                for (int i = 0; i < Model.InjuredColleagues.Count; i++)
+                                {
+                                    @Html.Partial("_InjuredColleagueFields", Model.InjuredColleagues[i], new ViewDataDictionary { { "index", i } })
+                                }
+                            }
+                        </div>
+                        <div class="card-footer-lux text-end">
+                            <button type="button" id="addInjuredColleagueBtn" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus-circle me-2"></i>إضافة زميل مصاب</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" value="حفظ" class="btn btn-primary btn-lg me-2">
+                        <i class="fas fa-save me-2"></i>حفظ
+                    </button>
+                    @Html.ActionLink("العودة إلى الملف الشخصي", "Index", "MyProfile", null, new { @class = "btn btn-outline-secondary btn-lg" })
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            var addMartyrColleagueUrl = '@Url.Action("AddMartyrColleagueField", "MyProfile")';
+            var addDetainedColleagueUrl = '@Url.Action("AddDetainedColleagueField", "MyProfile")';
+            var addInjuredColleagueUrl = '@Url.Action("AddInjuredColleagueField", "MyProfile")';
+
+            function reindexDynamicItems(containerId, prefixName) {
+                $('#' + containerId + ' .dynamic-item').each(function (i) {
+                    $(this).attr('data-index', i);
+                    $(this).find(':input').each(function () {
+                        var currentName = $(this).attr('name');
+                        if (currentName) {
+                            var newName = currentName.replace(new RegExp(prefixName + '\\[\\d+\\]'), prefixName + '[' + i + ']');
+                            $(this).attr('name', newName);
+                        }
+                        var currentId = $(this).attr('id');
+                        if (currentId) {
+                            var newId = currentId.replace(new RegExp(prefixName + '_\\d+__'), prefixName + '_' + i + '__');
+                            $(this).attr('id', newId);
+                        }
+                    });
+                    $(this).find('.card-title-lux').html(function (idx, oldHtml) {
+                        var regexToReplace = new RegExp('رقم \\d+');
+                        return oldHtml.replace(regexToReplace, 'رقم ' + (i + 1));
+                    });
+                });
+                var form = $('form');
+                form.removeData('validator');
+                form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse(form);
+            }
+
+            $('#knowsOfMartyrColleagues').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#martyrColleaguesSection').show();
+                } else {
+                    $('#martyrColleaguesSection').hide();
+                    $('#martyrColleaguesContainer').empty();
+                }
+            }).change();
+
+            $('#knowsOfDetainedColleagues').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#detainedColleaguesSection').show();
+                } else {
+                    $('#detainedColleaguesSection').hide();
+                    $('#detainedColleaguesContainer').empty();
+                }
+            }).change();
+
+            $('#knowsOfInjuredColleagues').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#injuredColleaguesSection').show();
+                } else {
+                    $('#injuredColleaguesSection').hide();
+                    $('#injuredColleaguesContainer').empty();
+                }
+            }).change();
+
+            $('#addMartyrColleagueBtn').click(function () {
+                var newIndex = $('#martyrColleaguesContainer .dynamic-item').length;
+                $.post(addMartyrColleagueUrl, { index: newIndex }, function (data) {
+                    $('#martyrColleaguesContainer').append(data);
+                    reindexDynamicItems('martyrColleaguesContainer', 'MartyrColleagues');
+                });
+            });
+
+            $(document).on('click', '.remove-martyr-item', function () {
+                $(this).closest('.dynamic-item').remove();
+                reindexDynamicItems('martyrColleaguesContainer', 'MartyrColleagues');
+            });
+
+            $('#addDetainedColleagueBtn').click(function () {
+                var newIndex = $('#detainedColleaguesContainer .dynamic-item').length;
+                $.post(addDetainedColleagueUrl, { index: newIndex }, function (data) {
+                    $('#detainedColleaguesContainer').append(data);
+                    reindexDynamicItems('detainedColleaguesContainer', 'DetainedColleagues');
+                });
+            });
+
+            $(document).on('click', '.remove-detained-item', function () {
+                $(this).closest('.dynamic-item').remove();
+                reindexDynamicItems('detainedColleaguesContainer', 'DetainedColleagues');
+            });
+
+            $('#addInjuredColleagueBtn').click(function () {
+                var newIndex = $('#injuredColleaguesContainer .dynamic-item').length;
+                $.post(addInjuredColleagueUrl, { index: newIndex }, function (data) {
+                    $('#injuredColleaguesContainer').append(data);
+                    reindexDynamicItems('injuredColleaguesContainer', 'InjuredColleagues');
+                });
+            });
+
+            $(document).on('click', '.remove-injured-item', function () {
+                $(this).closest('.dynamic-item').remove();
+                reindexDynamicItems('injuredColleaguesContainer', 'InjuredColleagues');
+            });
+
+            // Initial re-indexing and setup
+            reindexDynamicItems('martyrColleaguesContainer', 'MartyrColleagues');
+            reindexDynamicItems('detainedColleaguesContainer', 'DetainedColleagues');
+            reindexDynamicItems('injuredColleaguesContainer', 'InjuredColleagues');
+        });
+    </script>
+}

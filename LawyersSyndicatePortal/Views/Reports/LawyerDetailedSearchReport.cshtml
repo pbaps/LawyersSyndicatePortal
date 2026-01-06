@@ -1,0 +1,333 @@
+﻿@model LawyersSyndicatePortal.ViewModels.LawyerDetailedReportViewModel
+@{
+    ViewBag.Title = "تقرير بحث تفصيلي للمحامين";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .filter-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .column-selection-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+
+    .report-table {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+        overflow-x: auto; /* لجعل الجدول قابلاً للتمرير أفقياً على الشاشات الصغيرة */
+    }
+
+    .table thead th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        text-align: right; /* محاذاة رؤوس الأعمدة لليمين */
+    }
+
+    .table tbody td {
+        text-align: right; /* محاذاة خلايا البيانات لليمين */
+    }
+
+    .form-check-label {
+        padding-right: 0.5rem; /* مسافة بين مربع الاختيار والنص */
+    }
+
+    .btn-group-custom {
+        display: flex;
+        justify-content: flex-end; /* محاذاة الأزرار لليسار في RTL */
+        gap: 10px; /* مسافة بين الأزرار */
+    }
+</style>
+
+<div class="container py-5">
+    <h2 class="text-center mb-5">@ViewBag.Title</h2>
+
+    <div class="filter-card">
+        <h4 class="mb-4">معايير البحث</h4>
+        @using (Html.BeginForm("LawyerDetailedSearchReport", "Reports", FormMethod.Get, new { @class = "row g-3", id = "detailedSearchForm" }))
+        {
+            <div class="col-md-4">
+                <label for="professionalStatus" class="form-label">الحالة المهنية:</label>
+                @Html.DropDownListFor(m => m.SelectedProfessionalStatus, Model.ProfessionalStatuses, "الكل", new { @class = "form-select", id = "professionalStatus" })
+            </div>
+            <div class="col-md-4">
+                <label for="gender" class="form-label">الجنس:</label>
+                @Html.DropDownListFor(m => m.SelectedGender, Model.Genders, "الكل", new { @class = "form-select", id = "gender" })
+            </div>
+            <div class="col-md-4">
+                <label for="currentGovernorate" class="form-label">المحافظة الحالية:</label>
+                @Html.DropDownListFor(m => m.SelectedCurrentGovernorate, Model.Governorates, "الكل", new { @class = "form-select", id = "currentGovernorate" })
+            </div>
+            <div class="col-md-4">
+                <label for="originalGovernorate" class="form-label">المحافظة الأصلية:</label>
+                @Html.DropDownListFor(m => m.SelectedOriginalGovernorate, Model.Governorates, "الكل", new { @class = "form-select", id = "originalGovernorate" })
+            </div>
+            <div class="col-md-4">
+                <label for="minChildAge" class="form-label">الحد الأدنى لعمر الطفل:</label>
+                @Html.TextBoxFor(m => m.MinChildAge, new { @class = "form-control", type = "number", id = "minChildAge" })
+            </div>
+            <div class="col-md-4">
+                <label for="maxChildAge" class="form-label">الحد الأقصى لعمر الطفل:</label>
+                @Html.TextBoxFor(m => m.MaxChildAge, new { @class = "form-control", type = "number", id = "maxChildAge" })
+            </div>
+            <div class="col-md-4">
+                <label for="officePropertyType" class="form-label">نوع ملكية المكتب:</label>
+                @Html.DropDownListFor(m => m.SelectedOfficePropertyType, Model.OfficePropertyTypes, "الكل", new { @class = "form-select", id = "officePropertyType" })
+            </div>
+            <div class="col-md-4">
+                <label for="officeDamageType" class="form-label">نوع ضرر المكتب:</label>
+                @Html.DropDownListFor(m => m.SelectedOfficeDamageType, Model.OfficeDamageTypes, "الكل", new { @class = "form-select", id = "officeDamageType" })
+            </div>
+
+            @* إضافة فلاتر جديدة هنا *@
+            <div class="col-md-4">
+                <label for="maritalStatus" class="form-label">الحالة الاجتماعية:</label>
+                @Html.DropDownListFor(m => m.SelectedMaritalStatus, Model.MaritalStatuses, "الكل", new { @class = "form-select", id = "maritalStatus" })
+            </div>
+            <div class="col-md-4">
+                <label for="wasDetained" class="form-label">هل تعرض للاعتقال؟</label>
+                @Html.DropDownListFor(m => m.SelectedWasDetained, Model.YesNoOptions, "الكل", new { @class = "form-select", id = "wasDetained" })
+            </div>
+            <div class="col-md-4">
+                <label for="detentionType" class="form-label">نوع الاعتقال:</label>
+                @Html.DropDownListFor(m => m.SelectedDetentionType, Model.DetentionTypes, "الكل", new { @class = "form-select", id = "detentionType" })
+            </div>
+            <div class="col-md-4">
+                <label for="detentionLocation" class="form-label">مكان الاعتقال:</label>
+                @Html.DropDownListFor(m => m.SelectedDetentionLocation, Model.DetentionLocations, "الكل", new { @class = "form-select", id = "detentionLocation" })
+            </div>
+            <div class="col-md-4">
+                <label for="hasHomeDamage" class="form-label">هل تعرض المنزل لأضرار؟</label>
+                @Html.DropDownListFor(m => m.SelectedHasHomeDamage, Model.YesNoOptions, "الكل", new { @class = "form-select", id = "hasHomeDamage" })
+            </div>
+            <div class="col-md-4">
+                <label for="homeDamageType" class="form-label">نوع ضرر المنزل:</label>
+                @Html.DropDownListFor(m => m.SelectedHomeDamageType, Model.HomeDamageTypes, "الكل", new { @class = "form-select", id = "homeDamageType" })
+            </div>
+            <div class="col-md-4">
+                <label for="hasFamilyMembersInjured" class="form-label">هل تعرض أحد أفراد العائلة للإصابة؟</label>
+                @Html.DropDownListFor(m => m.SelectedHasFamilyMembersInjured, Model.YesNoOptions, "الكل", new { @class = "form-select", id = "hasFamilyMembersInjured" })
+            </div>
+            <div class="col-md-4">
+                <label for="lawyerCondition" class="form-label">حالة المحامي الصحية:</label>
+                @Html.DropDownListFor(m => m.SelectedLawyerCondition, Model.LawyerConditions, "الكل", new { @class = "form-select", id = "lawyerCondition" })
+            </div>
+            <div class="col-md-4">
+                <label for="practicesShariaLaw" class="form-label">هل يمارس المحاماة الشرعية؟</label>
+                @Html.DropDownListFor(m => m.SelectedPracticesShariaLaw, Model.YesNoOptions, "الكل", new { @class = "form-select", id = "practicesShariaLaw" })
+            </div>
+            <div class="col-md-4">
+                <label for="aidType" class="form-label">نوع المساعدة المستلمة:</label>
+                @Html.DropDownListFor(m => m.SelectedAidType, Model.AidTypes, "الكل", new { @class = "form-select", id = "aidType" })
+            </div>
+
+
+            <div class="col-12 mt-4">
+                <button type="submit" class="btn btn-primary">بحث</button>
+            </div>
+
+            <div class="col-12 mt-5 column-selection-card">
+                <h4 class="mb-3">اختيار الأعمدة للعرض والتصدير:</h4>
+                <div class="row">
+                    @for (int i = 0; i < Model.AvailableColumns.Count; i++)
+                    {
+                        <div class="col-md-3 col-sm-6">
+                            <div class="form-check form-check-inline">
+                                @* يجب أن يكون الاسم "selectedColumns" ليرتبط بقائمة في الـ Controller *@
+                                @Html.CheckBoxFor(m => m.AvailableColumns[i].IsSelected, new { @class = "form-check-input", id = "col_" + Model.AvailableColumns[i].Name, name = "selectedColumns", value = Model.AvailableColumns[i].Name })
+                                <label class="form-check-label" for="col_@Model.AvailableColumns[i].Name">@Model.AvailableColumns[i].DisplayName</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="col-12 mt-4 btn-group-custom">
+                    <button type="submit" class="btn btn-success">تحديث الأعمدة وعرض التقرير</button>
+                    <button type="submit" formaction="@Url.Action("ExportLawyerDetailedSearchReportToExcel", "Reports")" class="btn btn-info">تصدير إلى Excel</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (Model.Lawyers != null && Model.Lawyers.Any())
+    {
+        <div class="report-table mt-5">
+            <h4 class="mb-4">نتائج البحث (@Model.Lawyers.Count محامٍ)</h4>
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        @foreach (var columnName in Model.SelectedColumnNames)
+                        {
+                            var columnOption = Model.AvailableColumns.FirstOrDefault(c => c.Name == columnName);
+                            if (columnOption != null)
+                            {
+                                <th>@columnOption.DisplayName</th>
+                            }
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var lawyer in Model.Lawyers)
+                    {
+                        <tr>
+                            @foreach (var columnName in Model.SelectedColumnNames)
+                            {
+                                <td>
+                                    @{
+                                        object value = null;
+                                        // الوصول إلى PersonalDetails
+                                        var personalDetail = lawyer.PersonalDetails.FirstOrDefault();
+                                        // الوصول إلى FamilyDetails
+                                        var familyDetail = lawyer.FamilyDetails.FirstOrDefault();
+                                        // الوصول إلى OfficeDetails
+                                        var officeDetail = lawyer.OfficeDetails.FirstOrDefault();
+                                        // الوصول إلى HomeDamages
+                                        var homeDamage = lawyer.HomeDamages.FirstOrDefault();
+                                        // الوصول إلى OfficeDamages (موجودة مباشرة على Lawyer)
+                                        var officeDamage = lawyer.OfficeDamages.FirstOrDefault();
+                                        // الوصول إلى DetentionDetails
+                                        var detentionDetail = lawyer.DetentionDetails.FirstOrDefault();
+                                        // الوصول إلى HealthStatuses
+                                        var healthStatus = lawyer.HealthStatuses.FirstOrDefault();
+                                        // الوصول إلى ColleagueInfos
+                                        var colleagueInfo = lawyer.ColleagueInfos.FirstOrDefault();
+                                        // الوصول إلى GeneralInfos (للوصول إلى ReceivedAids)
+                                        var generalInfo = lawyer.GeneralInfos.FirstOrDefault();
+
+
+                                        switch (columnName)
+                                        {
+                                            case "IdNumber": value = lawyer.IdNumber; break;
+                                            case "FullName": value = lawyer.FullName; break;
+                                            case "ProfessionalStatus": value = lawyer.ProfessionalStatus; break;
+                                            case "Gender": value = lawyer.Gender; break;
+                                            case "MembershipNumber": value = lawyer.MembershipNumber; break;
+                                            case "TrainingStartDate": value = lawyer.TrainingStartDate?.ToShortDateString(); break;
+                                            case "PracticeStartDate": value = lawyer.PracticeStartDate?.ToShortDateString(); break;
+                                            case "IsTrainee": value = (lawyer.IsTrainee) ? "نعم" : "لا"; break;
+                                            case "TrainerLawyerName": value = lawyer.TrainerLawyerName ?? "غير متوفر"; break;
+                                            case "IsActive": value = (lawyer.IsActive) ? "نعم" : "لا"; break;
+
+                                            // Personal Details
+                                            case "CurrentGovernorate": value = personalDetail?.CurrentGovernorate ?? "غير متوفر"; break;
+                                            case "OriginalGovernorate": value = personalDetail?.OriginalGovernorate ?? "غير متوفر"; break;
+                                            case "PhoneNumber": value = personalDetail?.MobileNumber ?? personalDetail?.LandlineNumber ?? "غير متوفر"; break;
+                                            case "Email": value = personalDetail?.EmailAddress ?? "غير متوفر"; break;
+                                            case "AccommodationType": value = personalDetail?.AccommodationType ?? "غير متوفر"; break;
+                                            case "FullAddress": value = personalDetail?.FullAddress ?? "غير متوفر"; break;
+                                            case "AltMobileNumber1": value = personalDetail?.AltMobileNumber1 ?? "غير متوفر"; break;
+                                            case "AltMobileNumber2": value = personalDetail?.AltMobileNumber2 ?? "غير متوفر"; break;
+                                            case "WhatsAppNumber": value = personalDetail?.WhatsAppNumber ?? "غير متوفر"; break;
+                                            case "LandlineNumber": value = personalDetail?.LandlineNumber ?? "غير متوفر"; break;
+
+                                            // Family Details
+                                            case "MaritalStatus": value = familyDetail?.MaritalStatus ?? "غير متوفر"; break;
+                                            case "NumberOfSpouses": value = familyDetail?.NumberOfSpouses?.ToString() ?? "غير متوفر"; break;
+                                            case "HasChildren": value = (familyDetail?.HasChildren == true) ? "نعم" : "لا"; break;
+                                            case "ChildrenCount": value = familyDetail?.Children?.Count.ToString() ?? "غير متوفر"; break;
+                                            case "SpouseName": value = familyDetail?.Spouses.FirstOrDefault()?.SpouseName ?? "غير متوفر"; break;
+                                            case "SpouseIdNumber": value = familyDetail?.Spouses.FirstOrDefault()?.SpouseIdNumber ?? "غير متوفر"; break;
+                                            case "SpouseMobileNumber": value = familyDetail?.Spouses.FirstOrDefault()?.SpouseMobileNumber ?? "غير متوفر"; break;
+
+                                            // Office Details
+                                            case "OfficeName": value = officeDetail?.OfficeName ?? "غير متوفر"; break;
+                                            case "OfficeAddress": value = officeDetail?.OfficeAddress ?? "غير متوفر"; break;
+                                            case "OfficePropertyType": value = officeDetail?.PropertyType ?? "غير متوفر"; break;
+                                            case "PropertyStatus": value = officeDetail?.PropertyStatus ?? "غير متوفر"; break;
+                                            case "HasPartners": value = (officeDetail?.HasPartners == true) ? "نعم" : "لا"; break;
+                                            case "NumberOfPartners": value = officeDetail?.NumberOfPartners?.ToString() ?? "غير متوفر"; break;
+                                            // الخصائص التالية تم إزالتها من ViewModel و Controller بناءً على ملف الأخطاء
+                                            // case "OfficePhoneNumber": value = officeDetail?.OfficePhoneNumber ?? "غير متوفر"; break;
+                                            // case "OfficeEmail": value = officeDetail?.OfficeEmail ?? "غير متوفر"; break;
+                                            // case "OfficeRegistrationNumber": value = officeDetail?.OfficeRegistrationNumber ?? "غير متوفر"; break;
+                                            // case "OfficeLeaseStartDate": value = (officeDetail?.OfficeLeaseStartDate as DateTime?)?.ToShortDateString() ?? "غير متوفر"; break;
+                                            // case "OfficeLeaseEndDate": value = (officeDetail?.OfficeLeaseEndDate as DateTime?)?.ToShortDateString() ?? "غير متوفر"; break;
+
+                                            // Home Damages
+                                            case "HasHomeDamage": value = (homeDamage?.HasHomeDamage == true) ? "نعم" : "لا"; break;
+                                            case "HomeDamageType": value = homeDamage?.DamageType ?? "غير متوفر"; break;
+                                            case "HomeDamageDetails": value = homeDamage?.DamageDetails ?? "غير متوفر"; break;
+
+                                            // Office Damages
+                                            case "OfficeDamageType": value = officeDamage?.DamageType ?? "غير متوفر"; break;
+                                            case "OfficeDamageDetails": value = officeDamage?.DamageDetails ?? "غير متوفر"; break;
+
+                                            // Detention Details
+                                            case "WasDetained": value = (detentionDetail?.WasDetained == true) ? "نعم" : "لا"; break;
+                                            case "DetentionDuration": value = detentionDetail?.DetentionDuration ?? "غير متوفر"; break;
+                                            case "DetentionStartDate": value = (detentionDetail?.DetentionStartDate as DateTime?)?.ToShortDateString() ?? "غير متوفر"; break;
+                                            case "IsStillDetained": value = (detentionDetail?.IsStillDetained == true) ? "نعم" : "لا"; break;
+                                            case "ReleaseDate": value = (detentionDetail?.ReleaseDate as DateTime?)?.ToShortDateString() ?? "غير متوفر"; break;
+                                            case "DetentionType": value = detentionDetail?.DetentionType ?? "غير متوفر"; break;
+                                            case "DetentionLocation": value = detentionDetail?.DetentionLocation ?? "غير متوفر"; break;
+
+                                            // Health Status
+                                            case "LawyerCondition": value = healthStatus?.LawyerCondition ?? "غير متوفر"; break;
+                                            case "LawyerInjuryDetails": value = healthStatus?.InjuryDetails ?? "غير متوفر"; break;
+                                            case "TreatmentNeeded": value = healthStatus?.TreatmentNeeded ?? "غير متوفر"; break;
+                                            case "LawyerDiagnosis": value = healthStatus?.LawyerDiagnosis ?? "غير متوفر"; break;
+                                            case "HasFamilyMembersInjured": value = (healthStatus?.HasFamilyMembersInjured == true) ? "نعم" : "لا"; break;
+                                            case "FamilyMembersInjuredCount": value = healthStatus?.FamilyMembersInjured?.ToString() ?? "غير متوفر"; break;
+                                            case "InjuredFamilyMemberName": value = healthStatus?.FamilyMemberInjuries.FirstOrDefault()?.InjuredFamilyMemberName ?? "غير متوفر"; break;
+                                            case "RelationshipToLawyer": value = healthStatus?.FamilyMemberInjuries.FirstOrDefault()?.RelationshipToLawyer ?? "غير متوفر"; break;
+                                            case "FamilyMemberInjuryDetails": value = healthStatus?.FamilyMemberInjuries.FirstOrDefault()?.InjuryDetails ?? "غير متوفر"; break;
+
+                                            // Colleague Info (Martyrs, Detained, Injured)
+                                            case "KnowsOfMartyrColleagues": value = (colleagueInfo?.KnowsOfMartyrColleagues == true) ? "نعم" : "لا"; break;
+                                            case "MartyrName": value = colleagueInfo?.MartyrColleagues.FirstOrDefault()?.MartyrName ?? "غير متوفر"; break;
+                                            case "MartyrContactNumber": value = colleagueInfo?.MartyrColleagues.FirstOrDefault()?.ContactNumber ?? "غير متوفر"; break;
+                                            case "KnowsOfDetainedColleagues": value = (colleagueInfo?.KnowsOfDetainedColleagues == true) ? "نعم" : "لا"; break;
+                                            case "DetainedName": value = colleagueInfo?.DetainedColleagues.FirstOrDefault()?.DetainedName ?? "غير متوفر"; break;
+                                            case "DetainedContactNumber": value = colleagueInfo?.DetainedColleagues.FirstOrDefault()?.ContactNumber ?? "غير متوفر"; break;
+                                            case "KnowsOfInjuredColleagues": value = (colleagueInfo?.KnowsOfInjuredColleagues == true) ? "نعم" : "لا"; break;
+                                            case "InjuredColleagueName": value = colleagueInfo?.InjuredColleagues.FirstOrDefault()?.InjuredName ?? "غير متوفر"; break;
+                                            case "InjuredColleagueContactNumber": value = colleagueInfo?.InjuredColleagues.FirstOrDefault()?.ContactNumber ?? "غير متوفر"; break;
+
+                                            // General Info (Sharia Law & Received Aid)
+                                            case "PracticesShariaLaw": value = (generalInfo?.PracticesShariaLaw == true) ? "نعم" : "لا"; break;
+                                            case "ShariaLawPracticeStartDate": value = (generalInfo?.ShariaLawPracticeStartDate as DateTime?)?.ToShortDateString() ?? "غير متوفر"; break;
+                                            case "ReceivedAidFromSyndicate": value = (generalInfo?.ReceivedAidFromSyndicate == true) ? "نعم" : "لا"; break;
+                                            case "AidType": value = generalInfo?.ReceivedAids.FirstOrDefault()?.AidType ?? "غير متوفر"; break;
+                                            case "ReceivedAidDate": value = (generalInfo?.ReceivedAids.FirstOrDefault()?.ReceivedDate as DateTime?)?.ToShortDateString() ?? "غير متوفر"; break;
+
+                                            // Lawyer Attachments
+                                            case "LawyerAttachmentsCount": value = lawyer.LawyerAttachments?.Count.ToString() ?? "0"; break;
+
+                                            default: value = "N/A"; break; // في حال لم يتم العثور على الخاصية
+                                        }
+                                    }
+                                    @value
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center mt-5" role="alert">
+            لا توجد نتائج مطابقة لمعايير البحث المحددة.
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // لا حاجة لـ JavaScript إضافي لـ submit() لأننا نستخدم formmethod="get" و formaction
+            // ولكن يمكن إضافة أي منطق تحقق من الصحة هنا إذا لزم الأمر
+        });
+    </script>
+}

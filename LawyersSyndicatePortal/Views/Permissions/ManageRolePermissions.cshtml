@@ -1,0 +1,207 @@
+﻿@model LawyersSyndicatePortal.Models.ViewModels.RolePermissionsViewModel
+
+@{
+    ViewBag.Title = "إدارة صلاحيات الدور";
+}
+
+<style>
+    /* Styling for a standard checkbox to look like a toggle switch */
+    .checkbox-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+    }
+
+        .checkbox-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .checkbox-switch .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+            .checkbox-switch .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+                border-radius: 50%;
+            }
+
+        .checkbox-switch input:checked + .slider {
+            background-color: #28a745;
+        }
+
+            .checkbox-switch input:checked + .slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+            }
+
+    .panel-heading .pull-left {
+        margin-top: -5px; /* Adjust button position */
+    }
+
+    .list-group-item.permission-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .permission-item-text {
+        flex-grow: 1; /* Allow text to take up available space */
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">إدارة صلاحيات الدور: @Model.RoleName</h1>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show text-right" dir="rtl" role="alert">
+        @Html.Raw(TempData["SuccessMessage"])
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show text-right" dir="rtl" role="alert">
+        @Html.Raw(TempData["ErrorMessage"])
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@using (Html.BeginForm("UpdateRolePermissions", "Permissions", FormMethod.Post, new { id = "permissionsForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.RoleId)
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="panel-title">قائمة الصلاحيات المتاحة</h3>
+                </div>
+                <div class="col-md-6 text-left">
+                    <button type="button" class="btn btn-sm btn-info" id="check-all-global">
+                        <i class="fa fa-check-square-o"></i> تحديد/إلغاء تحديد الكل
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                @foreach (var permissionGroup in Model.Permissions.GroupBy(p => p.ControllerName).OrderBy(g => g.Key))
+                {
+                    <div class="col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">@permissionGroup.Key</h3>
+                                <button type="button" class="btn btn-sm btn-default pull-left check-all-controller" data-controller-name="@permissionGroup.Key">
+                                    تحديد الكل
+                                </button>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="list-group">
+                                    @foreach (var permission in permissionGroup.OrderBy(p => p.Name))
+                                    {
+                                        <li class="list-group-item permission-item">
+                                            <div class="permission-item-text">
+                                                <h5>@permission.Name</h5>
+                                                <small class="text-muted">@permission.Description</small>
+                                            </div>
+                                            <div class="checkbox-switch">
+                                                <input type="checkbox" name="selectedPermissions" value="@permission.Id" @(permission.IsAssigned ? "checked" : "") class="permission-checkbox" data-controller-name="@permissionGroup.Key" />
+                                                <span class="slider"></span>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fa fa-save"></i> حفظ التغييرات
+                </button>
+                @Html.ActionLink("العودة إلى قائمة الأدوار", "Index", null, new { @class = "btn btn-default btn-lg" })
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // New logic to toggle checkbox when the list item is clicked
+            $('.permission-item').on('click', function (e) {
+                var checkbox = $(this).find('.permission-checkbox');
+                checkbox.prop('checked', !checkbox.prop('checked')).trigger('change');
+            });
+
+            // "تحديد/إلغاء تحديد الكل" في كل الصفحة
+            $('#check-all-global').on('click', function () {
+                var checkedStatus = !$('.permission-checkbox').prop('checked');
+                $('.permission-checkbox').prop('checked', checkedStatus).trigger('change');
+                if (checkedStatus) {
+                    $(this).html('<i class="fa fa-check-square-o"></i> إلغاء تحديد الكل');
+                } else {
+                    $(this).html('<i class="fa fa-check-square-o"></i> تحديد الكل');
+                }
+            });
+
+            // "تحديد الكل" لكل متحكم
+            $('.check-all-controller').on('click', function () {
+                var controllerName = $(this).data('controller-name');
+                var controllerCheckboxes = $('.permission-checkbox[data-controller-name="' + controllerName + '"]');
+                var allChecked = controllerCheckboxes.length === controllerCheckboxes.filter(':checked').length;
+                controllerCheckboxes.prop('checked', !allChecked).trigger('change');
+                if (!allChecked) {
+                    $(this).text("إلغاء تحديد الكل");
+                } else {
+                    $(this).text("تحديد الكل");
+                }
+            });
+
+            // تحديث حالة زر المتحكم عند تغيير مربعات الاختيار
+            $('.permission-checkbox').on('change', function () {
+                var controllerName = $(this).data('controller-name');
+                var controllerCheckboxes = $('.permission-checkbox[data-controller-name="' + controllerName + '"]');
+                var allChecked = controllerCheckboxes.length === controllerCheckboxes.filter(':checked').length;
+                var controllerButton = $('.check-all-controller[data-controller-name="' + controllerName + '"]');
+                if (allChecked) {
+                    controllerButton.text("إلغاء تحديد الكل");
+                } else {
+                    controllerButton.text("تحديد الكل");
+                }
+            });
+        });
+    </script>
+}

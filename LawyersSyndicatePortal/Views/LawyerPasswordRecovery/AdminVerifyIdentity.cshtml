@@ -1,0 +1,44 @@
+﻿@model LawyersSyndicatePortal.Models.VerifyIdentityViewModel
+
+@{
+    ViewBag.Title = "التحقق من الهوية";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg rounded-3">
+                <div class="card-header bg-primary text-white text-center py-3 rounded-top-3">
+                    <h2 class="card-title mb-0">التحقق من الهوية</h2>
+                </div>
+                <div class="card-body p-4">
+                    @using (Html.BeginForm("AdminVerifyIdentity", "LawyerPasswordRecovery", FormMethod.Post, new { role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <p class="text-muted text-center mb-4">
+                            يرجى إدخال رقم الهوية وتاريخ المزاولة أو التدريب للتحقق من هويتك.
+                        </p>
+                        @Html.ValidationSummary("", new { @class = "text-danger text-center" })
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.IdNumber, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.IdNumber, new { @class = "form-control", placeholder = "أدخل رقم الهوية" })
+                            @Html.ValidationMessageFor(m => m.IdNumber, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.VerificationDate, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.VerificationDate, new { @class = "form-control", type = "date" })
+                            @Html.ValidationMessageFor(m => m.VerificationDate, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">تحقق</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

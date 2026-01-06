@@ -1,0 +1,81 @@
+﻿@model LawyersSyndicatePortal.Models.Lawyer
+
+@{
+    ViewBag.Title = "إدارة الصلاحيات";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark"><i class="fas fa-shield-alt me-3 text-primary"></i> إدارة صلاحيات المستخدم</h2>
+        <a href="@Url.Action("Details", "Lawyers", new { id = Model.IdNumber })" class="btn btn-secondary px-4 py-2">
+            <i class="fas fa-arrow-right me-2"></i> العودة لصفحة المحامي
+        </a>
+    </div>
+    <p class="text-muted mb-4">
+        إدارة الأدوار والصلاحيات للمستخدم المرتبط بالمحامي **@Model.FullName**.
+    </p>
+    <hr class="mb-5" />
+
+    @* عرض رسائل النجاح والخطأ من TempData *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-right" role="alert" dir="rtl">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-right" role="alert" dir="rtl">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm rounded-3 p-4">
+        <div class="card-body">
+            @using (Html.BeginForm("UpdatePermissions", "Lawyers", FormMethod.Post, new { @class = "text-right", dir = "rtl" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="idNumber" value="@Model.IdNumber" />
+                <input type="hidden" name="userId" value="@ViewBag.UserId" />
+
+                <h5 class="fw-bold mb-3"><i class="fas fa-user-tag me-2 text-info"></i> الأدوار المتاحة</h5>
+
+                <div class="mb-4">
+                    @{
+                        var roles = ViewBag.Roles as List<SelectListItem>;
+                    }
+
+                    @if (roles != null && roles.Any())
+                    {
+                        foreach (var role in roles)
+                        {
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" role="switch" name="selectedRoles" value="@role.Value" id="role_@(role.Value)"
+                                       @if (role.Selected) { <text> checked</text> }>
+                                <label class="form-check-label" for="role_@(role.Value)">
+                                    @role.Text
+                                </label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">لا توجد أدوار متاحة.</div>
+                    }
+                </div>
+
+                <div class="d-flex justify-content-start gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill">
+                        <i class="fas fa-save me-2"></i> حفظ الصلاحيات
+                    </button>
+                    <a href="@Url.Action("Details", new { id = Model.IdNumber })" class="btn btn-secondary px-4 py-2 rounded-pill">
+                        <i class="fas fa-times me-2"></i> إلغاء
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

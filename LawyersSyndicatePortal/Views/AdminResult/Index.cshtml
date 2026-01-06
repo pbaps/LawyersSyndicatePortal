@@ -1,0 +1,70 @@
+﻿@* Path: LawyersSyndicatePortal\Views\AdminResult\Index.cshtml *@
+@model LawyersSyndicatePortal.Controllers.AdminResultViewModel
+
+@{
+    ViewBag.Title = "النتائج";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";  
+}
+
+<h2 class="mt-4 text-center">نتائج الاختبارات</h2>
+<hr />
+
+<div class="container mt-5">
+    <div class="row">
+        @* الاختبارات التي تحتاج إلى تصحيح يدوي *@
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="card-title mb-0">الاختبارات التي تتطلب تصحيحاً يدوياً</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.ManualGradingExams.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var exam in Model.ManualGradingExams)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>@exam.Title</span>
+                                    @* رابط التصحيح اليدوي مع تمرير معرف الاختبار بشكل صحيح *@
+                                    @Html.ActionLink("تصحيح يدوي", "AttendeesNeedingGrading", new { examId = exam.Id }, new { @class = "btn btn-primary btn-sm" })
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-center text-success">لا توجد اختبارات تحتاج إلى تصحيح يدوي حالياً.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* الاختبارات التي اكتمل تصحيحها *@
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">الاختبارات التي تم تصحيحها</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.CompletedGradingExams.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var exam in Model.CompletedGradingExams)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>@exam.Title</span>
+                                    @* رابط تصدير النتائج إلى إكسل *@
+                                    @Html.ActionLink("تصدير إلى إكسل", "ExportToExcel", new { examId = exam.Id }, new { @class = "btn btn-success btn-sm" })
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-center text-secondary">لا توجد اختبارات مكتملة حالياً.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

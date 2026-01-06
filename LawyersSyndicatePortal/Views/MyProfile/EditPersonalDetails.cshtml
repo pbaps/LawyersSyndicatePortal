@@ -1,0 +1,219 @@
+﻿@model LawyersSyndicatePortal.ViewModels.PersonalDetailViewModel
+
+@{
+    ViewBag.Title = "تعديل البيانات الشخصية";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="dashboard-wrapper">
+    <h2 class="page-title">
+        تعديل البيانات الشخصية
+    </h2>
+
+    @* Success and Error Messages Section *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-card-glow alert-success-glow mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert-card-glow alert-danger-glow mb-4" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* Info Message Section *@
+    @if (TempData["InfoMessage"] != null)
+    {
+        <div class="alert-card-glow alert-info-glow mb-4" role="alert">
+            <i class="fas fa-info-circle me-2"></i>
+            @TempData["InfoMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        @using (Html.BeginForm("EditPersonalDetails", "MyProfile", FormMethod.Post, new { @class = "row g-4" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger col-12" })
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="col-md-6">
+                <div class="card-lux h-100">
+                    <div class="card-header-lux">
+                        <h5 class="card-title-lux mb-0"><i class="fas fa-info-circle me-2"></i>معلومات الاتصال الأساسية</h5>
+                    </div>
+                    <div class="card-body-lux">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="EmailAddress" class="form-label control-label">@Html.DisplayNameFor(model => model.EmailAddress)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-12">
+                                <label for="MobileNumber" class="form-label control-label">@Html.DisplayNameFor(model => model.MobileNumber)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-mobile-alt"></i></span>
+                                    @Html.EditorFor(model => model.MobileNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.MobileNumber, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-12">
+                                <label for="WhatsAppNumber" class="form-label control-label">@Html.DisplayNameFor(model => model.WhatsAppNumber)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fab fa-whatsapp"></i></span>
+                                    @Html.EditorFor(model => model.WhatsAppNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.WhatsAppNumber, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-12">
+                                <label for="LandlineNumber" class="form-label control-label">@Html.DisplayNameFor(model => model.LandlineNumber)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    @Html.EditorFor(model => model.LandlineNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.LandlineNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card-lux h-100">
+                    <div class="card-header-lux">
+                        <h5 class="card-title-lux mb-0"><i class="fas fa-map-marker-alt me-2"></i>تفاصيل العنوان</h5>
+                    </div>
+                    <div class="card-body-lux">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="Gender" class="form-label control-label">@Html.DisplayNameFor(model => model.Gender)</label>
+                                @Html.DropDownListFor(model => model.Gender, Model.Genders, "الرجاء الاختيار", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-12">
+                                <label for="OriginalGovernorate" class="form-label control-label">@Html.DisplayNameFor(model => model.OriginalGovernorate)</label>
+                                @Html.DropDownListFor(model => model.OriginalGovernorate, Model.Governorates, "الرجاء الاختيار", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.OriginalGovernorate, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-12">
+                                <label for="CurrentGovernorate" class="form-label control-label">@Html.DisplayNameFor(model => model.CurrentGovernorate)</label>
+                                @Html.DropDownListFor(model => model.CurrentGovernorate, Model.Governorates, "الرجاء الاختيار", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.CurrentGovernorate, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-12">
+                                <label for="AccommodationType" class="form-label control-label">@Html.DisplayNameFor(model => model.AccommodationType)</label>
+                                @Html.DropDownListFor(model => model.AccommodationType, Model.HousingTypes, "الرجاء الاختيار", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.AccommodationType, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-12">
+                                <label for="FullAddress" class="form-label control-label">@Html.DisplayNameFor(model => model.FullAddress)</label>
+                                @Html.TextAreaFor(model => model.FullAddress, new { @class = "form-control", rows = 4 })
+                                @Html.ValidationMessageFor(model => model.FullAddress, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card-lux h-100">
+                    <div class="card-header-lux">
+                        <h5 class="card-title-lux mb-0"><i class="fas fa-university me-2"></i>البيانات المصرفية</h5>
+                    </div>
+                    <div class="card-body-lux">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="BankName" class="form-label control-label">@Html.DisplayNameFor(model => model.BankName)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-bank"></i></span>
+                                    @Html.DropDownListFor(model => model.BankName, Model.BankList, "الرجاء الاختيار", new { @class = "form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-12">
+                                <label for="BankBranch" class="form-label control-label">@Html.DisplayNameFor(model => model.BankBranch)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-code-branch"></i></span>
+                                    @Html.EditorFor(model => model.BankBranch, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.BankBranch, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-12">
+                                <label for="BankAccountNumber" class="form-label control-label">@Html.DisplayNameFor(model => model.BankAccountNumber)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                                    @Html.EditorFor(model => model.BankAccountNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.BankAccountNumber, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-12">
+                                <label for="IBAN" class="form-label control-label">@Html.DisplayNameFor(model => model.IBAN)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-barcode"></i></span>
+                                    @Html.EditorFor(model => model.IBAN, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.IBAN, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card-lux h-100">
+                    <div class="card-header-lux">
+                        <h5 class="card-title-lux mb-0"><i class="fas fa-wallet me-2"></i>تفاصيل المحفظة</h5>
+                    </div>
+                    <div class="card-body-lux">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="WalletType" class="form-label control-label">@Html.DisplayNameFor(model => model.WalletType)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-money-check"></i></span>
+                                    @Html.EditorFor(model => model.WalletType, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.WalletType, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-12">
+                                <label for="WalletAccountNumber" class="form-label control-label">@Html.DisplayNameFor(model => model.WalletAccountNumber)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-wallet"></i></span>
+                                    @Html.EditorFor(model => model.WalletAccountNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.WalletAccountNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 text-center mt-5">
+                <button type="submit" class="btn btn-primary btn-lg me-3"><i class="fas fa-save me-2"></i>حفظ</button>
+                @Html.ActionLink("العودة", "Index", "MyProfile", null, new { @class = "btn btn-outline-secondary btn-lg" })
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

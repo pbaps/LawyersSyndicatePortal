@@ -1,0 +1,138 @@
+﻿@* المسار: LawyersSyndicatePortal\Views\Reports\Index.cshtml --}}*@
+@using System.Web.Mvc.Html
+@using System.Globalization
+
+@{
+    ViewBag.Title = "التقارير والإحصائيات";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    /* أنماط مخصصة لصفحة التقارير */
+    .report-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        text-align: center;
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .report-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .report-card h5 {
+            margin-bottom: 15px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .report-card p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .report-card .btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+    .report-icon {
+        font-size: 3em;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="container py-5" dir="rtl">
+    <h2 class="text-right mb-4">@ViewBag.Title</h2>
+    <hr />
+
+    
+    <h3 class="text-right mb-4">الاستعلامات المتخصصة</h3>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="report-card">
+                <i class="fas fa-users report-icon text-info"></i>
+                <h5>تقرير مفصل عن البيانات العائلية</h5>
+                <p>إنشاء تقارير مفصلة وديناميكية عن البيانات العائلية للمحامين، مثل عدد الأبناء وحالتهم.</p>
+                @Html.ActionLink("اذهب إلى الاستعلام", "Index", "SpecializedReports", null, new { @class = "btn btn-info" })
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5" />
+
+    
+    <h3 class="text-right mb-4">التقارير والإحصائيات السريعة</h3>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="report-card">
+                <i class="fas fa-user-tie report-icon text-primary"></i>
+                <h5>المحامون حسب الحالة المهنية</h5>
+                <p>عرض إحصائيات توزيع المحامين حسب حالتهم المهنية (مزاول، متدرب، إلخ).</p>
+                @Html.ActionLink("عرض التقرير", "LawyerProfessionalStatusReport", "Reports", null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="report-card">
+                <i class="fas fa-venus-mars report-icon text-info"></i>
+                <h5>المحامون حسب الجنس</h5>
+                <p>عرض إحصائيات توزيع المحامين حسب الجنس (ذكر، أنثى).</p>
+                @Html.ActionLink("عرض التقرير", "LawyerGenderReport", "Reports", null, new { @class = "btn btn-info" })
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="report-card">
+                <i class="fas fa-map-marked-alt report-icon text-success"></i>
+                <h5>المحامون حسب المحافظة</h5>
+                <p>عرض إحصائيات توزيع المحامين حسب المحافظة الأصلية أو الحالية.</p>
+                @Html.ActionLink("حسب المحافظة الحالية", "LawyerGovernorateReport", "Reports", new { type = "Current" }, new { @class = "btn btn-success mb-2" })
+                @Html.ActionLink("حسب المحافظة الأصلية", "LawyerGovernorateReport", "Reports", new { type = "Original" }, new { @class = "btn btn-outline-success" })
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="report-card">
+                <i class="fas fa-child report-icon text-warning"></i>
+                <h5>الأطفال حسب الفئة العمرية</h5>
+                <p>عرض إحصائيات توزيع أطفال المحامين حسب الفئات العمرية.</p>
+                @Html.ActionLink("عرض التقرير", "LawyerChildrenAgeReport", "Reports", null, new { @class = "btn btn-warning" })
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="report-card">
+                <i class="fas fa-building report-icon text-danger"></i>
+                <h5>المكاتب حسب نوع الملكية</h5>
+                <p>عرض إحصائيات توزيع المكاتب حسب نوع الملكية (ملك، إيجار، إلخ).</p>
+                @Html.ActionLink("عرض التقرير", "LawyerOfficePropertyTypeReport", "Reports", null, new { @class = "btn btn-danger" })
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="report-card">
+                <i class="fas fa-house-damage report-icon text-secondary"></i>
+                <h5>المكاتب حسب أضرار المكتب</h5>
+                <p>عرض إحصائيات توزيع المكاتب حسب نوع الضرر الذي لحق بها.</p>
+                @Html.ActionLink("عرض التقرير", "LawyerOfficeDamageReport", "Reports", null, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            window.setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 5000);
+        });
+    </script>
+}

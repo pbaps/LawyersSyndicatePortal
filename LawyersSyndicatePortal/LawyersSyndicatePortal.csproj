@@ -1,0 +1,863 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2A6F0637-3189-43D9-957B-234A35805B8F}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LawyersSyndicatePortal</RootNamespace>
+    <AssemblyName>LawyersSyndicatePortal</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44391</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>3.8</TypeScriptToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
+      <HintPath>..\packages\BouncyCastle.Cryptography.2.4.0\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.105.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.105.0\lib\netstandard2.0\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1d5f7376574c51ec, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.Parser.2.0.0\lib\netstandard2.0\ClosedXML.Parser.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.3.1.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.1.1\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Enums.NET, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7ea1c1650d506225, processorArchitecture=MSIL">
+      <HintPath>..\packages\Enums.NET.5.0.0\lib\net461\Enums.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlusFree, Version=4.5.3.8, Culture=neutral, PublicKeyToken=85bfa0499e2db48a, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlusFree.4.5.3.8\lib\net40\EPPlusFree.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="ExtendedNumerics.BigDecimal, Version=2025.1001.2.129, Culture=neutral, PublicKeyToken=65f1315a45ad8949, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExtendedNumerics.BigDecimal.2025.1001.2.129\lib\net472\ExtendedNumerics.BigDecimal.dll</HintPath>
+    </Reference>
+    <Reference Include="FirebaseAdmin, Version=3.4.0.0, Culture=neutral, PublicKeyToken=97c8d00c348326ed, processorArchitecture=MSIL">
+      <HintPath>..\packages\FirebaseAdmin.3.4.0\lib\net462\FirebaseAdmin.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Api.Gax, Version=4.8.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Api.Gax.4.8.0\lib\net462\Google.Api.Gax.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Api.Gax.Rest, Version=4.8.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Api.Gax.Rest.4.8.0\lib\net462\Google.Api.Gax.Rest.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis, Version=1.68.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.68.0\lib\net462\Google.Apis.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Auth, Version=1.68.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.68.0\lib\net462\Google.Apis.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Apis.Core, Version=1.68.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.68.0\lib\net462\Google.Apis.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.4.2.13, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.4.2\lib\netstandard2.0\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cd8b63ad3d691a37, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.Signed.5.0.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.3\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.3\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.6.0.0\lib\net461\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.3.0.1\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="RBush, Version=4.0.0.0, Culture=neutral, PublicKeyToken=c77e27b81f4d0187, processorArchitecture=MSIL">
+      <HintPath>..\packages\RBush.Signed.4.0.0\lib\net47\RBush.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.Fonts.1.0.1\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="SixLabors.ImageSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
+      <HintPath>..\packages\SixLabors.ImageSharp.2.1.10\lib\net472\SixLabors.ImageSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.CodeDom, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.CodeDom.7.0.0\lib\net462\System.CodeDom.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.8.0.0\lib\net462\System.Collections.Immutable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.0.0\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Xml, Version=8.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Xml.8.0.2\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding.CodePages, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.5.0.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="ZString, Version=2.6.0.0, Culture=neutral, PublicKeyToken=df4c250b14d82627, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZString.2.6.0\lib\netstandard2.0\ZString.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.3\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.3\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.4.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.4.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.4.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.4.0.1\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\PermissionsSeeder.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AdminResultController.cs" />
+    <Compile Include="Controllers\AuditLogsController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ChildrenController.cs" />
+    <Compile Include="Controllers\ColleagueReportsController.cs" />
+    <Compile Include="Controllers\ContractsController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\ExamAttendeesController.cs" />
+    <Compile Include="Controllers\ExamQuestionsController.cs" />
+    <Compile Include="Controllers\ExamResultsController.cs" />
+    <Compile Include="Controllers\ExamsController.cs" />
+    <Compile Include="Controllers\ExamTakerController.cs" />
+    <Compile Include="Controllers\FamilyReportsController.cs" />
+    <Compile Include="Controllers\FinancialDataController.cs" />
+    <Compile Include="Controllers\GeneralInfoReportsController.cs" />
+    <Compile Include="Controllers\GradingController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LawyerAttachmentReportsController.cs" />
+    <Compile Include="Controllers\LawyerCVController.cs" />
+    <Compile Include="Controllers\LawyerPasswordRecoveryController.cs" />
+    <Compile Include="Controllers\LawyersController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Controllers\MyProfileController.cs" />
+    <Compile Include="Controllers\NewDetentionReportsController.cs" />
+    <Compile Include="Controllers\NewHealthReportsController.cs" />
+    <Compile Include="Controllers\NotificationsController.cs" />
+    <Compile Include="Controllers\OfficeAndDamageReportsController.cs" />
+    <Compile Include="Controllers\PermissionsController.cs" />
+    <Compile Include="Controllers\PublicContactController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
+    <Compile Include="Controllers\SpecializedReportsController.cs" />
+    <Compile Include="Controllers\SpousesController.cs" />
+    <Compile Include="Controllers\TakeExamController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Filters\AuditLogAttribute.cs" />
+    <Compile Include="Filters\PermissionAuthorizationFilter.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\ExcelHelper.cs" />
+    <Compile Include="Hubs\BroadcastHub.cs" />
+    <Compile Include="Migrations\202508211112249_InitialCreate.cs" />
+    <Compile Include="Migrations\202508211112249_InitialCreate.Designer.cs">
+      <DependentUpon>202508211112249_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202509031158552_AddLawyerIdToContract1.cs" />
+    <Compile Include="Migrations\202509031158552_AddLawyerIdToContract1.Designer.cs">
+      <DependentUpon>202509031158552_AddLawyerIdToContract1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202509031250368_AddLawyerIdToContract12.cs" />
+    <Compile Include="Migrations\202509031250368_AddLawyerIdToContract12.Designer.cs">
+      <DependentUpon>202509031250368_AddLawyerIdToContract12.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202509110627454_FinalMigration.cs" />
+    <Compile Include="Migrations\202509110627454_FinalMigration.Designer.cs">
+      <DependentUpon>202509110627454_FinalMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202509110636027_CorrectedFinalMigration.cs" />
+    <Compile Include="Migrations\202509110636027_CorrectedFinalMigration.Designer.cs">
+      <DependentUpon>202509110636027_CorrectedFinalMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202509110819092_AddPermissionsTables.cs" />
+    <Compile Include="Migrations\202509110819092_AddPermissionsTables.Designer.cs">
+      <DependentUpon>202509110819092_AddPermissionsTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Answer.cs" />
+    <Compile Include="Models\AuditLog.cs" />
+    <Compile Include="Models\Broadcast.cs" />
+    <Compile Include="Models\Child.cs" />
+    <Compile Include="Models\ColleagueInfo.cs" />
+    <Compile Include="Models\ContactMessage.cs" />
+    <Compile Include="Models\DetainedColleague.cs" />
+    <Compile Include="Models\DetentionDetail.cs" />
+    <Compile Include="Models\DeviceToken.cs" />
+    <Compile Include="Models\Exam.cs" />
+    <Compile Include="Models\ExamAttendee.cs" />
+    <Compile Include="Models\ExamResult.cs" />
+    <Compile Include="Models\FamilyDetail.cs" />
+    <Compile Include="Models\FamilyMemberInjury.cs" />
+    <Compile Include="Models\GeneralInfo.cs" />
+    <Compile Include="Models\HealthStatus.cs" />
+    <Compile Include="Models\HomeDamage.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\InjuredColleague.cs" />
+    <Compile Include="Models\Lawyer.cs" />
+    <Compile Include="Models\LawyerAttachment.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MartyrColleague.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\OfficeDamage.cs" />
+    <Compile Include="Models\OfficeDetail.cs" />
+    <Compile Include="Models\Partner.cs" />
+    <Compile Include="Models\PbaContract.cs" />
+    <Compile Include="Models\PermissionModels.cs" />
+    <Compile Include="Models\PersonalDetail.cs" />
+    <Compile Include="Models\Question.cs" />
+    <Compile Include="Models\ReceivedAid.cs" />
+    <Compile Include="Models\RoleViewModels.cs" />
+    <Compile Include="Models\Spouse.cs" />
+    <Compile Include="Models\UserBroadcastReadStatus.cs" />
+    <Compile Include="Models\UserCreateViewModel.cs" />
+    <Compile Include="Models\UserDetailsViewModel.cs" />
+    <Compile Include="Models\UserViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Services\FirebaseNotificationService.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="Utility\AppConstants.cs" />
+    <Compile Include="Utility\PermissionsHelper.cs" />
+    <Compile Include="ViewModels\AdminMessageListViewModel.cs" />
+    <Compile Include="ViewModels\AdminResultViewModel.cs" />
+    <Compile Include="ViewModels\BroadcastListViewModel.cs" />
+    <Compile Include="ViewModels\ChildAgeGroupCount.cs" />
+    <Compile Include="ViewModels\ChildReportViewModel.cs" />
+    <Compile Include="ViewModels\ChildReportViewModel2.cs" />
+    <Compile Include="ViewModels\ChildViewModel.cs" />
+    <Compile Include="ViewModels\ColleagueInfoViewModel.cs" />
+    <Compile Include="ViewModels\ColleagueReportViewModel.cs" />
+    <Compile Include="ViewModels\ComposeBroadcastViewModel.cs" />
+    <Compile Include="ViewModels\ComprehensiveLawyerReportViewModel.cs" />
+    <Compile Include="ViewModels\DetainedColleagueViewModel.cs" />
+    <Compile Include="ViewModels\DetentionDetailViewModel.cs" />
+    <Compile Include="ViewModels\ExamAttendeeExportModel.cs" />
+    <Compile Include="ViewModels\ExamAttendeeImportModel.cs" />
+    <Compile Include="ViewModels\ExamAttendeesExportViewModel.cs" />
+    <Compile Include="ViewModels\ExamDetailsViewModel.cs" />
+    <Compile Include="ViewModels\ExamListViewModel.cs" />
+    <Compile Include="ViewModels\ExamQuestionsExportViewModel.cs" />
+    <Compile Include="ViewModels\ExamResultsExportViewModel.cs" />
+    <Compile Include="ViewModels\ExamResultViewModel.cs" />
+    <Compile Include="ViewModels\ExamViewModel.cs" />
+    <Compile Include="ViewModels\FamilyDetailViewModel.cs" />
+    <Compile Include="ViewModels\FamilyMemberInjuryViewModel.cs" />
+    <Compile Include="ViewModels\FamilyReportViewModel.cs" />
+    <Compile Include="ViewModels\FinancialDataReportViewModel.cs" />
+    <Compile Include="ViewModels\GenderCount.cs" />
+    <Compile Include="ViewModels\GeneralInfoReportViewModel.cs" />
+    <Compile Include="ViewModels\GeneralInfoViewModel.cs" />
+    <Compile Include="ViewModels\GovernorateCount.cs" />
+    <Compile Include="ViewModels\HealthStatusViewModel.cs" />
+    <Compile Include="ViewModels\HomeDamageViewModel.cs" />
+    <Compile Include="ViewModels\InjuredColleagueViewModel.cs" />
+    <Compile Include="ViewModels\LawyerAttachmentReportViewModel.cs" />
+    <Compile Include="ViewModels\LawyerAttachmentsListViewModel.cs" />
+    <Compile Include="ViewModels\LawyerAttachmentViewModel.cs" />
+    <Compile Include="ViewModels\LawyerChildrenAgeReportViewModel.cs" />
+    <Compile Include="ViewModels\LawyerDetailedReportViewModel.cs" />
+    <Compile Include="ViewModels\LawyerDetailsViewModel.cs" />
+    <Compile Include="ViewModels\LawyerGenderReportViewModel.cs" />
+    <Compile Include="ViewModels\LawyerGovernorateReportViewModel.cs" />
+    <Compile Include="ViewModels\LawyerOfficeDamageReportViewModel.cs" />
+    <Compile Include="ViewModels\LawyerOfficePropertyTypeReportViewModel.cs" />
+    <Compile Include="ViewModels\LawyerProfessionalStatusReportViewModel.cs" />
+    <Compile Include="ViewModels\LawyerReportViewModel.cs" />
+    <Compile Include="ViewModels\LawyerResetPasswordViewModel.cs" />
+    <Compile Include="ViewModels\LawyerVerifyViewModel.cs" />
+    <Compile Include="ViewModels\MartyrColleagueViewModel.cs" />
+    <Compile Include="ViewModels\MessageListViewModel.cs" />
+    <Compile Include="ViewModels\MyProfileViewModel.cs" />
+    <Compile Include="ViewModels\NewDetentionReportViewModel.cs" />
+    <Compile Include="ViewModels\NewHealthReportViewModel.cs" />
+    <Compile Include="ViewModels\NewLawyerReportResultViewModel.cs" />
+    <Compile Include="ViewModels\NewLawyerReportViewModel.cs" />
+    <Compile Include="ViewModels\OfficeAndDamageReportViewModel.cs" />
+    <Compile Include="ViewModels\OfficeDamageCount.cs" />
+    <Compile Include="ViewModels\OfficeDamageViewModel.cs" />
+    <Compile Include="ViewModels\OfficeDetailViewModel.cs" />
+    <Compile Include="ViewModels\OfficePropertyTypeCount.cs" />
+    <Compile Include="ViewModels\PartnerViewModel.cs" />
+    <Compile Include="ViewModels\PermissionViewModels.cs" />
+    <Compile Include="ViewModels\PersonalDetailViewModel.cs" />
+    <Compile Include="ViewModels\PrivateMessageListViewModel.cs" />
+    <Compile Include="ViewModels\ProfessionalStatusCount.cs" />
+    <Compile Include="ViewModels\ReceivedAidViewModel.cs" />
+    <Compile Include="ViewModels\ReplyMessageViewModel.cs" />
+    <Compile Include="ViewModels\ResetPasswordEmailViewModel.cs" />
+    <Compile Include="ViewModels\SendMessageViewModel.cs" />
+    <Compile Include="ViewModels\SpouseReportViewModel.cs" />
+    <Compile Include="ViewModels\SpouseViewModel.cs" />
+    <Compile Include="ViewModels\UpdateEmailViewModel.cs" />
+    <Compile Include="ViewModels\UserBroadcastViewModel.cs" />
+    <Compile Include="ViewModels\UserDashboardViewModel.cs" />
+    <Compile Include="ViewModels\UserProfileViewModel.cs" />
+    <Compile Include="ViewModels\VerifyIdentityViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\BlueandGold.css" />
+    <Content Include="Content\BlueandGoldSite.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\CommonDashboardStyles.css" />
+    <Content Include="Content\DarkDashboard.css" />
+    <Content Include="Content\DarkSite.css" />
+    <Content Include="Content\Exam.css" />
+    <Content Include="Content\Examstylenew.css" />
+    <Content Include="Content\GreenandEarth.css" />
+    <Content Include="Content\GreenDashboard.css" />
+    <Content Include="Content\GreenSite.css" />
+    <Content Include="Content\Images\logo.png" />
+    <Content Include="Content\LightDashboard.css" />
+    <Content Include="Content\LightSite.css" />
+    <Content Include="Content\mdb.min.css" />
+    <Content Include="Content\mdb.rtl.min.css" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\PurpleandPink.css" />
+    <Content Include="Content\PurpleandPinkStyle.css" />
+    <Content Include="Content\RedDashboard.css" />
+    <Content Include="Content\RedSite.css" />
+    <Content Include="Content\ResultsStyles.css" />
+    <Content Include="Content\SiteStyles.css" />
+    <Content Include="Content\SiteStylesxam.css" />
+    <Content Include="Content\SiteThemes.css" />
+    <Content Include="Content\Style.css" />
+    <Content Include="Content\UserCustom.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="firebase-messaging-sw.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="App_Data\firebase-adminsdk.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile10.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile11.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile12.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile13.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile14.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile15.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile16.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile17.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile18.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile19.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile20.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile21.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile3.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile4.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile5.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile6.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile7.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile8.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile9.pubxml" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Scripts\jquery-3.7.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.7.1.js" />
+    <Content Include="Scripts\jquery-3.7.1.min.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.7.1.min.map" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.3.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.3.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\mdb.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\popper.min.js" />
+    <Content Include="Views\Error\index-old.html" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Users\Create.cshtml" />
+    <Content Include="Views\Users\Edit.cshtml" />
+    <Content Include="Views\Users\Details.cshtml" />
+    <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Lawyers\Index.cshtml" />
+    <Content Include="Views\Lawyers\Create.cshtml" />
+    <Content Include="Views\Lawyers\Edit.cshtml" />
+    <Content Include="Views\Lawyers\Delete.cshtml" />
+    <Content Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <Content Include="Views\Lawyers\Details.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
+    <Content Include="Views\Roles\Create.cshtml" />
+    <Content Include="Views\Roles\Edit.cshtml" />
+    <Content Include="Views\Roles\Delete.cshtml" />
+    <Content Include="Views\Roles\ManageUserRoles.cshtml" />
+    <Content Include="Views\Home\UserDashboard.cshtml" />
+    <Content Include="Views\Home\UserProfile.cshtml" />
+    <Content Include="Views\Shared\_PublicLayout.cshtml" />
+    <Content Include="Views\Shared\_UserLayout.cshtml" />
+    <Content Include="Views\MyProfile\Index.cshtml" />
+    <Content Include="Views\MyProfile\EditPersonalDetails.cshtml" />
+    <Content Include="Views\MyProfile\EditHealthStatus.cshtml" />
+    <Content Include="Views\MyProfile\EditFamilyDetails.cshtml" />
+    <Content Include="Views\MyProfile\_SpouseFields.cshtml" />
+    <Content Include="Views\MyProfile\_ChildFields.cshtml" />
+    <Content Include="Views\MyProfile\_FamilyMemberInjuryFields.cshtml" />
+    <Content Include="Views\Users\Profile.cshtml" />
+    <Content Include="Views\Home\Profile.cshtml" />
+    <Content Include="Views\MyProfile\EditOfficeDetails.cshtml" />
+    <Content Include="Views\MyProfile\_PartnerFields.cshtml" />
+    <Content Include="Views\MyProfile\EditHomeDamage.cshtml" />
+    <Content Include="Views\MyProfile\EditOfficeDamage.cshtml" />
+    <Content Include="Views\MyProfile\EditDetentionDetails.cshtml" />
+    <Content Include="Views\Users\LawyerDetails.cshtml" />
+    <Content Include="Views\MyProfile\ViewMyCV.cshtml" />
+    <Content Include="Views\MyProfile\EditColleagueInfo.cshtml" />
+    <Content Include="Views\MyProfile\_MartyrColleagueFields.cshtml" />
+    <Content Include="Views\MyProfile\_DetainedColleagueFields.cshtml" />
+    <Content Include="Views\MyProfile\_InjuredColleagueFields.cshtml" />
+    <Content Include="Views\MyProfile\EditGeneralInfo.cshtml" />
+    <Content Include="Views\MyProfile\_ReceivedAidFields.cshtml" />
+    <Content Include="Views\MyProfile\EditLawyerAttachments.cshtml" />
+    <Content Include="Views\MyProfile\_LawyerAttachmentFields.cshtml" />
+    <Content Include="Views\MyProfile\LawyerDetails.cshtml" />
+    <Content Include="Views\MyProfile\CreateLawyerProfile.cshtml" />
+    <Content Include="Views\LawyerCV\ViewMyCV.cshtml" />
+    <Content Include="Views\Reports\LawyerProfessionalStatusReport.cshtml" />
+    <Content Include="Views\Reports\LawyerGenderReport.cshtml" />
+    <Content Include="Views\Reports\LawyerGovernorateReport.cshtml" />
+    <Content Include="Views\Reports\LawyerChildrenAgeReport.cshtml" />
+    <Content Include="Views\Reports\LawyerOfficePropertyTypeReport.cshtml" />
+    <Content Include="Views\Reports\LawyerOfficeDamageReport.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Reports\LawyerDetailedSearchReport.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\ServerError.cshtml" />
+    <Content Include="Views\Messages\AdminInbox.cshtml" />
+    <Content Include="Views\Messages\AdminBroadcasts.cshtml" />
+    <Content Include="Views\Messages\Inbox.cshtml" />
+    <Content Include="Views\Messages\Sent.cshtml" />
+    <Content Include="Views\Messages\Compose.cshtml" />
+    <Content Include="Views\Messages\ComposeBroadcast.cshtml" />
+    <Content Include="Views\Messages\ComposeToAdmin.cshtml" />
+    <Content Include="Views\Messages\Details.cshtml" />
+    <Content Include="Views\Messages\Reply.cshtml" />
+    <Content Include="Views\Messages\UserBroadcasts.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\PublicContact\Contact.cshtml" />
+    <Content Include="Views\Messages\AdminContactMessages.cshtml" />
+    <Content Include="Views\Messages\AdminContactMessageDetails.cshtml" />
+    <Content Include="Views\Messages\ReplyToContactMessage.cshtml" />
+    <Content Include="Views\SpecializedReports\Index.cshtml" />
+    <Content Include="Views\SpecializedReports\_ReportTablePartial.cshtml" />
+    <Content Include="Views\SpecializedReports\LawyerDetailedSearchReport.cshtml" />
+    <Content Include="Views\AuditLogs\Index.cshtml" />
+    <Content Include="Views\Children\Index.cshtml" />
+    <Content Include="Views\Spouses\Index.cshtml" />
+    <Content Include="Views\Spouses\FamilyDetails.cshtml" />
+    <Content Include="Views\FamilyReports\Index.cshtml" />
+    <Content Include="Views\FamilyReports\Menufmaily.cshtml" />
+    <Content Include="Views\ColleagueReports\Index.cshtml" />
+    <Content Include="Views\ColleagueReports\_ColleagueReportResults.cshtml" />
+    <Content Include="Views\OfficeAndDamageReports\_OfficeAndDamageReportResults.cshtml" />
+    <Content Include="Views\OfficeAndDamageReports\Index.cshtml" />
+    <Content Include="Views\NewHealthReports\Index.cshtml" />
+    <Content Include="Views\NewHealthReports\_NewHealthReportResults.cshtml" />
+    <Content Include="Views\NewDetentionReports\Index.cshtml" />
+    <Content Include="Views\NewDetentionReports\_NewDetentionReportResults.cshtml" />
+    <Content Include="Views\GeneralInfoReports\Index.cshtml" />
+    <Content Include="Views\GeneralInfoReports\_GeneralInfoReportResults.cshtml" />
+    <Content Include="Views\LawyerAttachmentReports\Index.cshtml" />
+    <Content Include="Views\LawyerAttachmentReports\_LawyerAttachmentReportResults.cshtml" />
+    <Content Include="Views\LawyerAttachmentReports\DisplayAttachment.cshtml" />
+    <Content Include="Views\Shared\_SupervisorLayout.cshtml" />
+    <Content Include="Views\Shared\_LayoutCorrector.cshtml" />
+    <Content Include="Views\Exams\Index.cshtml" />
+    <Content Include="Views\Exams\Details.cshtml" />
+    <Content Include="Views\Exams\Create.cshtml" />
+    <Content Include="Views\Exams\Edit.cshtml" />
+    <Content Include="Views\Exams\Delete.cshtml" />
+    <Content Include="Views\ExamTaker\Index.cshtml" />
+    <Content Include="Views\ExamTaker\ExamCompleted.cshtml" />
+    <Content Include="Views\Grading\Index.cshtml" />
+    <Content Include="Views\Grading\GradeExam.cshtml" />
+    <Content Include="Views\ExamQuestions\Create.cshtml" />
+    <Content Include="Views\ExamAttendees\Index.cshtml" />
+    <Content Include="Views\ExamAttendees\Details.cshtml" />
+    <Content Include="Views\ExamAttendees\Create.cshtml" />
+    <Content Include="Views\ExamAttendees\Edit.cshtml" />
+    <Content Include="Views\ExamAttendees\Delete.cshtml" />
+    <Content Include="Views\ExamQuestions\Index.cshtml" />
+    <Content Include="Views\ExamQuestions\Edit.cshtml" />
+    <Content Include="Views\ExamQuestions\Delete.cshtml" />
+    <Content Include="Views\ExamQuestions\QuestionOptionPartial.cshtml" />
+    <Content Include="Views\ExamResults\ExamResult.cshtml" />
+    <Content Include="Views\ExamResults\Index.cshtml" />
+    <Content Include="Views\ExamResults\Details.cshtml" />
+    <Content Include="Views\ExamTaker\TakeExam.cshtml" />
+    <Content Include="Views\ExamTaker\ExamStart.cshtml" />
+    <Content Include="Views\ExamTaker\NoExamAvailable.cshtml" />
+    <Content Include="Views\ExamTaker\ExamDetails.cshtml" />
+    <Content Include="Views\FinancialData\Index.cshtml" />
+    <Content Include="Views\FinancialData\_FinancialDataReportPartial.cshtml" />
+    <Content Include="Views\AdminResult\Index.cshtml" />
+    <Content Include="Views\AuditLogs\Results.cshtml" />
+    <Content Include="Views\AdminResult\ManualGrading.cshtml" />
+    <Content Include="Views\AdminResult\ManualGradingList.cshtml" />
+    <Content Include="Views\AdminResult\AttendeesNeedingGrading.cshtml" />
+    <Content Include="Views\Messages\AdmiinReplyToContactMessage.cshtml" />
+    <Content Include="Views\Messages\ContactMessages.cshtml" />
+    <Content Include="Views\Admin\ReportsAndQueries.cshtml" />
+    <Content Include="Views\LawyerCV\GenerateReport.cshtml" />
+    <Content Include="Views\LawyerCV\DisplayAttachment.cshtml" />
+    <Content Include="Views\Lawyers\ManagePermissions.cshtml" />
+    <Content Include="Views\Permissions\Index.cshtml" />
+    <Content Include="Views\Permissions\ManageRolePermissions.cshtml" />
+    <Content Include="Views\Permissions\Create.cshtml" />
+    <Content Include="Views\Permissions\Edit.cshtml" />
+    <Content Include="Views\Permissions\Delete.cshtml" />
+    <Content Include="Views\Error\Forbidden.cshtml" />
+    <Content Include="Views\Permissions\GeneratePermissions.cshtml" />
+    <Content Include="Views\Contracts\Index.cshtml" />
+    <Content Include="Views\Contracts\Details.cshtml" />
+    <Content Include="Views\Contracts\Create.cshtml" />
+    <Content Include="Views\Contracts\Edit.cshtml" />
+    <Content Include="Views\Contracts\Delete.cshtml" />
+    <Content Include="Views\Contracts\Search.cshtml" />
+    <Content Include="Views\Contracts\ImportFromExcel.cshtml" />
+    <Content Include="Views\Contracts\SearchContracts.cshtml" />
+    <Content Include="Views\Home\Unauthorized.cshtml" />
+    <Content Include="Views\Messages\ViewBroadcast.cshtml" />
+    <Content Include="Views\LawyerPasswordRecovery\VerifyIdentity.cshtml" />
+    <Content Include="Views\LawyerPasswordRecovery\ConfirmEmail.cshtml" />
+    <Content Include="Views\LawyerPasswordRecovery\UpdateEmail.cshtml" />
+    <Content Include="Views\LawyerPasswordRecovery\AdminVerifyIdentity.cshtml" />
+    <Content Include="Views\LawyerPasswordRecovery\AdminResetPassword.cshtml" />
+    <Content Include="Views\LawyerPasswordRecovery\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\LawyerPasswordRecovery\AdminRecoveryRequest.cshtml" />
+    <Content Include="Views\LawyerPasswordRecovery\AdminRecoveryConfirmation.cshtml" />
+    <Content Include="Views\LawyerPasswordRecovery\AdminResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\LawyerPasswordRecovery\ResetPassword.cshtml" />
+    <Content Include="Views\Reports\ComprehensiveReport.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\NewFolder1\" />
+    <Folder Include="BusinessLogic\" />
+    <Folder Include="Content\QuestionImages\" />
+    <Folder Include="Uploads\LawyerAttachments\" />
+    <Folder Include="Views\AttendeeExam\" />
+    <Folder Include="Views\Base\" />
+    <Folder Include="Views\Corrector\" />
+    <Folder Include="Views\Notifications\" />
+    <Folder Include="Views\PermissionAuthorizationFilter\" />
+    <Folder Include="Views\Questions\" />
+    <Folder Include="Views\Results\" />
+    <Folder Include="Views\TakeExam\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202508211112249_InitialCreate.resx">
+      <DependentUpon>202508211112249_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509031158552_AddLawyerIdToContract1.resx">
+      <DependentUpon>202509031158552_AddLawyerIdToContract1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509031250368_AddLawyerIdToContract12.resx">
+      <DependentUpon>202509031250368_AddLawyerIdToContract12.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509110627454_FinalMigration.resx">
+      <DependentUpon>202509110627454_FinalMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509110636027_CorrectedFinalMigration.resx">
+      <DependentUpon>202509110636027_CorrectedFinalMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509110819092_AddPermissionsTables.resx">
+      <DependentUpon>202509110819092_AddPermissionsTables.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>38082</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44391/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\build\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

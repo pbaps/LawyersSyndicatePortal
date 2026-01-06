@@ -1,0 +1,88 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.Models.ExamResult>
+
+@{
+    ViewBag.Title = "نتائج الامتحانات";
+}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="text-center text-primary">نتائج الامتحانات</h2>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <a href="@Url.Action("ExportToExcel")" class="btn btn-success btn-block">
+                <i class="fas fa-file-excel"></i> تصدير إلى Excel
+            </a>
+        </div>
+        <div class="col-md-6">
+            <form method="get" action="@Url.Action("Index")">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="ابحث عن نتيجة امتحان..." />
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-primary" type="submit">بحث</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            لا توجد نتائج امتحانات لعرضها.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Exam.Title)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.Lawyer.FullName)</th>
+                        <th scope="col">الدرجة</th>
+                        <th scope="col">حالة التصحيح</th>
+                        <th scope="col">العمليات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Exam.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Lawyer.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalScoreAchieved) / @Html.DisplayFor(modelItem => item.TotalExamScore)
+                            </td>
+                            <td>
+                                @if (item.IsGradingComplete)
+                                {
+                                    <span class="badge badge-success">تم التصحيح</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-warning">قيد التصحيح</span>
+                                }
+                            </td>
+                            <td>
+                                @Html.ActionLink("التفاصيل", "Details", new { id = item.ExamAttendeeId }, new { @class = "btn btn-info btn-sm" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+}

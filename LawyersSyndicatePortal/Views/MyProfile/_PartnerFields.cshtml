@@ -1,0 +1,41 @@
+﻿@model LawyersSyndicatePortal.ViewModels.PartnerViewModel
+
+@{
+    var index = ViewData["index"] != null ? (int)ViewData["index"] : 0;
+    var prefix = $"Partners[{index}]";
+    ViewData.TemplateInfo.HtmlFieldPrefix = prefix;
+}
+
+<div class="card-lux dynamic-item mb-3" data-index="@index">
+    <div class="card-header-lux d-flex justify-content-between align-items-center">
+        <h5 class="card-title-lux mb-0">
+            <i class="fas fa-user-tie me-2"></i>
+            تفاصيل الشريك رقم @(index + 1)
+        </h5>
+        <button type="button" class="btn-close removePartner" aria-label="Remove"></button>
+    </div>
+    <div class="card-body-lux">
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.OfficeDetailId)
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="@(prefix)_PartnerName" class="form-label">@Html.DisplayNameFor(model => model.PartnerName)</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    @Html.EditorFor(model => model.PartnerName, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.PartnerName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-6">
+                <label for="@(prefix)_MembershipNumber" class="form-label">@Html.DisplayNameFor(model => model.MembershipNumber)</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-id-badge"></i></span>
+                    @Html.EditorFor(model => model.MembershipNumber, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.MembershipNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+</div>

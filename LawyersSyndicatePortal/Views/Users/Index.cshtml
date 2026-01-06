@@ -1,0 +1,347 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.Models.UserViewModel>
+
+@{
+    ViewBag.Title = "إدارة المستخدمين";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int totalPages = ViewBag.TotalPages ?? 1;
+    int totalRecords = ViewBag.TotalRecords ?? 0;
+    string currentFilter = ViewBag.CurrentFilter;
+}
+
+<style>
+    /* * الأنماط الأساسية
+    * لضمان تطبيق الألوان بشكل صحيح وجمالية عامة
+    */
+    :root {
+        --primary-color: #0d6efd;
+        --primary-light: #e0f2fe;
+        --success-color: #198754;
+        --success-light: #d1fae5;
+    }
+
+    .card-summary {
+        border: none;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card-summary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-summary .icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+    .bg-primary-light {
+        background-color: var(--primary-light) !important;
+    }
+
+    .bg-success-light {
+        background-color: var(--success-light) !important;
+    }
+
+    .text-primary-custom {
+        color: var(--primary-color) !important;
+    }
+
+    .text-success-custom {
+        color: var(--success-color) !important;
+    }
+
+    .bg-primary-custom {
+        background-color: var(--primary-color) !important;
+    }
+
+    .bg-success-custom {
+        background-color: var(--success-color) !important;
+    }
+
+    .table-responsive {
+        border-radius: 0.75rem;
+        overflow: hidden;
+        border: 1px solid #dee2e6;
+    }
+
+    /* * الأنماط الخاصة بالقائمة المنسدلة المتحركة
+    * لتضمن ظهورها فوق كل العناصر
+    */
+    .dropdown-menu.visible {
+        display: block !important;
+        position: absolute !important;
+        z-index: 1050; /* تأكد أن z-index أعلى من الجدول */
+    }
+</style>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">إدارة المستخدمين</h2>
+        <a href="@Url.Action("Create")" class="btn btn-primary px-4 py-2">
+            <i class="fas fa-plus me-2"></i> إنشاء مستخدم جديد
+        </a>
+    </div>
+    <p class="text-muted mb-4">لوحة التحكم الرئيسية لإدارة حسابات المستخدمين في النظام.</p>
+
+    <hr class="mb-5" />
+
+    @* رسائل التنبيهات *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-end" role="alert">
+            @Html.Raw(TempData["SuccessMessage"])
+            <button type="button" class="btn-close m-0" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-end" role="alert">
+            @Html.Raw(TempData["ErrorMessage"])
+            <button type="button" class="btn-close m-0" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* بطاقات الإحصائيات *@
+    <div class="row g-4 mb-5 text-end">
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-summary bg-primary-light">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="fw-bold mb-1 text-primary-custom">@ViewBag.TotalRecords</h4>
+                        <p class="mb-0 text-muted">إجمالي المستخدمين</p>
+                    </div>
+                    <div class="icon bg-primary-custom">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-summary bg-success-light">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="fw-bold mb-1 text-success-custom">@Model.Count()</h4>
+                        <p class="mb-0 text-muted">المستخدمون المعروضون حالياً</p>
+                    </div>
+                    <div class="icon bg-success-custom">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
+            <div class="card card-summary bg-light text-center w-100">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                    <p class="mb-2 text-muted">إجراءات سريعة</p>
+                    <div class="d-flex gap-2">
+                        <a href="@Url.Action("ExportUsersToExcel", "Users")" class="btn btn-success" title="تصدير إلى Excel">
+                            <i class="fas fa-file-excel me-2"></i> تصدير
+                        </a>
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importExcelModal" title="استيراد من Excel">
+                            <i class="fas fa-file-import me-2"></i> استيراد
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* نموذج البحث وخيارات العرض *@
+    <div class="mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        @using (Html.BeginForm("Index", "Users", FormMethod.Get, new { @class = "flex-grow-1" }))
+        {
+            <div class="input-group">
+                <input type="text" name="SearchString" value="@currentFilter" class="form-control rounded-start-pill" placeholder="البحث بالاسم، البريد الإلكتروني، رقم الهوية..." aria-label="Search" />
+                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                @if (!string.IsNullOrEmpty(currentFilter))
+                {
+                    <a href="@Url.Action("Index", "Users", new { pageSize = pageSize })" class="btn btn-outline-danger" title="مسح البحث"><i class="fas fa-times"></i></a>
+                }
+            </div>
+        }
+        <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+            <label for="pageSizeSelect" class="form-label mb-0 text-nowrap">عرض:</label>
+            @Html.DropDownList("pageSize", (IEnumerable<SelectListItem>)ViewBag.PageSizes, new { @class = "form-select w-auto", @onchange = "this.form.submit();", id = "pageSizeSelect" })
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center shadow-sm" role="alert">
+            <i class="fas fa-info-circle me-2"></i> لا توجد مستخدمون لعرضهم.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive rounded-3 shadow-sm">
+            <table class="table table-hover table-striped text-end align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.Email)</th>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.FullName)</th>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.IdNumber)</th>
+                        <th scope="col" class="py-3">المحامي المرتبط</th>
+                        <th scope="col" class="py-3">الأدوار</th>
+                        <th scope="col" class="py-3">تاريخ الإنشاء</th>
+                        <th scope="col" class="py-3">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IdNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.LinkedLawyerFullName)</td>
+                            <td>
+                                @foreach (var role in item.Roles.Split(','))
+                                {
+                                    <span class="badge rounded-pill bg-info me-1">@role.Trim()</span>
+                                }
+                            </td>
+                            <td>@(item.CreationDate.HasValue ? item.CreationDate.Value.ToShortDateString() : "غير محدد")</td>
+                            <td class="table-actions">
+                                <button class="btn btn-success btn-sm user-actions-btn" type="button"
+                                        data-user-id="@item.Id">
+                                    الإجراءات
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* عناصر التحكم في ترقيم الصفحات *@
+        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-2">
+            <div class="text-muted">
+                عرض @(Model.Any() ? ((currentPage - 1) * pageSize) + 1 : 0) - @(Math.Min(currentPage * pageSize, totalRecords)) من @totalRecords سجل.
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end mb-0">
+                    <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                        @Html.ActionLink("السابق", "Index", new { page = currentPage - 1, pageSize = pageSize, searchString = currentFilter }, new { @class = "page-link" })
+                    </li>
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            @Html.ActionLink(i.ToString(), "Index", new { page = i, pageSize = pageSize, searchString = currentFilter }, new { @class = "page-link" })
+                        </li>
+                    }
+                    <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+                        @Html.ActionLink("التالي", "Index", new { page = currentPage + 1, pageSize = pageSize, searchString = currentFilter }, new { @class = "page-link" })
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+</div>
+
+@* قائمة الإجراءات المنسدلة (خارج الجدول) *@
+<ul class="dropdown-menu text-end" id="userActionsMenu" style="display: none;">
+    <li><a class="dropdown-item" id="editAction"><i class="fas fa-edit me-2 text-primary"></i> تعديل</a></li>
+    <li><a class="dropdown-item" id="detailsAction"><i class="fas fa-info-circle me-2 text-info"></i> تفاصيل</a></li>
+    <li><a class="dropdown-item" id="manageRolesAction"><i class="fas fa-user-tag me-2 text-warning"></i> إدارة الأدوار</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item text-danger" id="deleteAction"><i class="fas fa-trash-alt me-2"></i> حذف</a></li>
+</ul>
+
+@* نافذة منبثقة لاستيراد Excel *@
+<div class="modal fade" id="importExcelModal" tabindex="-1" aria-labelledby="importExcelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-end">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importExcelModalLabel">استيراد بيانات المستخدمين من Excel</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @using (Html.BeginForm("ImportUsersExcel", "Users", FormMethod.Post, new { enctype = "multipart/form-data", @class = "text-end" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">الرجاء اختيار ملف Excel للاستيراد:</label>
+                        <input type="file" name="file" id="file" class="form-control rounded-3" accept=".xlsx, .xls" required />
+                    </div>
+                    <p>
+                        <a href="@Url.Action("DownloadUsersExcelTemplate", "Users")" class="btn btn-link text-decoration-none">
+                            <i class="fas fa-download me-2"></i> تنزيل نموذج ملف Excel للاستيراد
+                        </a>
+                    </p>
+                    <div class="alert alert-info rounded-3" role="alert">
+                        <h6 class="alert-heading">ملاحظات هامة:</h6>
+                        <ul class="text-end list-unstyled mb-0">
+                            <li><strong>1. الرؤوس:</strong> يجب أن يحتوي الصف الأول على الرؤوس التالية بالضبط: "البريد الإلكتروني", "الاسم الكامل", "رقم الهوية", "رقم هوية المحامي المرتبط", "تاريخ إنشاء الحساب", "كلمة المرور", "الأدوار".</li>
+                            <li><strong>2. التنسيق:</strong> "تاريخ إنشاء الحساب" يجب أن يكون بتنسيق تاريخ صحيح. "الأدوار" يجب أن تكون قائمة مفصولة بفاصلة.</li>
+                            <li><strong>3. تحديث أو إضافة:</strong> إذا كان البريد الإلكتروني موجودًا، سيتم تحديث بيانات المستخدم، وإلا سيتم إضافة مستخدم جديد.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary rounded-pill">استيراد</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // إغلاق التنبيهات تلقائيًا
+            window.setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 5000);
+
+            // التحكم في القائمة المنسدلة
+            const userActionsMenu = $('#userActionsMenu');
+
+            // إخفاء القائمة عند النقر خارجها
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.user-actions-btn, #userActionsMenu').length) {
+                    userActionsMenu.removeClass('visible');
+                }
+            });
+
+            // إظهار القائمة وتحديد موقعها عند النقر على الزر
+            $(document).on('click', '.user-actions-btn', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const button = $(this);
+                const userId = button.data('user-id');
+                const buttonOffset = button.offset();
+                const buttonHeight = button.outerHeight();
+
+                // تحديد الروابط بناءً على الـ ID
+                $('#editAction').attr('href', `/Users/Edit/${userId}`);
+                $('#detailsAction').attr('href', `/Users/Details/${userId}`);
+                $('#manageRolesAction').attr('href', `/Roles/ManageUserRoles?userId=${userId}`);
+                $('#deleteAction').attr('href', `/Users/Delete/${userId}`);
+
+                // تحديد موقع القائمة المنسدلة
+                userActionsMenu.css({
+                    top: buttonOffset.top + buttonHeight + 5, /* إضافة مسافة 5 بكسل للأسفل */
+                    left: buttonOffset.left,
+                    'min-width': button.outerWidth()
+                }).addClass('visible');
+            });
+        });
+    </script>
+}

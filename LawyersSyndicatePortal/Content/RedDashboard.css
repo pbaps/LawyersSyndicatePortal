@@ -1,0 +1,28 @@
+﻿/*
+ * ملف سمة حمراء
+ */
+:root {
+    --bg-primary: #F5F5F5; /* خلفية رمادية فاتحة جداً */
+    --navbar-bg: #E57373; /* أحمر فاتح للشريط العلوي */
+    --card-bg: #FFFFFF; /* أبيض نقي للبطاقات */
+    --primary-color: #B71C1C; /* أحمر عميق وأساسي */
+    --secondary-color: #FFCDD2; /* أحمر فاتح وناعم لللمسات الجمالية */
+    --text-dark: #212121; /* رمادي داكن جداً للنص الرئيسي */
+    --text-muted: #757575; /* رمادي متوسط للنص الثانوي */
+    --text-light: #FFFFFF; /* أبيض نقي للنص الفاتح */
+    --border-color: #E0E0E0; /* حدود رمادية فاتحة */
+    --box-shadow-subtle: 0 6px 18px rgba(0, 0, 0, 0.1);
+    --box-shadow-hover: 0 12px 25px rgba(0, 0, 0, 0.2);
+    --border-radius-lg: 15px;
+    --primary-color-focus-ring: rgba(183, 28, 28, 0.4);
+}
+
+/* أنماط خاصة بالسمة الحمراء */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-dark);
+}
+
+.navbar-lux {
+    background-color: var(--navbar-bg);
+}

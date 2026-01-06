@@ -1,0 +1,232 @@
+﻿@model LawyersSyndicatePortal.ViewModels.NewLawyerReportViewModel
+@using System.Web.Mvc.Html
+@using System.Globalization
+
+@{
+    ViewBag.Title = "تقارير واستعلامات متخصصة";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; 
+}
+
+<h2 class="text-right">تقارير واستعلامات متخصصة</h2>
+<hr />
+
+@* عرض رسائل النجاح والخطأ *@
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show text-right" role="alert" dir="rtl">
+        <strong>نجاح!</strong> @TempData["SuccessMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show text-right" role="alert" dir="rtl">
+        <strong>خطأ!</strong> @TempData["ErrorMessage"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@* قسم البحث والفلاتر *@
+<div class="card mb-4" dir="rtl">
+    <div class="card-header bg-primary text-white text-right">
+        <i class="fas fa-search"></i> خيارات البحث
+    </div>
+    <div class="card-body">
+        <form id="searchForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group text-right">
+                        @Html.LabelFor(model => model.FullName, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.FullName, new { @class = "form-control text-right", placeholder = "الاسم الكامل أو جزء منه" })
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="IdNumber" class="form-label">رقم الهوية</label>
+                    @Html.TextBoxFor(model => model.IdNumber, new { @class = "form-control", placeholder = "ادخل رقم الهوية" })
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="MembershipNumber" class="form-label">رقم العضوية</label>
+                    @Html.TextBoxFor(model => model.MembershipNumber, new { @class = "form-control", placeholder = "ادخل رقم العضوية" })
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group text-right">
+                        @Html.LabelFor(model => model.ProfessionalStatus, new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.ProfessionalStatus, Model.ProfessionalStatuses, new { @class = "form-control text-right" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group text-right">
+                        @Html.LabelFor(model => model.MaritalStatus, new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.MaritalStatus, Model.MaritalStatuses, new { @class = "form-control text-right" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group text-right">
+                        @Html.LabelFor(model => model.Gender, new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.Gender, Model.Genders, new { @class = "form-control text-right" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group text-right">
+                        @Html.LabelFor(model => model.OriginalGovernorate, new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.OriginalGovernorate, Model.GovernorateList, new { @class = "form-control text-right" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group text-right">
+                        @Html.LabelFor(model => model.CurrentGovernorate, new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.CurrentGovernorate, Model.GovernorateList, new { @class = "form-control text-right" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group text-right">
+                        @Html.LabelFor(model => model.HasChildren, new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.HasChildren, Model.HasChildrenOptions, new { @class = "form-control text-right" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    @* هنا يمكن إضافة حقل بحث إضافي إذا لزم الأمر *@
+                </div>
+            </div>
+
+            <div class="form-group text-right mt-3">
+                <button type="submit" id="searchBtn" class="btn btn-primary">
+                    <i class="fas fa-search"></i> بحث
+                </button>
+                <button type="button" id="clearBtn" class="btn btn-secondary">
+                    <i class="fas fa-undo"></i> مسح الحقول
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+ 
+
+<div class="col-md-12">
+    <div class="card mb-4 shadow-sm" dir="rtl">
+        <div class="card-header text-white text-right">
+            <h5 class="mb-0"><i class="fas fa-columns me-2"></i> اختيار الأعمدة في التقرير</h5>
+        </div>
+        <div class="card-body">
+            <form id="columnsSelection">
+                <div class="row">
+                    @* بداية القائمة المحدثة *@
+                    @for (int i = 0; i < Model.AvailableColumns.Count; i++)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-2">
+                            <div class="form-check form-switch d-flex justify-content-between align-items-center">
+                                <label class="form-check-label text-right" for="AvailableColumns_@(i)__IsSelected">
+                                    @Model.AvailableColumns[i].DisplayName
+                                </label>
+                                @Html.CheckBoxFor(m => m.AvailableColumns[i].IsSelected, new { @class = "form-check-input", role = "switch" })
+                                @Html.HiddenFor(m => m.AvailableColumns[i].ColumnName)
+                                @Html.HiddenFor(m => m.AvailableColumns[i].DisplayName)
+                            </div>
+                        </div>
+                    }
+                    @* نهاية القائمة المحدثة *@
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@* زر التصدير ونتائج البحث *@
+<div class="text-right mb-3" dir="rtl">
+    <button type="button" id="exportExcelBtn" class="btn btn-success">
+        <i class="fas fa-file-excel"></i> تصدير إلى Excel
+    </button>
+</div>
+
+@* نتائج البحث يتم تحميلها هنا عبر AJAX *@
+<div id="reportResultsContainer" class="mt-4">
+    @* يتم عرض Partial View هنا *@
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // Event handler for search button click
+            $("#searchBtn").click(function (e) {
+                e.preventDefault(); // Prevent default form submission
+
+                // Show loading spinner
+                $("#reportResultsContainer").html('<div class="text-center"><i class="fas fa-spinner fa-spin fa-2x"></i></div>');
+
+                // Collect all data from search form and column selection
+                var requestData = $("#searchForm, #columnsSelection").serialize();
+
+                $.ajax({
+                    url: "@Url.Action("Search", "SpecializedReports")",
+                    type: "POST",
+                    data: requestData,
+                    success: function (result) {
+                        $("#reportResultsContainer").html(result);
+
+                        // هنا يتم إضافة الكود الجديد
+                        var totalRecords = $("#reportResultsContainer table tbody tr").length;
+                        var totalRecordsHtml = '<div class="alert alert-info text-center" dir="rtl"><i class="fas fa-info-circle"></i> عدد السجلات الموجودة: <strong>' + totalRecords + '</strong></div>';
+
+                        // إضافة العدد إلى الجزء العلوي من النتائج
+                        $("#reportResultsContainer").prepend(totalRecordsHtml);
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error: " + error);
+                        $("#reportResultsContainer").html('<div class="alert alert-danger text-center" dir="rtl">حدث خطأ أثناء تحميل البيانات.</div>');
+                    }
+                });
+            });
+
+            // Event handler for "Export to Excel" button
+            $("#exportExcelBtn").click(function () {
+                // Collect all data from search form and column selection
+                var requestData = $("#searchForm, #columnsSelection").serialize();
+                var form = $('<form action="@Url.Action("ExportToExcel", "SpecializedReports")" method="post"></form>');
+
+                // Append all serialized data as hidden fields
+                var dataArray = $("#searchForm, #columnsSelection").serializeArray();
+                $.each(dataArray, function (index, item) {
+                    form.append($('<input type="hidden">').attr('name', item.name).val(item.value));
+                });
+
+                $('body').append(form);
+                form.submit();
+                form.remove();
+            });
+
+            // Event handler for "Clear Fields" button
+            $("#clearBtn").click(function () {
+                // إعادة تعيين حقول النموذج
+                $("#searchForm")[0].reset();
+                // إعادة تعيين حقول قائمة الاختيار
+                $("#searchForm select").each(function () {
+                    $(this).val($(this).find("option:first").val());
+                });
+
+                // مسح محتوى النتائج
+                $("#reportResultsContainer").empty();
+            });
+        });
+    </script>
+}

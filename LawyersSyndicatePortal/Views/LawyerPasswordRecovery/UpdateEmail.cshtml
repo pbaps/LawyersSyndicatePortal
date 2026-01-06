@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "تعديل البريد الإلكتروني";
+    Layout = "~/Views/Shared/_PublicLayout.cshtml"; // تأكد من أن هذا هو اسم ملف الـ Layout الصحيح
+}
+
+@model LawyersSyndicatePortal.Models.UpdateEmailViewModel
+
+<div class="card p-4 shadow-sm" style="max-width: 500px; margin: auto;">
+    <div class="card-header text-center bg-primary text-white rounded-top">
+        <h3 class="my-2"><i class="fa-solid fa-envelope-open-text me-2"></i> تحديث البريد الإلكتروني</h3>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title text-center mb-4">تعديل البريد الإلكتروني المسجل</h5>
+        <p class="text-center text-muted">يرجى إدخال البريد الإلكتروني الجديد الذي ترغب في استخدامه.</p>
+
+        @using (Html.BeginForm("UpdateEmail", "LawyerPasswordRecovery", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            @Html.HiddenFor(m => m.IdNumber)
+
+            <div class="mb-3">
+                @Html.LabelFor(m => m.NewEmail, new { @class = "form-label" })
+                @Html.TextBoxFor(m => m.NewEmail, new { @class = "form-control", placeholder = "أدخل البريد الإلكتروني الجديد" })
+                @Html.ValidationMessageFor(m => m.NewEmail, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary btn-lg"><i class="fa-solid fa-save me-2"></i> حفظ التغييرات</button>
+            </div>
+        }
+    </div>
+</div>

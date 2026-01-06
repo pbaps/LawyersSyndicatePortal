@@ -1,0 +1,65 @@
+﻿@model LawyersSyndicatePortal.Models.Permission
+
+@{
+    ViewBag.Title = "حذف صلاحية";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">حذف صلاحية</h1>
+    </div>
+</div>
+
+<h3>هل أنت متأكد أنك تريد حذف هذه الصلاحية؟</h3>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                تفاصيل الصلاحية
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ControllerName)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ControllerName)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.ActionName)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.ActionName)
+                    </dd>
+                </dl>
+
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-actions no-color">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fa fa-trash"></i> حذف
+                        </button>
+                        @Html.ActionLink("العودة إلى القائمة", "Index", null, new { @class = "btn btn-default" })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>

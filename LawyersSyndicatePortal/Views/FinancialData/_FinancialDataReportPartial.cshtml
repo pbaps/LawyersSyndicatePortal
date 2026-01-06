@@ -1,0 +1,92 @@
+﻿@model LawyersSyndicatePortal.ViewModels.FinancialDataReportResultViewModel
+@using System.Reflection
+@using System.Linq
+
+@if (Model != null && Model.Lawyers.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered caption-top">
+            <caption class="text-right">عدد النتائج: @Model.Lawyers.Count()</caption>
+            <thead class="bg-primary text-white">
+                <tr>
+                    @foreach (var col in Model.SelectedColumns)
+                    {
+                        <th>@col.DisplayName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Lawyers)
+                {
+                    // For each lawyer, iterate through their PersonalDetails collection.
+                    if (item.PersonalDetails != null && item.PersonalDetails.Any())
+                    {
+                        foreach (var personalDetail in item.PersonalDetails)
+                        {
+                            <tr>
+                                @foreach (var col in Model.SelectedColumns)
+                                {
+                                    <td>
+                                        @{
+                                            var propertyPath = col.ColumnName;
+                                            var parts = propertyPath.Split('.');
+                                            object currentObject = null;
+
+                                            // The first part of the path is "PersonalDetails", which is a collection.
+                                            // The remaining part is the property name on the PersonalDetail object.
+                                            if (parts.Length > 1)
+                                            {
+                                                currentObject = personalDetail;
+                                                var propertyName = parts.Last();
+                                                var propInfo = currentObject.GetType().GetProperty(propertyName);
+                                                var value = propInfo?.GetValue(currentObject, null);
+                                                <span>@value</span>
+                                            }
+                                            else
+                                            {
+                                                // If the column is not part of PersonalDetails (e.g., FullName, IdNumber), get it from the Lawyer object.
+                                                var propInfo = item.GetType().GetProperty(propertyPath);
+                                                var value = propInfo?.GetValue(item, null);
+                                                <span>@value</span>
+                                            }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        // If there are no PersonalDetails, display a single row for the lawyer.
+                        <tr>
+                            @foreach (var col in Model.SelectedColumns)
+                            {
+                                <td>
+                                    @{
+                                        var propertyPath = col.ColumnName;
+                                        if (propertyPath.Contains("PersonalDetails"))
+                                        {
+                                            <span></span> @* Display empty for financial columns *@
+                                        }
+                                        else
+                                        {
+                                            var propInfo = item.GetType().GetProperty(propertyPath);
+                                            var value = propInfo?.GetValue(item, null);
+                                            <span>@value</span>
+                                        }
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning text-center" role="alert">
+        <i class="fas fa-exclamation-triangle"></i> لا توجد نتائج مطابقة لمعايير البحث المحددة.
+    </div>
+}

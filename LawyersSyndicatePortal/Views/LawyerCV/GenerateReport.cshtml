@@ -1,0 +1,74 @@
+﻿@* المسار: LawyersSyndicatePortal/Views/LawyerAttachmentReports/DisplayAttachment.cshtml --}}*@
+@model LawyersSyndicatePortal.Models.LawyerAttachment
+@{
+    // تعطيل استخدام أي تخطيط (Layout) لضمان عرض الملف فقط
+  
+    ViewBag.Title = "عرض المرفق: " + Model.FileName;
+
+    // بناء المسار المطلق للملف
+    string filePath = Url.Content("~/App_Data/Uploads/LawyerAttachments/" + Model.FileName);
+    string fileExtension = Path.GetExtension(Model.FileName).ToLower();
+
+    // تحديد نوع المحتوى بناءً على الامتداد
+    string contentType = "";
+    switch (fileExtension)
+    {
+        case ".pdf":
+            contentType = "application/pdf";
+            break;
+        case ".jpg":
+        case ".jpeg":
+            contentType = "image/jpeg";
+            break;
+        case ".png":
+            contentType = "image/png";
+            break;
+        case ".gif":
+            contentType = "image/gif";
+            break;
+        case ".doc":
+        case ".docx":
+            contentType = "application/msword";
+            break;
+        case ".xls":
+        case ".xlsx":
+            contentType = "application/vnd.ms-excel";
+            break;
+        default:
+            contentType = "application/octet-stream";
+            break;
+    }
+}
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    @if (!string.IsNullOrEmpty(filePath))
+    {
+        <iframe src="@filePath" frameborder="0"></iframe>
+    }
+    else
+    {
+        <div style="text-align: center; padding-top: 50px;">
+            <p style="font-size: 18px; color: #555;">تعذر العثور على المرفق أو المسار غير صحيح.</p>
+        </div>
+    }
+</body>
+</html>

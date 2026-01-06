@@ -1,0 +1,86 @@
+﻿@model LawyersSyndicatePortal.ViewModels.LawyerOfficePropertyTypeReportViewModel
+
+@{
+    ViewBag.Title = "تقرير إحصائي عن المحامين حسب ملكية المكتب";
+}
+
+<h2 class="text-right mb-4">@ViewBag.Title</h2>
+<hr />
+
+<div class="container py-5" dir="rtl">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white text-right">
+            <h5 class="mb-0">ملخص التقرير</h5>
+        </div>
+        <div class="card-body text-right">
+            <p class="card-text">
+                هذا التقرير يقدم إحصائيات عن توزيع المكاتب حسب نوع الملكية.
+            </p>
+            <p class="card-text">
+                <strong>إجمالي عدد المكاتب (المسجلة):</strong> @Model.TotalOffices
+            </p>
+        </div>
+    </div>
+
+    @if (!Model.PropertyTypeCounts.Any())
+    {
+        <div class="alert alert-info text-right" role="alert">
+            لا توجد بيانات لعرضها في هذا التقرير.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-striped text-right">
+                <thead>
+                    <tr>
+                        <th>نوع الملكية</th>
+                        <th>عدد المكاتب</th>
+                        <th>النسبة المئوية</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.PropertyTypeCounts)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.PropertyType)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Count)</td>
+                            <td>
+                                @if (Model.TotalOffices > 0)
+                                {
+                                    @(string.Format("{0:P2}", (double)item.Count / Model.TotalOffices))
+                                }
+                                else
+                                {
+                                    @:0%
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-3">
+            <a href="@Url.Action("ExportOfficePropertyTypeReportToExcel", "Reports")" class="btn btn-success">
+                <i class="fas fa-file-excel"></i> تصدير إلى Excel
+            </a>
+        </div>
+    }
+
+    <div class="text-center mt-4">
+        @Html.ActionLink("العودة إلى التقارير", "Index", "Reports", null, new { @class = "btn btn-secondary" })
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            window.setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 5000);
+        });
+    </script>
+}

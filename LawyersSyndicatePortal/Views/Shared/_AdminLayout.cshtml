@@ -1,0 +1,206 @@
+﻿@*
+    ملف التخطيط هذا هو لوحة تحكم المسؤول
+    يجب أن يحتوي على أماكن (sections) لتضمين المحتوى الإضافي من الصفحات الفرعية.
+*@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - لوحة تحكم المسؤول</title>
+
+    @* تضمين Bootstrap 5 CSS من CDN *@
+
+ 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    @* تضمين Font Awesome CSS للأيقونات *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6TaYlQoNWlMInRykD6Xx0fLZpgSjV/PJzGFDRJdPSj+rcZA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    @* تضمين Bootstrap Datepicker CSS *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css" />
+
+    @* تضمين خط Cairo من Google Fonts *@
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+    @* تضمين Modernizr (إذا كان مشروعك لا يزال يستخدمه) *@
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        /* تنسيقات CSS مخصصة لهذا الـ Layout الخاص بالمسؤولين */
+        body {
+            font-family: 'Cairo', sans-serif; /* تطبيق خط Cairo */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: 70px; /* مسافة أعلى الصفحة لتعويض شريط التنقل الثابت */
+            background-color: #E8F0F7; /* خلفية رمادية فاتحة مزرقة للصفحة بأكملها */
+        }
+
+        .body-content {
+            flex: 1;
+            padding: 20px; /* حشو داخلي للمحتوى */
+            background-color: #ffffff; /* خلفية بيضاء لمحتوى الصفحة الرئيسي */
+            border-radius: 8px; /* حواف مستديرة لمظهر عصري */
+            margin-bottom: 20px; /* مسافة من الفوتر */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ظل خفيف للمحتوى */
+        }
+
+        footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid #e7e7e7;
+            color: #6c757d; /* لون النص في الفوتر */
+            font-size: 0.9em; /* حجم خط أصغر للفوتر */
+        }
+
+        .navbar-admin-custom {
+            background-color: #2C3E50; /* لون أزرق داكن احترافي لشريط التنقل */
+            position: fixed; /* جعل شريط التنقل ثابتًا */
+            top: 0; /* تثبيته في أعلى الصفحة */
+            width: 100%; /* جعله يمتد على عرض الصفحة بالكامل */
+            z-index: 1030; /* لضمان ظهوره فوق المحتوى الآخر */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* ظل خفيف لشريط التنقل */
+        }
+
+            .navbar-admin-custom .navbar-brand,
+            .navbar-admin-custom .nav-link {
+                color: #ffffff; /* لون النص في شريط التنقل */
+                transition: color 0.3s ease; /* تأثير انتقال اللون عند التحويم */
+            }
+
+                .navbar-admin-custom .nav-link:hover {
+                    color: #ECF0F1; /* لون أفتح عند التحويم */
+                }
+
+        .navbar-brand img {
+            height: 40px; /* حجم الشعار في شريط التنقل */
+            margin-left: 10px; /* مسافة بين الشعار والنص */
+        }
+
+        /* ضمان ظهور أيقونة الـ toggler باللون الأبيض */
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        }
+    </style>
+
+    @*
+        تمت إضافة هذا السطر لإصلاح خطأ "styles".
+        يجب أن يكون هنا لكي يتمكن من عرض محتوى الأقسام الفرعية.
+    *@
+    @RenderSection("styles", required: false)
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark navbar-admin-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="@Url.Action("Index", "Admin")">
+                <img src="@Url.Content("~/Content/images/logo.png")" alt="شعار النقابة" />
+                لوحة تحكم المسؤول
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        @Html.ActionLink("الرئيسية", "Index", "Admin", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink(" المستخدمين", "Index", "Users", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink(" المحامين", "Index", "Lawyers", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("تقارير", "ReportsAndQueries", "Admin", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("العقود", "Index", "Contracts", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownExams" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            اعدادات
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownExams">
+                            <li>@Html.ActionLink("الادوار  ", "Index", "Roles", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("الصلاحيات  ", "Index", "Permissions", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("انشاء صلاحيات  ", "GeneratePermissions", "Permissions", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink(" تعديل كلمة مرور مستخدم    ", "AdminRecoveryRequest", "LawyerPasswordRecovery", null, new { @class = "dropdown-item" })</li>
+
+
+
+
+ 
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownExams" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            إدارة الاختبارات
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownExams">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>@Html.ActionLink("انشاء الاختبارات", "Index", "Exams", null, new { @class = "dropdown-item" })</li>
+                                <li>@Html.ActionLink("لوحة تحكم المسؤول", "Index", "AdminResult", null, new { @class = "dropdown-item" })</li>
+
+
+                            }
+
+                            @if (User.IsInRole("Corrector"))
+                            {
+                                <li>@Html.ActionLink("لوحة تحكم المصحح", "CorrectorDashboard", "Corrector", null, new { @class = "dropdown-item" })</li>
+                            }
+                        </ul>
+                    </li>
+                    <!-- قائمة الرسائل المنسدلة للمسؤول -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMessages" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            الرسائل
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdownMessages">
+                            <li>@Html.ActionLink("صندوق وارد الإدارة", "AdminInbox", "Messages", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("رسائل الاتصال الواردة", "AdminContactMessages", "Messages", null, new { @class = "dropdown-item" })</li> @* NEW: Added link for Admin Contact Messages *@
+                            <li>@Html.ActionLink("إرسال رسالة خاصة", "Compose", "Messages", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("إرسال تعميم إداري", "ComposeBroadcast", "Messages", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("التعميمات والإعلانات", "AdminBroadcasts", "Messages", null, new { @class = "dropdown-item" })</li>
+                        </ul>
+                    </li>
+
+                    @* يمكنك إضافة المزيد من الروابط الخاصة بالمسؤول هنا *@
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    @Html.Partial("_LoginPartial")
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+    </div>
+
+    <footer>
+        <div class="container text-muted">
+            <p>&copy; @DateTime.Now.Year - نقابة المحامين الفلسطينيين - مركز غزة. لوحة تحكم المسؤول - نقابة المحامين. جميع الحقوق محفوظة. تم التطوير بواسطة: مهندس محمد العمري - جوال: 0598910120</p>
+        </div>
+    </footer>
+
+    @* إضافة jQuery CDN مباشرة لضمان تحميله قبل Bootstrap *@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    @* إضافة Bootstrap 5 JS Bundle (مع Popper.js) مباشرة لضمان عمل الـ collapse *@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    @* إضافة Bootstrap Datepicker JS وملف اللغة العربية *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ar.min.js"></script>
+
+    @* تضمين سكريبتات التحقق من الصحة (jQuery Validation) *@
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @* هذا القسم يسمح للـ Views الفردية بإضافة سكريبتات خاصة بها *@
+    @RenderSection("scripts", required: false)
+</body>
+</html>

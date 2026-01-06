@@ -1,0 +1,272 @@
+﻿@model LawyersSyndicatePortal.ViewModels.FamilyReportViewModel
+
+@{
+    ViewBag.Title = "تقرير عائلات المحامين";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    // Get filter values from the model to display them
+    var lawyerIdNumberFilter = Model.LawyerIdNumberFilter;
+    var lawyerFullNameFilter = Model.LawyerFullNameFilter;
+    var originalGovernorateFilter = Model.OriginalGovernorateFilter;
+    var currentGovernorateFilter = Model.CurrentGovernorateFilter;
+    var mobileNumberFilter = Model.MobileNumberFilter;
+    var professionalStatusFilter = Model.ProfessionalStatusFilter;
+
+    // Dropdown lists
+    var governorateList = new List<SelectListItem>
+{
+        new SelectListItem { Value = "", Text = "كل المحافظات", Selected = string.IsNullOrEmpty(originalGovernorateFilter) && string.IsNullOrEmpty(currentGovernorateFilter) },
+        new SelectListItem { Value = "شمال غزة", Text = "شمال غزة", Selected = "شمال غزة" == originalGovernorateFilter || "شمال غزة" == currentGovernorateFilter },
+        new SelectListItem { Value = "مدينة غزة", Text = "مدينة غزة", Selected = "مدينة غزة" == originalGovernorateFilter || "مدينة غزة" == currentGovernorateFilter },
+        new SelectListItem { Value = "الوسطى", Text = "الوسطى", Selected = "الوسطى" == originalGovernorateFilter || "الوسطى" == currentGovernorateFilter },
+        new SelectListItem { Value = "خانيونس", Text = "خانيونس", Selected = "خانيونس" == originalGovernorateFilter || "خانيونس" == currentGovernorateFilter },
+        new SelectListItem { Value = "رفح", Text = "رفح", Selected = "رفح" == originalGovernorateFilter || "رفح" == currentGovernorateFilter },
+        new SelectListItem { Value = "الضفة الغربية", Text = "الضفة الغربية", Selected = "الضفة الغربية" == originalGovernorateFilter || "الضفة الغربية" == currentGovernorateFilter },
+        new SelectListItem { Value = "خارج البلاد", Text = "خارج البلاد", Selected = "خارج البلاد" == originalGovernorateFilter || "خارج البلاد" == currentGovernorateFilter }
+    };
+
+    var professionalStatusList = new List<SelectListItem>
+{
+        new SelectListItem { Value = "", Text = "كل الحالات", Selected = string.IsNullOrEmpty(professionalStatusFilter) },
+        new SelectListItem { Value = "مزاول", Text = "مزاول", Selected = "مزاول" == professionalStatusFilter },
+        new SelectListItem { Value = "غير مزاول", Text = "غير مزاول", Selected = "غير مزاول" == professionalStatusFilter },
+        new SelectListItem { Value = "متدرب", Text = "متدرب", Selected = "متدرب" == professionalStatusFilter },
+        new SelectListItem { Value = "موقوف", Text = "موقوف", Selected = "موقوف" == professionalStatusFilter },
+        new SelectListItem { Value = "مشطوب", Text = "مشطوب", Selected = "مشطوب" == professionalStatusFilter },
+        new SelectListItem { Value = "متقاعد", Text = "متقاعد", Selected = "متقاعد" == professionalStatusFilter },
+        new SelectListItem { Value = "متوفي", Text = "متوفي", Selected = "متوفي" == professionalStatusFilter },
+        new SelectListItem { Value = "إلغاء إجازة المحاماة", Text = "إلغاء إجازة المحاماة", Selected = "إلغاء إجازة المحاماة" == professionalStatusFilter },
+        new SelectListItem { Value = "غير مسدد للرسوم", Text = "غير مسدد للرسوم", Selected = "غير مسدد للرسوم" == professionalStatusFilter },
+        new SelectListItem { Value = "فارغ", Text = "فارغ", Selected = "فارغ" == professionalStatusFilter },
+        new SelectListItem { Value = "مزاول 2021", Text = "مزاول 2021", Selected = "مزاول 2021" == professionalStatusFilter },
+        new SelectListItem { Value = "مسدد 2022", Text = "مسدد 2022", Selected = "مسدد 2022" == professionalStatusFilter },
+        new SelectListItem { Value = "موظف", Text = "موظف", Selected = "موظف" == professionalStatusFilter },
+        new SelectListItem { Value = "مقيد", Text = "مقيد", Selected = "مقيد" == professionalStatusFilter },
+        new SelectListItem { Value = "عليه تغيير مدرب", Text = "عليه تغيير مدرب", Selected = "عليه تغيير مدرب" == professionalStatusFilter }
+    };
+
+    // Group the data by LawyerIdNumber to create the nested structure
+    var lawyersWithFamilies = Model.Spouses
+        .Select(s => new
+        {
+            s.LawyerIdNumber,
+            s.LawyerFullName,
+            s.ProfessionalStatus,
+            s.OriginalGovernorate,
+            s.CurrentGovernorate
+        })
+        .Union(Model.Children.Select(c => new
+        {
+            c.LawyerIdNumber,
+            c.LawyerFullName,
+            c.ProfessionalStatus,
+            c.OriginalGovernorate,
+            c.CurrentGovernorate
+        }))
+        .Distinct()
+        .ToList();
+}
+
+<div class="container-fluid py-5" dir="rtl">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h2 class="h3 font-weight-bold mb-0">
+            <i class="fas fa-sitemap text-primary me-2"></i> تقرير عائلات المحامين
+        </h2>
+
+        <div class="d-flex flex-column align-items-end">
+            <span class="badge bg-primary text-white fs-6 py-2 px-3 rounded-pill shadow-sm mb-1">
+                عدد المحامين: <strong class="ms-1">@lawyersWithFamilies.Count()</strong>
+            </span>
+            <span class="badge bg-danger text-white fs-6 py-2 px-3 rounded-pill shadow-sm mb-1">
+                عدد الزوجات: <strong class="ms-1">@Model.Spouses.Count()</strong>
+            </span>
+            <span class="badge bg-success text-white fs-6 py-2 px-3 rounded-pill shadow-sm">
+                عدد الأبناء: <strong class="ms-1">@Model.Children.Count()</strong>
+            </span>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-lg rounded-3 border-0">
+        <div class="card-header bg-light border-0 py-3 rounded-top-3">
+            <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                <a class="text-dark text-decoration-none" data-bs-toggle="collapse" href="#filterCollapse" role="button" aria-expanded="true" aria-controls="filterCollapse">
+                    <i class="fas fa-filter me-2 text-secondary"></i> تصفية البيانات
+                </a>
+            </h5>
+        </div>
+        <div class="card-body collapse show" id="filterCollapse">
+            @using (Html.BeginForm("Index", "FamilyReports", FormMethod.Get, new { @class = "row g-3" }))
+            {
+                <div class="col-md-6 col-lg-3">
+                    <label for="lawyerIdNumber" class="form-label mb-1">رقم هوية المحامي:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                        <input type="text" name="lawyerIdNumber" id="lawyerIdNumber" class="form-control" value="@lawyerIdNumberFilter" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <label for="lawyerFullName" class="form-label mb-1">اسم المحامي:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" name="lawyerFullName" id="lawyerFullName" class="form-control" value="@lawyerFullNameFilter" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <label for="originalGovernorate" class="form-label mb-1">المحافظة الأصلية:</label>
+                    @Html.DropDownList("originalGovernorate", governorateList, new { @class = "form-control" })
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <label for="currentGovernorate" class="form-label mb-1">محافظة التواجد حاليًا:</label>
+                    @Html.DropDownList("currentGovernorate", governorateList, new { @class = "form-control" })
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <label for="mobileNumber" class="form-label mb-1">رقم الجوال:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-mobile-alt"></i></span>
+                        <input type="text" name="mobileNumber" id="mobileNumber" class="form-control" value="@mobileNumberFilter" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <label for="professionalStatus" class="form-label mb-1">الحالة المهنية:</label>
+                    @Html.DropDownList("professionalStatus", professionalStatusList, new { @class = "form-control" })
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg me-2">
+                        <i class="fas fa-search me-1"></i> تصفية
+                    </button>
+                    @Html.ActionLink("إعادة تعيين", "Index", null, new { @class = "btn btn-outline-secondary btn-lg" })
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-start mb-3">
+        @Html.ActionLink("تصدير التقرير الموحد إلى Excel", "ExportToExcel", new
+        {
+            lawyerIdNumber = lawyerIdNumberFilter,
+            lawyerFullName = lawyerFullNameFilter,
+            originalGovernorate = originalGovernorateFilter,
+            currentGovernorate = currentGovernorateFilter,
+            mobileNumber = mobileNumberFilter,
+            professionalStatus = professionalStatusFilter
+        }, new { @class = "btn btn-success" })
+    </div>
+
+    @if (!lawyersWithFamilies.Any())
+    {
+        <div class="alert alert-info text-center shadow-sm rounded-3 py-4" role="alert">
+            <i class="fas fa-info-circle me-2"></i> لا توجد بيانات عائلية مطابقة للمعايير المحددة.
+        </div>
+    }
+    else
+    {
+        foreach (var lawyer in lawyersWithFamilies)
+        {
+            var lawyerSpouses = Model.Spouses.Where(s => s.LawyerIdNumber == lawyer.LawyerIdNumber).ToList();
+            var lawyerChildren = Model.Children.Where(c => c.LawyerIdNumber == lawyer.LawyerIdNumber).ToList();
+
+            <div class="card mb-5 shadow-lg rounded-3 border-0">
+                <div class="card-header bg-primary text-white d-flex align-items-center py-3 rounded-top-3">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-tie me-2"></i>
+                        بيانات المحامي: @lawyer.LawyerFullName (@lawyer.LawyerIdNumber)
+                    </h4>
+                </div>
+
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <strong>الحالة المهنية:</strong>
+                            <p>@(lawyer.ProfessionalStatus ?? "غير محدد")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>محافظة الإقامة:</strong>
+                            <p>@(lawyer.CurrentGovernorate ?? "غير محدد")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>المحافظة الأصلية:</strong>
+                            <p>@(lawyer.OriginalGovernorate ?? "غير محدد")</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3 text-primary"><i class="fas fa-venus-mars me-2"></i> سجل الزوجات (@lawyerSpouses.Count())</h5>
+                        @if (!lawyerSpouses.Any())
+                        {
+                            <div class="alert alert-warning text-center" role="alert">لا توجد بيانات زوجات لهذا المحامي.</div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive rounded-3 shadow-sm">
+                                <table class="table table-hover table-striped table-bordered mb-0">
+                                    <thead class="bg-info text-white">
+                                        <tr>
+                                            <th>@Html.DisplayNameFor(model => model.Spouses.FirstOrDefault().SpouseName)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Spouses.FirstOrDefault().SpouseIdNumber)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Spouses.FirstOrDefault().SpouseMobileNumber)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var spouse in lawyerSpouses)
+                                        {
+                                            <tr>
+                                                <td>@Html.DisplayFor(modelItem => spouse.SpouseName)</td>
+                                                <td>@Html.DisplayFor(modelItem => spouse.SpouseIdNumber)</td>
+                                                <td>@Html.DisplayFor(modelItem => spouse.SpouseMobileNumber)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+
+                    <div>
+                        <h5 class="mb-3 text-success"><i class="fas fa-baby me-2"></i> سجل الأبناء (@lawyerChildren.Count())</h5>
+                        @if (!lawyerChildren.Any())
+                        {
+                            <div class="alert alert-warning text-center" role="alert">لا توجد بيانات أبناء لهذا المحامي.</div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive rounded-3 shadow-sm">
+                                <table class="table table-hover table-striped table-bordered mb-0">
+                                    <thead class="bg-success text-white">
+                                        <tr>
+                                            <th>@Html.DisplayNameFor(model => model.Children.FirstOrDefault().ChildName)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Children.FirstOrDefault().ChildIdNumber)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Children.FirstOrDefault().Gender)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Children.FirstOrDefault().DateOfBirth)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var child in lawyerChildren)
+                                        {
+                                            <tr>
+                                                <td>@Html.DisplayFor(modelItem => child.ChildName)</td>
+                                                <td>@Html.DisplayFor(modelItem => child.ChildIdNumber)</td>
+                                                <td>@Html.DisplayFor(modelItem => child.Gender)</td>
+                                                <td>@Html.DisplayFor(modelItem => child.DateOfBirth)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

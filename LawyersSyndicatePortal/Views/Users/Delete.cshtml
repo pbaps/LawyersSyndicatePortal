@@ -1,0 +1,107 @@
+﻿@model LawyersSyndicatePortal.Models.UserDetailsViewModel
+
+@{
+    ViewBag.Title = "حذف مستخدم";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+
+<style>
+
+    /* الأنماط المخصصة الجديدة */
+        .delete-container {
+                max-width: 800px;
+                margin: auto;
+
+    }
+
+        .card {
+                border: none;
+                border-radius: 1rem;
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+
+    }
+
+        .card-header {
+                background-color: #dc3545; /* لون أحمر للخطر */
+                color: white;
+                border-top-left-radius: 1rem;
+                border-top-right-radius: 1rem;
+                padding: 1.5rem;
+
+    }
+
+        .card-body h5 {
+                font-weight: bold;
+                color: #333;
+
+    }
+</style>
+
+<div class="container py-5">
+    <div class="delete-container">
+        <div class="card text-end" dir="rtl">
+            <div class="card-header">
+                <h3 class="card-title mb-0 fw-bold">
+                    <i class="fas fa-trash-alt me-2"></i> حذف مستخدم
+                </h3>
+            </div>
+            <div class="card-body p-4">
+                <h4 class="text-dark mb-4">هل أنت متأكد أنك تريد حذف هذا المستخدم؟</h4>
+
+                <dl class="row mb-4">
+                    <dt class="col-sm-4">
+                        <span class="fw-bold text-secondary"><i class="fas fa-user me-2"></i> @Html.DisplayNameFor(model => model.FullName):</span>
+                    </dt>
+                    <dd class="col-sm-8 text-dark text-right">
+                        @Html.DisplayFor(model => model.FullName)
+                    </dd>
+
+                    <dt class="col-sm-4">
+                        <span class="fw-bold text-secondary"><i class="fas fa-at me-2"></i> @Html.DisplayNameFor(model => model.Email):</span>
+                    </dt>
+                    <dd class="col-sm-8 text-dark text-right">
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+
+                    <dt class="col-sm-4">
+                        <span class="fw-bold text-secondary"><i class="fas fa-id-card me-2"></i> @Html.DisplayNameFor(model => model.IdNumber):</span>
+                    </dt>
+                    <dd class="col-sm-8 text-dark text-right">
+                        @Html.DisplayFor(model => model.IdNumber)
+                    </dd>
+
+                    <dt class="col-sm-4">
+                        <span class="fw-bold text-secondary"><i class="fas fa-link me-2"></i> @Html.DisplayNameFor(model => model.LinkedLawyerFullName):</span>
+                    </dt>
+                    <dd class="col-sm-8 text-dark text-right">
+                        @Html.DisplayFor(model => model.LinkedLawyerFullName)
+                    </dd>
+
+                    <dt class="col-sm-4">
+                        <span class="fw-bold text-secondary"><i class="fas fa-user-tag me-2"></i> @Html.DisplayNameFor(model => model.RoleName):</span>
+                    </dt>
+                    <dd class="col-sm-8 text-dark text-right">
+                        @Html.DisplayFor(model => model.RoleName)
+                    </dd>
+                </dl>
+
+                @using (Html.BeginForm("Delete", "Users", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
+
+                    <div class="d-flex justify-content-end gap-2 pt-3">
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="fas fa-trash me-2"></i> تأكيد الحذف
+                        </button>
+                        <a href="@Url.Action("Index", "Users")" class="btn btn-secondary px-4">
+                            <i class="fas fa-arrow-left me-2"></i> إلغاء
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

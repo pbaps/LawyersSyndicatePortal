@@ -1,0 +1,97 @@
+﻿@model LawyersSyndicatePortal.Models.Lawyer
+
+@{
+    ViewBag.Title = "تعديل بيانات المحامي";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">تعديل بيانات المحامي</h2>
+        <a href="@Url.Action("Index", "Lawyers")" class="btn btn-secondary px-4 py-2">
+            <i class="fas fa-arrow-right me-2"></i> العودة للقائمة
+        </a>
+    </div>
+    <p class="text-muted mb-4">قم بتحديث معلومات المحامي ثم اضغط على حفظ.</p>
+
+    <hr class="mb-5" />
+
+    @* بطاقة لجمع حقول النموذج *@
+    <div class="card shadow-sm rounded-3">
+        <div class="card-body p-4">
+
+            @using (Html.BeginForm("Edit", "Lawyers", FormMethod.Post, new { @class = "text-end", dir = "rtl" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.IdNumber) @* مهم جداً للحفاظ على رقم الهوية عند التعديل *@
+                <div class="row g-4">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4" })
+
+                    <div class="col-12">
+                        <div class="alert alert-info py-2 rounded-3">
+                            <i class="fas fa-info-circle me-2"></i> لا يمكن تعديل رقم الهوية.
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="FullName" class="form-label">@Html.DisplayNameFor(model => model.FullName)</label>
+                        @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control form-control-lg", placeholder = "الاسم الكامل" } })
+                        @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger mt-2" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="ProfessionalStatus" class="form-label">@Html.DisplayNameFor(model => model.ProfessionalStatus)</label>
+                        @Html.DropDownListFor(
+                            model => model.ProfessionalStatus,
+                            (IEnumerable<SelectListItem>)ViewBag.ProfessionalStatuses,
+                            "-- اختر الحالة المهنية --",
+                            new { @class = "form-control form-control-lg" }
+                        )
+                        @Html.ValidationMessageFor(model => model.ProfessionalStatus, "", new { @class = "text-danger mt-2" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="MembershipNumber" class="form-label">@Html.DisplayNameFor(model => model.MembershipNumber)</label>
+                        @Html.EditorFor(model => model.MembershipNumber, new { htmlAttributes = new { @class = "form-control form-control-lg", placeholder = "رقم العضوية" } })
+                        @Html.ValidationMessageFor(model => model.MembershipNumber, "", new { @class = "text-danger mt-2" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="TrainingStartDate" class="form-label">@Html.DisplayNameFor(model => model.TrainingStartDate)</label>
+                        @Html.EditorFor(model => model.TrainingStartDate, new { htmlAttributes = new { @class = "form-control form-control-lg", type = "date" } })
+                        @Html.ValidationMessageFor(model => model.TrainingStartDate, "", new { @class = "text-danger mt-2" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="PracticeStartDate" class="form-label">@Html.DisplayNameFor(model => model.PracticeStartDate)</label>
+                        @Html.EditorFor(model => model.PracticeStartDate, new { htmlAttributes = new { @class = "form-control form-control-lg", type = "date" } })
+                        @Html.ValidationMessageFor(model => model.PracticeStartDate, "", new { @class = "text-danger mt-2" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="Gender" class="form-label">@Html.DisplayNameFor(model => model.Gender)</label>
+                        @Html.DropDownListFor(model => model.Gender, new SelectList(new[] { "ذكر", "أنثى" }), "-- اختر الجنس --", new { @class = "form-control form-control-lg" })
+                        @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger mt-2" })
+                    </div>
+
+                    <div class="col-md-6 d-flex align-items-center mt-auto">
+                        <div class="form-check form-switch mb-3">
+                            @Html.EditorFor(model => model.IsActive, new { htmlAttributes = new { @class = "form-check-input", role = "switch" } })
+                            <label class="form-check-label ms-2" for="IsActive">@Html.DisplayNameFor(model => model.IsActive)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-start gap-2 mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill">
+                        <i class="fas fa-save me-2"></i> حفظ
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+}

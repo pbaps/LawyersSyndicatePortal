@@ -1,0 +1,128 @@
+﻿@model LawyersSyndicatePortal.ViewModels.ExamViewModel
+
+@{
+    ViewBag.Title = "بدء الاختبار";
+}
+
+<style>
+    /* Custom styling for the Exam Start page */
+    body {
+        background-color: #f0f2f5; /* A soft, light gray background */
+ 
+    }
+
+    .main-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        border-radius: 1rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+        .main-card:hover {
+            transform: translateY(-5px); /* Lift the card slightly on hover */
+        }
+
+    .card-header-styled {
+        background-color: #007bff; /* Blue header for a professional look */
+        color: #fff;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        padding: 2.5rem 1.5rem;
+    }
+
+    .instructions-list {
+        list-style-type: none;
+        padding-right: 0;
+    }
+
+        .instructions-list li {
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .instructions-list .icon-check {
+            color: #28a745;
+            font-size: 1.5rem;
+            margin-left: 0.5rem;
+        }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Main Card for Exam Details and Instructions -->
+            <div class="card main-card border-0">
+                <div class="card-header-styled text-center">
+                    <h1 class="h3 fw-bold mb-1">@Model.Exam.Title</h1>
+                    <p class="mb-0 text-muted">صفحة بدء الاختبار</p>
+                </div>
+                <div class="card-body p-4 text-end">
+
+                    <!-- Exam Summary Section -->
+                    <div class="mb-4">
+                        <h4 class="fw-bold mb-3 text-secondary">ملخص الاختبار</h4>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">اسم الاختبار:</span>
+                                <span>@Model.Exam.Title</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">وقت الاختبار الكلي:</span>
+                                <span>@((Model.Exam.DurationMinutes) + " دقيقة")</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">عدد الأسئلة:</span>
+                                <span>@Model.TotalQuestions سؤال</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Instructions Section -->
+                    <div class="mb-5">
+                        <h4 class="fw-bold mb-3 text-secondary">تعليمات هامة</h4>
+                        <ul class="instructions-list">
+                            <li>
+                                <i class="bi bi-check-circle-fill icon-check"></i>
+                                <span>يُرجى قراءة كل سؤال بعناية قبل الإجابة.</span>
+                            </li>
+                            <li>
+                                <i class="bi bi-check-circle-fill icon-check"></i>
+                                <span>وقت الاختبار محدد، وستظهر مؤقتات لمساعدتك في إدارة وقتك.</span>
+                            </li>
+                            <li>
+                                <i class="bi bi-check-circle-fill icon-check"></i>
+                                <span>عند انتهاء الوقت المخصص لأي سؤال، سيتم تخطيه تلقائياً.</span>
+                            </li>
+                            <li>
+                                <i class="bi bi-check-circle-fill icon-check"></i>
+                                <span>سيتم إرسال إجاباتك تلقائياً عند انتهاء وقت الاختبار الكلي.</span>
+                            </li>
+                            <li>
+                                <i class="bi bi-check-circle-fill icon-check"></i>
+                                <span>تأكد من وجود اتصال إنترنت ثابت طوال فترة الاختبار.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Start Exam Button Form -->
+                    <!-- This button submits to the controller action that begins the actual exam. -->
+                    @using (Html.BeginForm("BeginExam", "ExamTaker", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("examId", Model.Exam.Id)
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold rounded-pill">
+                                بدء الاختبار الآن
+                                <i class="bi bi-play-circle-fill me-2"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

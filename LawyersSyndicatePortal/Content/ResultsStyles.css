@@ -1,0 +1,85 @@
+﻿/*
+ * LawyersSyndicatePortal/Content/ResultsStyles.css
+ *
+ * هذا الملف يحتوي على تنسيقات مخصصة لصفحة عرض نتائج الاختبار.
+ * تم تصميمه ليكون حديثاً واحترافياً، مع دعم الاتجاه من اليمين لليسار (RTL).
+ */
+
+/* استيراد خط Cairo من Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap');
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: #f3f4f6; /* لون خلفية فاتح */
+    color: #374151; /* لون نص أساسي */
+    direction: rtl;
+    text-align: right;
+}
+
+/*
+ * ملف التنسيقات (CSS) الخاص بصفحة نتائج الاختبار.
+ *
+ * تم تصميم هذه التنسيقات لتتكامل مع Bootstrap 5
+ * وتمنح الصفحة مظهراً عصرياً وأنيقاً.
+ */
+
+/* التنسيق العام للبطاقات (Cards) */
+.card {
+    border-radius: 1rem; /* حواف مستديرة للبطاقات */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* ظل خفيف وجميل */
+    transition: transform 0.3s ease-in-out; /* تأثير التحويل عند التحويم */
+}
+
+    /* تأثير عند التحويم على البطاقة */
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+/* تنسيق عنوان القسم (مثال: تفاصيل الإجابات) */
+.section-title {
+    position: relative;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #212529;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+    /* خط تحت عنوان القسم لإضافة لمسة جمالية */
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 80px;
+        height: 4px;
+        background-color: #0d6efd; /* لون أزرق جذاب من Bootstrap */
+        border-radius: 2px;
+    }
+
+/* تنسيق شارات (Badges) الحالة */
+.badge-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.badge-danger {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.badge-warning {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+/* تنسيق بطاقة السؤال الفردي */
+.question-card {
+    background-color: #f8f9fa; /* لون خلفية فاتح للسؤال */
+    border: 1px solid #e9ecef;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+

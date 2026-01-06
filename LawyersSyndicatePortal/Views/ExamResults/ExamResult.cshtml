@@ -1,0 +1,83 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.Models.ExamResult>
+
+@{
+    ViewBag.Title = "نتائج الامتحانات";
+}
+
+<!-- حاوية رئيسية للصفحة مع تنسيق Bootstrap -->
+<div class="container py-4">
+    <!-- عنوان الصفحة -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="text-center text-primary">قائمة نتائج الامتحانات</h2>
+            <hr />
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <!-- رسالة في حالة عدم وجود نتائج لعرضها -->
+        <div class="alert alert-info text-center" role="alert">
+            لا توجد نتائج امتحانات لعرضها في الوقت الحالي.
+        </div>
+    }
+    else
+    {
+        <!-- جدول لعرض النتائج -->
+        <div class="table-responsive">
+            <table class="table table-hover table-striped shadow-sm rounded">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col">الامتحان</th>
+                        <th scope="col">المحامي</th>
+                        <th scope="col">الدرجة النهائية</th>
+                        <th scope="col">حالة التصحيح</th>
+                        <th scope="col">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="align-middle">
+                            <!-- اسم الامتحان -->
+                            <td>@Html.DisplayFor(modelItem => item.Exam.Title)</td>
+                            <!-- اسم المحامي -->
+                            <td>@Html.DisplayFor(modelItem => item.Lawyer.FullName)</td>
+                            <!-- الدرجة التي حصل عليها المحامي -->
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalScoreAchieved) من @Html.DisplayFor(modelItem => item.TotalExamScore)
+                            </td>
+                            <!-- حالة التصحيح (تم / قيد) -->
+                            <td>
+                                @if (item.IsGradingComplete)
+                                {
+                                    <span class="badge badge-success">تم التصحيح</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-warning">قيد التصحيح</span>
+                                }
+                            </td>
+                            <!-- رابط عرض التفاصيل -->
+                            <td>
+                                <!--
+                                    تم استبدال Html.ActionLink() بـ Url.Action() لحل مشكلة الخطأ
+                                    CS0828. هذه الطريقة أكثر وضوحًا في بناء الروابط.
+                                -->
+                                <a href="@Url.Action("Details", "ExamResults", new { id = item.ExamId })"
+                                   class="btn btn-outline-primary btn-sm">
+                                    تفاصيل
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <!-- FontAwesome library for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+}

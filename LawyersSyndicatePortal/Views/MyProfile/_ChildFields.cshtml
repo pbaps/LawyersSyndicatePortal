@@ -1,0 +1,57 @@
+﻿@model LawyersSyndicatePortal.ViewModels.ChildViewModel
+
+@{
+    var index = ViewData["index"] != null ? (int)ViewData["index"] : 0;
+    var prefix = $"Children[{index}]";
+    ViewData.TemplateInfo.HtmlFieldPrefix = prefix;
+}
+
+<div class="card-lux dynamic-item mb-3" data-index="@index">
+    <div class="card-header-lux">
+        <h5 class="card-title-lux mb-0 d-flex justify-content-between align-items-center">
+            <i class="fas fa-child me-2"></i>
+            تفاصيل الابن/الابنة رقم @(index + 1)
+            <button type="button" class="btn-close removeChild" aria-label="Remove"></button>
+        </h5>
+    </div>
+    <div class="card-body-lux row g-3">
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.FamilyDetailId)
+
+        <div class="col-md-6">
+            <label for="ChildName" class="form-label control-label">@Html.DisplayNameFor(model => model.ChildName)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                @Html.EditorFor(model => model.ChildName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.ChildName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-6">
+            <label for="DateOfBirth" class="form-label control-label">@Html.DisplayNameFor(model => model.DateOfBirth)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control datepicker" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-6">
+            <label for="IdNumber" class="form-label control-label">@Html.DisplayNameFor(model => model.IdNumber)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                @Html.EditorFor(model => model.IdNumber, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.IdNumber, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-6">
+            <label for="Gender" class="form-label control-label">@Html.DisplayNameFor(model => model.Gender)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                @Html.DropDownListFor(model => model.Gender, Model.Genders, "الرجاء الاختيار", new { @class = "form-control" })
+            </div>
+            @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>

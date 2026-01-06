@@ -1,0 +1,263 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - لوحة تحكم المستخدم</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <!-- هذا الرابط سيتم تحديثه بواسطة JavaScript لتغيير المظهر بين الداكن والفاتح -->
+    <link id="theme-style" href="~/Content/DarkSite.css" rel="stylesheet" />
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark navbar-user-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="@Url.Action("Index", "UserDashboard")">
+                <img src="@Url.Content("~/Content/images/logo.png")" alt="شعار النقابة" />
+                لوحة تحكم المستخدم
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#userNavbar" aria-controls="userNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="userNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        @Html.ActionLink("الرئيسية ", "UserDashboard", "Home", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("تحديث البيانات", "Index", "MyProfile", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink(" تقرير التحديث", "ViewMyCV", "LawyerCV", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink(" بحث عن عقد ", "SearchContracts", "Contracts", null, new { @class = "nav-link" })
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <!-- قائمة منسدلة لتغيير المظهر (داكن / فاتح / أخضر / أحمر) -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="themeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-sun fa-lg" id="theme-icon"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="themeDropdown" id="theme-menu">
+                            <li>
+                                <a class="dropdown-item" href="#" data-theme-name="dark" data-theme-path="@Url.Content("~/Content/DarkSite.css")">
+                                    <i class="fas fa-sun fa-fw me-2"></i> داكن
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" data-theme-name="light" data-theme-path="@Url.Content("~/Content/LightSite.css")">
+                                    <i class="fas fa-moon fa-fw me-2"></i> فاتح
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" data-theme-name="green" data-theme-path="@Url.Content("~/Content/GreenSite.css")">
+                                    <i class="fas fa-leaf fa-fw me-2"></i> أخضر
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" data-theme-name="redsite" data-theme-path="@Url.Content("~/Content/RedSite.css")">
+                                    <i class="fas fa-circle fa-fw me-2" style="color: #dc3545;"></i> أحمر
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" data-theme-name="bluegold" data-theme-path="@Url.Content("~/Content/BlueandGoldSite.css")">
+                                    <i class="fas fa-star fa-fw me-2" style="color: #FFD700;"></i> أزرق وذهبي
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" data-theme-name="purplepink" data-theme-path="@Url.Content("~/Content/PurpleandPink.css")">
+                                    <i class="fas fa-heart fa-fw me-2" style="color: #FF69B4;"></i> بنفسجي ووردي
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" data-theme-name="greenearth" data-theme-path="@Url.Content("~/Content/GreenandEarth.css")">
+                                    <i class="fas fa-globe-americas fa-fw me-2" style="color: #228B22;"></i> أخضر وأرضي
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="notification-bell">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge bg-danger rounded-pill" id="unreadCountBadge" style="display: none;">0</span>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="messagesDropdown">
+                            <li>@Html.ActionLink("صندوق الوارد", "Inbox", "Messages", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("الرسائل المرسلة", "Sent", "Messages", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("التعميمات والإعلانات", "UserBroadcasts", "Messages", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("إرسال رسالة للإدارة", "ComposeToAdmin", "Messages", null, new { @class = "dropdown-item" })</li>
+                        </ul>
+                    </li>
+                    @Html.Partial("_LoginPartial")
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+    </div>
+
+    <footer>
+        <div class="container text-muted">
+            <p>&copy; @DateTime.Now.Year - نقابة المحامين الفلسطينيين - مركز غزة. بوابة المحامي الإلكتروني - نقابة المحامين. جميع الحقوق محفوظة. تم التطوير بواسطة: مهندس محمد العمري - جوال: 0598910120</p>
+        </div>
+    </footer>
+
+    <div class="toast-container">
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="broadcastToast">
+            <div class="toast-header">
+                <i class="fas fa-bullhorn text-primary me-2"></i>
+                <strong class="me-auto">إشعار جديد</strong>
+                <small>الآن</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ar.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // استرجاع العناصر الضرورية من الـ DOM
+            const themeLink = document.getElementById('theme-style');
+            const themeIcon = document.getElementById('theme-icon');
+            const themeMenu = document.getElementById('theme-menu');
+            // الحصول على المظهر الحالي من التخزين المحلي، أو تعيينه إلى "داكن" كقيمة افتراضية
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+
+            // دالة لتطبيق المظهر المطلوب وتحديث الأيقونة
+            function applyTheme(theme) {
+                let themePath;
+                if (theme === 'dark') {
+                    themePath = "@Url.Content("~/Content/DarkSite.css")";
+                    themeIcon.className = 'fas fa-sun fa-lg';
+                } else if (theme === 'light') {
+                    themePath = "@Url.Content("~/Content/LightSite.css")";
+                    themeIcon.className = 'fas fa-moon fa-lg';
+                } else if (theme === 'green') {
+                    themePath = "@Url.Content("~/Content/GreenSite.css")";
+                    themeIcon.className = 'fas fa-leaf fa-lg';
+                } else if (theme === 'redsite') {
+                    themePath = "@Url.Content("~/Content/RedSite.css")";
+                    themeIcon.className = 'fas fa-circle fa-lg';
+                } else if (theme === 'bluegold') {
+                    themePath = "@Url.Content("~/Content/BlueandGoldSite.css")";
+                    themeIcon.className = 'fas fa-star fa-lg';
+                } else if (theme === 'purplepink') {
+                    themePath = "@Url.Content("~/Content/PurpleandPink.css")";
+                    themeIcon.className = 'fas fa-heart fa-lg';
+                } else if (theme === 'greenearth') {
+                    themePath = "@Url.Content("~/Content/GreenandEarth.css")";
+                    themeIcon.className = 'fas fa-globe-americas fa-lg';
+                }
+                themeLink.href = themePath;
+            }
+
+            // تطبيق المظهر المحفوظ عند تحميل الصفحة
+            applyTheme(currentTheme);
+
+            // إضافة مستمع حدث عند النقر على أي عنصر في القائمة المنسدلة
+            themeMenu.addEventListener('click', function (e) {
+                e.preventDefault();
+                // التحقق من أن العنصر الذي تم النقر عليه هو رابط
+                if (e.target.tagName === 'A') {
+                    const newTheme = e.target.getAttribute('data-theme-name');
+                    // حفظ المظهر الجديد في التخزين المحلي
+                    localStorage.setItem('theme', newTheme);
+                    // تطبيق المظهر الجديد
+                    applyTheme(newTheme);
+                }
+            });
+        });
+
+        // Initialize Firebase once
+        const firebaseConfig = {
+            apiKey: "AIzaSyARUCL_jNabDuS6Ljk2i1gC2RZHQ6yj5_E",
+            authDomain: "palestinian-bar-associat-590d3.firebaseapp.com",
+            projectId: "palestinian-bar-associat-590d3",
+            storageBucket: "palestinian-bar-associat-590d3.appspot.com",
+            messagingSenderId: "308835126047",
+            appId: "1:308835126047:web:2362204c457f5e7e3fbe2a"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+
+        // Register the Service Worker once
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/firebase-messaging-sw.js')
+                .then((registration) => {
+                    console.log('Service Worker registered with scope: ', registration.scope);
+                }).catch((err) => {
+                    console.log('Service Worker registration failed: ', err);
+                });
+        }
+
+        // Request permission and get the token
+        function getDeviceTokenAndSave() {
+            messaging.requestPermission().then(() => {
+                console.log('Notification permission granted.');
+                return messaging.getToken();
+            }).then((currentToken) => {
+                if (currentToken) {
+                    console.log('FCM token:', currentToken);
+                    $.ajax({
+                        url: '/Notifications/SaveDeviceToken',
+                        type: 'POST',
+                        data: { token: currentToken },
+                        success: function (response) {
+                            console.log("Token saved successfully.");
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Failed to save token.");
+                        }
+                    });
+                } else {
+                    console.warn('No FCM token available. Requesting permission...');
+                }
+            }).catch((err) => {
+                console.error('An error occurred while retrieving token. ', err);
+            });
+        }
+
+        // Show a Toast when a message is received while the user is on the page
+        messaging.onMessage((payload) => {
+            console.log('Message received. ', payload);
+            const notificationTitle = payload.notification.title;
+            const notificationBody = payload.notification.body;
+
+            const toastEl = document.getElementById('broadcastToast');
+            if (toastEl) {
+                document.getElementById('toastMessage').innerText = notificationBody;
+                const toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
+        });
+
+        // Start the process when the page is loaded
+        $(document).ready(function () {
+            getDeviceTokenAndSave();
+        });
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

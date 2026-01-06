@@ -1,0 +1,71 @@
+﻿@model LawyersSyndicatePortal.Models.Question
+@{
+    // تعيين عنوان الصفحة والربط بملف الستايل
+    ViewBag.Title = "حذف السؤال";
+ 
+}
+
+<!-- ربط بملف الستايل المشترك -->
+<link href="@Url.Content("~/Content/Examstylenew.css")" rel="stylesheet" type="text/css" />
+
+<div class="container mt-4" dir="rtl">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>هل أنت متأكد من الحذف؟</h2>
+            <hr />
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle"></i> سيتم حذف هذا السؤال وجميع الخيارات المرتبطة به نهائياً. لا يمكن التراجع عن هذا الإجراء.
+            </div>
+
+            <dl class="dl-horizontal">
+                <dt>نص السؤال</dt>
+                <dd>@Html.DisplayFor(model => model.Text)</dd>
+
+                <dt>نوع السؤال</dt>
+                <dd>@GetQuestionTypeString(Model.QuestionType)</dd>
+
+                <dt>الدرجة</dt>
+                <dd>@Html.DisplayFor(model => model.Score)</dd>
+
+                <dt>يحتاج تصحيح يدوي</dt>
+                <dd>
+                    @if (Model.RequiresManualGrading)
+                    {
+                        <span class="badge badge-success">نعم</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger">لا</span>
+                    }
+                </dd>
+            </dl>
+
+            @using (Html.BeginForm("Delete", "ExamQuestions", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="form-actions no-color">
+                    <input type="submit" value="حذف" class="btn btn-danger" />
+                    <a href="@Url.Action("Index", new { examId = Model.ExamId })" class="btn btn-secondary">العودة إلى القائمة</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@functions {
+    // دالة مساعدة لعرض نوع السؤال
+    public string GetQuestionTypeString(LawyersSyndicatePortal.Models.QuestionType type)
+    {
+        switch (type)
+        {
+            case LawyersSyndicatePortal.Models.QuestionType.MultipleChoice:
+                return "خيار متعدد";
+            case LawyersSyndicatePortal.Models.QuestionType.TextAnswer:
+                return "إجابة نصية";
+            default:
+                return "غير محدد";
+        }
+    }
+}

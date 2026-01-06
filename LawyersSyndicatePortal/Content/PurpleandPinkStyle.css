@@ -1,0 +1,28 @@
+﻿/*
+ * ملف سمة بنفسجية ووردية
+ */
+:root {
+    --bg-primary: #F9F5FF; /* بنفسجي فاتح جداً للخلفية */
+    --navbar-bg: #A258F2; /* درجة من البنفسجي لشريط التنقل */
+    --card-bg: #FFFFFF; /* أبيض نقي للبطاقات */
+    --primary-color: #6A0DAD; /* بنفسجي عميق وأساسي */
+    --secondary-color: #FF69B4; /* وردي فوشيا لللمسات الجمالية */
+    --text-dark: #4B0082; /* بنفسجي داكن للنص الرئيسي */
+    --text-muted: #8A2BE2; /* بنفسجي متوسط للنص الثانوي */
+    --text-light: #FFFFFF; /* أبيض نقي للنص الفاتح */
+    --border-color: #E9D5FF; /* حدود بنفسجية فاتحة */
+    --box-shadow-subtle: 0 6px 18px rgba(0, 0, 0, 0.1);
+    --box-shadow-hover: 0 12px 25px rgba(0, 0, 0, 0.2);
+    --border-radius-lg: 15px;
+    --primary-color-focus-ring: rgba(106, 13, 173, 0.4);
+}
+
+/* أنماط خاصة بالسمة البنفسجية والوردية */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-dark);
+}
+
+.navbar-lux {
+    background-color: var(--navbar-bg);
+}

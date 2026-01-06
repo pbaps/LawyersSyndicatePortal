@@ -1,0 +1,229 @@
+﻿@model LawyersSyndicatePortal.Models.ContactMessage
+@using LawyersSyndicatePortal.ViewModels;
+
+@{
+    ViewBag.Title = "تفاصيل رسالة الاتصال";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ReplyMessageViewModel replyModel = ViewBag.ReplyModel as ReplyMessageViewModel;
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+
+<div class="container py-4">
+    <h2 class="text-center mb-4">تفاصيل رسالة الاتصال</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm p-4 mb-4 bg-white rounded">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">تفاصيل الرسالة</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">الاسم الكامل:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.FullName)</dd>
+                <dt class="col-sm-3">البريد الإلكتروني:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+                <dt class="col-sm-3">الموضوع:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Subject)</dd>
+                <dt class="col-sm-3">تاريخ الإرسال:</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.SentDate)</dd>
+                <dt class="col-sm-3">مقروءة:</dt>
+                <dd class="col-sm-9">
+                    @if (Model.IsRead)
+                    {
+                        <span class="badge bg-success">نعم</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">لا</span>
+                    }
+                </dd>
+                <dt class="col-sm-3">تاريخ الرد:</dt>
+                <dd class="col-sm-9">
+                    @if (Model.ReplyDate.HasValue)
+                    {
+                        <span class="badge bg-info">@Model.ReplyDate.Value.ToString("yyyy-MM-dd HH:mm")</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">لم يتم الرد بعد</span>
+                    }
+                </dd>
+                <dt class="col-sm-3">نص الرسالة:</dt>
+                <dd class="col-sm-9">
+                    <div class="alert alert-light border" style="white-space: pre-wrap; word-wrap: break-word;">
+                        @Html.Raw(Model.MessageBody)
+                    </div>
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-end">
+            @Html.ActionLink("العودة إلى القائمة", "AdminContactMessages", "Messages", null, new { @class = "btn btn-secondary" })
+            @if (!Model.IsRead)
+            {
+                <button type="button" class="btn btn-success ms-2" onclick="markAsRead(@Model.Id)">
+                    <i class="fas fa-eye me-1"></i> وضع علامة "مقروءة"
+                </button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-warning ms-2" onclick="markAsUnread(@Model.Id)">
+                    <i class="fas fa-eye-slash me-1"></i> وضع علامة "غير مقروءة"
+                </button>
+            }
+        </div>
+    </div>
+
+    <div class="card shadow-sm p-4 mb-4 bg-white rounded">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">الرد على الرسالة</h4>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("ReplyToContactMessage", "Messages", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "replyForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("OriginalMessageId", Model.Id)
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="mb-3 row">
+                    <label class="col-md-3 col-form-label">المرسل الأصلي:</label>
+                    <div class="col-md-9">
+                        <p class="form-control-plaintext">@Model.FullName (@Model.Email)</p>
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    @Html.LabelFor(model => replyModel.ReplySubject, htmlAttributes: new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextBox("ReplySubject", replyModel.ReplySubject, new { @class = "form-control", placeholder = "موضوع الرد" })
+                        @Html.ValidationMessage("ReplySubject", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    @Html.LabelFor(model => replyModel.ReplyBody, htmlAttributes: new { @class = "col-md-3 col-form-label" })
+                    <div class="col-md-9">
+                        @Html.TextArea("ReplyBody", replyModel.ReplyBody, new { @class = "form-control tinymce-editor", rows = 10, placeholder = "اكتب نص الرد هنا..." })
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <div class="offset-md-3 col-md-9">
+                        <button type="submit" class="btn btn-primary" id="submitReplyButton">
+                            <i class="fas fa-reply me-2"></i> إرسال الرد
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="https://cdn.tiny.cloud/1/nej7aks4rv03ieppa8zl3x45z1e3fz947m8n5w2zntp34eth/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+
+    <script>
+        // دوال JavaScript التي يتم استدعاؤها من HTML يجب أن تكون هنا في النطاق العام
+        function markAsRead(id) {
+            showCustomConfirm('هل أنت متأكد أنك تريد وضع علامة "مقروءة" على هذه الرسالة؟', function() {
+                $.post('@Url.Action("MarkContactMessageAsRead", "Messages")', { id: id }, function (response) {
+                    location.reload();
+                });
+            });
+        }
+
+        function markAsUnread(id) {
+            showCustomConfirm('هل أنت متأكد أنك تريد وضع علامة "غير مقروءة" على هذه الرسالة؟', function() {
+                $.post('@Url.Action("MarkContactMessageAsUnread", "Messages")', { id: id }, function (response) {
+                    location.reload();
+                });
+            });
+        }
+
+        function showCustomConfirm(message, callback) {
+            if (window.confirm(message)) {
+                callback();
+            }
+        }
+
+        function showCustomAlert(message, type) {
+            var alertHtml = '<div class="alert alert-' + type + ' alert-dismissible fade show" role="alert">' +
+                message +
+                '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+                '</div>';
+            $('h2.text-center.mb-4').after(alertHtml);
+            window.setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 100000);
+        }
+
+        tinymce.init({
+            selector: '.tinymce-editor',
+            language: 'ar',
+            directionality: 'rtl',
+            plugins: [
+                'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+                'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+            ],
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            font_family_formats: 'Cairo=cairo; Arial=arial,helvetica,sans-serif; Courier New=courier new,courier,monospace; AkrutiKndPcl=akrutikndpcl; Andale Mono=andale mono,times; Arial Black=arial black,sans-serif; Book Antiqua=book antiqua,palatino; Comic Sans MS=comic sans ms,sans-serif; Fixedsys=fixedsys; Georgia=georgia,palatino; Impact=impact,sans-serif; Symbol=symbol; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; Times New Roman=times new roman,times; Trebuchet MS=trebuchet ms,geneva; Verdana=verdana,geneva; Webdings=webdings; Wingdings=wingdings,zapf dingbats',
+            content_style: 'body { font-family: Cairo, Helvetica, Arial, sans-serif; font-size:14px; direction: rtl; text-align: right; }',
+            verify_html: false,
+            valid_elements: '+*[*]'
+        });
+
+        $(document).ready(function () {
+            window.setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 5000);
+
+            $('#replyForm').submit(function (event) {
+                event.preventDefault();
+
+                var $form = $(this);
+                var $submitButton = $('#submitReplyButton');
+
+                // الحصول على المحتوى من محرر TinyMCE قبل التحقق من الصحة
+                var tinyMceContent = tinymce.get($('.tinymce-editor').attr('id')).getContent();
+                $('textarea[name="ReplyBody"]').val(tinyMceContent);
+
+                if (!$form.valid()) {
+                    showCustomAlert("يرجى مراجعة الحقول المطلوبة قبل الإرسال.", "danger");
+                    $submitButton.prop('disabled', false).html('<i class="fas fa-reply me-2"></i> إرسال الرد');
+                    return false;
+                }
+
+                $submitButton.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> جارٍ الإرسال...');
+                $form[0].submit();
+            });
+        });
+    </script>
+}

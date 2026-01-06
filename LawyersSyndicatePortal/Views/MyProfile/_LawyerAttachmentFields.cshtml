@@ -1,0 +1,94 @@
+﻿@model LawyersSyndicatePortal.ViewModels.LawyerAttachmentViewModel
+
+@{
+    var index = ViewData["index"] != null ? (int)ViewData["index"] : 0;
+    var prefix = $"Attachments[{index}]";
+    ViewData.TemplateInfo.HtmlFieldPrefix = prefix;
+    var availableAttachmentTypes = ViewData["AvailableAttachmentTypes"] as List<SelectListItem>;
+}
+
+<div class="col-12 dynamic-item mb-3" data-index="@index" data-attachment-id="@Model.Id">
+    <div class="card-lux">
+        <div class="card-header-lux d-flex justify-content-between align-items-center">
+            <h6 class="card-title-lux mb-0">تفاصيل المرفق رقم @(index + 1)</h6>
+            <button type="button" class="btn btn-sm btn-danger remove-attachment-item">
+                <i class="fas fa-trash-alt me-2"></i>إزالة
+            </button>
+        </div>
+        <div class="card-body-lux">
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.ExistingFileName)
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="@(prefix)_AttachmentType" class="form-label control-label">@Html.DisplayNameFor(model => model.AttachmentType)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-paperclip"></i></span>
+                        @Html.DropDownListFor(model => model.AttachmentType, availableAttachmentTypes, "الرجاء الاختيار", new { @class = "form-select attachment-type-dropdown" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.AttachmentType, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6">
+                    <label for="@(prefix)_File" class="form-label control-label">@Html.DisplayNameFor(model => model.File)</label>
+                    @if (!string.IsNullOrEmpty(Model.ExistingFileName))
+                    {
+                        <p class="mb-1 text-muted">الملف الحالي: @Model.ExistingFileName</p>
+                        <p class="text-muted small">يمكنك اختيار ملف جديد لاستبداله.</p>
+                        <div class="d-flex gap-2 mb-2">
+                            <button type="button" class="btn btn-danger btn-sm delete-existing-attachment" data-id="@Model.Id">
+                                <i class="fas fa-trash-alt me-2"></i>حذف المرفق
+                            </button>
+                            <a href="@Url.Action("DisplayAttachment", "LawyerCV", new { attachmentId = Model.Id })" target="_blank" class="btn btn-info btn-sm">
+                                <i class="fas fa-eye me-2"></i>عرض المرفق
+                            </a>
+                        </div>
+                    }
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-upload"></i></span>
+                        <input type="file" id="@(Html.IdFor(model => model.File))" name="@(Html.NameFor(model => model.File))" class="form-control attachment-file-input" />
+                    </div>
+                    @Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })
+                    <small class="form-text text-muted file-type-hint mt-2">الحد الأقصى للحجم: 2 ميجابايت، النوع: PDF فقط.</small>
+                </div>
+
+                <div class="col-12">
+                    <label for="@(prefix)_Notes" class="form-label control-label">@Html.DisplayNameFor(model => model.Notes)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-sticky-note"></i></span>
+                        @Html.TextAreaFor(model => model.Notes, new { @class = "form-control", rows = 3 })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateFileAcceptAttribute(panelElement) {
+        var $panel = $(panelElement);
+        var $attachmentTypeDropdown = $panel.find('.attachment-type-dropdown');
+        var $fileInput = $panel.find('.attachment-file-input');
+        var $fileTypeHint = $panel.find('.file-type-hint');
+
+        var selectedType = $attachmentTypeDropdown.val();
+
+        if (selectedType === "صورة الهوية مع السليب") {
+            $fileInput.attr('accept', 'image/jpeg,image/png');
+            $fileTypeHint.text('الحد الأقصى للحجم: 2 ميجابايت، النوع: JPG أو PNG فقط.');
+        } else {
+            $fileInput.attr('accept', 'application/pdf');
+            $fileTypeHint.text('الحد الأقصى للحجم: 2 ميجابايت، النوع: PDF فقط.');
+        }
+    }
+
+    $(document).ready(function () {
+        var $currentPanel = $('.dynamic-item[data-index="@index"]');
+        updateFileAcceptAttribute($currentPanel);
+
+        $currentPanel.find('.attachment-type-dropdown').on('change', function () {
+            updateFileAcceptAttribute($currentPanel);
+        });
+    });
+</script>

@@ -1,0 +1,48 @@
+﻿@model LawyersSyndicatePortal.ViewModels.SpouseViewModel
+
+@{
+    var index = ViewData["index"] != null ? (int)ViewData["index"] : 0;
+    var prefix = $"Spouses[{index}]";
+    ViewData.TemplateInfo.HtmlFieldPrefix = prefix;
+}
+
+<div class="card-lux dynamic-item mb-3" data-index="@index">
+    <div class="card-header-lux">
+        <h5 class="card-title-lux mb-0 d-flex justify-content-between align-items-center">
+            <i class="fas fa-user-friends me-2"></i>
+            تفاصيل الزوجة رقم @(index + 1)
+            <button type="button" class="btn-close removeSpouse" aria-label="Remove"></button>
+        </h5>
+    </div>
+    <div class="card-body-lux row g-3">
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.FamilyDetailId)
+
+        <div class="col-md-6">
+            <label for="SpouseName" class="form-label control-label">@Html.DisplayNameFor(model => model.SpouseName)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                @Html.EditorFor(model => model.SpouseName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.SpouseName, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-6">
+            <label for="SpouseIdNumber" class="form-label control-label">@Html.DisplayNameFor(model => model.SpouseIdNumber)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                @Html.EditorFor(model => model.SpouseIdNumber, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.SpouseIdNumber, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-6">
+            <label for="SpouseMobileNumber" class="form-label control-label">@Html.DisplayNameFor(model => model.SpouseMobileNumber)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-mobile-alt"></i></span>
+                @Html.EditorFor(model => model.SpouseMobileNumber, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.SpouseMobileNumber, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>

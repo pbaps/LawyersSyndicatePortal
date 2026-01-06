@@ -1,0 +1,111 @@
+﻿@model LawyersSyndicatePortal.ViewModels.HomeDamageViewModel
+
+@{
+    ViewBag.Title = "تعديل أضرار المنزل";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="dashboard-wrapper">
+    <h2 class="page-title">
+        تعديل أضرار المنزل
+    </h2>
+
+    @* Success and Error Messages Section *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-card-glow alert-success-glow mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert-card-glow alert-danger-glow mb-4" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card-lux">
+        <div class="card-header-lux">
+            <h5 class="card-title-lux mb-0">
+                <i class="fas fa-tools me-2"></i>
+                تعديل أضرار المنزل
+            </h5>
+        </div>
+        <div class="card-body-lux">
+            @using (Html.BeginForm("EditHomeDamage", "MyProfile", FormMethod.Post, new { @class = "row g-3" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger col-12" })
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="col-4 mt-4">
+                    <div class="form-check form-switch">
+                        @Html.EditorFor(model => model.HasHomeDamage, new { htmlAttributes = new { @class = "form-check-input", id = "hasHomeDamage" } })
+                        <label for="hasHomeDamage" class="form-check-label control-label">@Html.DisplayNameFor(model => model.HasHomeDamage)</label>
+                        @Html.ValidationMessageFor(model => model.HasHomeDamage, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div id="damageDetailsSection" class="col-12" style="@(Model.HasHomeDamage ? "" : "display:none;")">
+                    <div class="card-lux mt-3">
+                        <div class="card-header-lux">
+                            <h5 class="card-title-lux mb-0">
+                                <i class="fas fa-hammer me-2"></i>
+                                تفاصيل الأضرار
+                            </h5>
+                        </div>
+                        <div class="card-body-lux">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="DamageType" class="form-label control-label">@Html.DisplayNameFor(model => model.DamageType)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-list-alt"></i></span>
+                                        @Html.DropDownListFor(model => model.DamageType, Model.DamageTypes, "الرجاء الاختيار", new { @class = "form-control" })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.DamageType, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="DamageDetails" class="form-label control-label">@Html.DisplayNameFor(model => model.DamageDetails)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-comment-dots"></i></span>
+                                        @Html.TextAreaFor(model => model.DamageDetails, new { @class = "form-control", rows = 3 })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.DamageDetails, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg me-2"><i class="fas fa-save me-2"></i>حفظ</button>
+                    @Html.ActionLink("العودة إلى الملف الشخصي", "Index", "MyProfile", null, new { @class = "btn btn-outline-secondary btn-lg" })
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            $('#hasHomeDamage').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#damageDetailsSection').show();
+                } else {
+                    $('#damageDetailsSection').hide();
+                    $('#DamageType').val('');
+                    $('#DamageDetails').val('');
+                }
+            }).change();
+        });
+    </script>
+}

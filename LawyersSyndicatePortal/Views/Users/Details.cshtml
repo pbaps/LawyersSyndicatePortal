@@ -1,0 +1,110 @@
+﻿@model LawyersSyndicatePortal.Models.UserDetailsViewModel
+
+@{
+    ViewBag.Title = "تفاصيل المستخدم";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
+
+<style>
+    /* الأنماط المخصصة الجديدة */
+    .details-container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .card {
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: #0d6efd;
+        color: white;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        padding: 1.5rem;
+    }
+
+    .dl-horizontal-custom dt {
+        float: right;
+        clear: right;
+        text-align: left;
+        font-weight: 500;
+        width: 30%;
+        padding-left: 15px;
+    }
+
+    .dl-horizontal-custom dd {
+        margin-right: 30%;
+        text-align: right;
+        padding-right: 15px;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="details-container">
+        <div class="card text-end" dir="rtl">
+            <div class="card-header">
+                <h3 class="card-title mb-0 fw-bold">
+                    <i class="fas fa-user-circle me-2"></i> تفاصيل المستخدم
+                </h3>
+            </div>
+            <div class="card-body p-4">
+                <dl class="row">
+                    <dt class="col-sm-4 text-secondary">
+                        <i class="fas fa-at me-2"></i> @Html.DisplayNameFor(model => model.Email)
+                    </dt>
+                    <dd class="col-sm-8 text-dark fw-bold">
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+
+                    <dt class="col-sm-4 text-secondary">
+                        <i class="fas fa-user me-2"></i> @Html.DisplayNameFor(model => model.FullName)
+                    </dt>
+                    <dd class="col-sm-8 text-dark fw-bold">
+                        @Html.DisplayFor(model => model.FullName)
+                    </dd>
+
+                    <dt class="col-sm-4 text-secondary">
+                        <i class="fas fa-id-card me-2"></i> @Html.DisplayNameFor(model => model.IdNumber)
+                    </dt>
+                    <dd class="col-sm-8 text-dark fw-bold">
+                        @Html.DisplayFor(model => model.IdNumber)
+                    </dd>
+
+                    <dt class="col-sm-4 text-secondary">
+                        <i class="fas fa-link me-2"></i> @Html.DisplayNameFor(model => model.LinkedLawyerFullName)
+                    </dt>
+                    <dd class="col-sm-8 text-dark fw-bold">
+                        @Html.DisplayFor(model => model.LinkedLawyerFullName)
+                    </dd>
+
+                    <dt class="col-sm-4 text-secondary">
+                        <i class="fas fa-user-tag me-2"></i> @Html.DisplayNameFor(model => model.RoleName)
+                    </dt>
+                    <dd class="col-sm-8 text-dark fw-bold">
+                        @Html.DisplayFor(model => model.RoleName)
+                    </dd>
+
+                    <dt class="col-sm-4 text-secondary">
+                        <i class="fas fa-calendar-alt me-2"></i> @Html.DisplayNameFor(model => model.CreationDate)
+                    </dt>
+                    <dd class="col-sm-8 text-dark fw-bold">
+                        @Html.DisplayFor(model => model.CreationDate)
+                    </dd>
+                </dl>
+            </div>
+            <div class="card-footer d-flex justify-content-end gap-2 p-4">
+                <a href="@Url.Action("Edit", "Users", new { id = Model.Id })" class="btn btn-primary px-4">
+                    <i class="fas fa-edit me-2"></i> تعديل
+                </a>
+                <a href="@Url.Action("Index", "Users")" class="btn btn-secondary px-4">
+                    <i class="fas fa-arrow-left me-2"></i> العودة إلى القائمة
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

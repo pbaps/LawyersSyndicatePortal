@@ -1,0 +1,86 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.Models.Answer>
+
+@{
+    ViewBag.Title = "تصحيح يدوي";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var examAttendee = ViewBag.ExamAttendee as LawyersSyndicatePortal.Models.ExamAttendee;
+}
+
+<div class="container py-5 text-right" dir="rtl">
+    <div class="card shadow-lg p-4 rounded-4 border-0">
+        <h2 class="card-title text-center text-primary mb-4">
+            تصحيح إجابات: @examAttendee.Lawyer.FullName
+        </h2>
+        <h4 class="card-subtitle text-muted text-center mb-4">
+            الامتحان: @examAttendee.Exam.Title
+        </h4>
+
+        @* عرض رسائل النجاح والخطأ *@
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show text-right" role="alert" dir="rtl">
+                <strong>نجاح!</strong> @TempData["SuccessMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show text-right" role="alert" dir="rtl">
+                <strong>خطأ!</strong> @TempData["ErrorMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        <!-- نموذج لإرسال الدرجات اليدوية -->
+        @using (Html.BeginForm("SaveManualGrade", "AdminResult", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("ExamAttendeeId", examAttendee.Id)
+
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th scope="col">السؤال</th>
+                            <th scope="col">إجابة الملتحق</th>
+                            <th scope="col">الدرجة المكتسبة</th>
+                            <th scope="col">درجة السؤال</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Count(); i++)
+                        {
+                            var answer = Model.ElementAt(i);
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => answer.Question.Text)</td>
+                                <td>@Html.DisplayFor(modelItem => answer.UserAnswer)</td>
+                                <td>
+                                    <!-- حقل إدخال للدرجة المكتسبة، مع تسمية صحيحة لتطابق النموذج -->
+                                    <input type="number"
+                                           step="0.1"
+                                           class="form-control"
+                                           name="Grades[@i].AcquiredScore"
+                                           value="@answer.AcquiredScore" />
+                                    <!-- حقل مخفي لمعرف الإجابة -->
+                                    <input type="hidden"
+                                           name="Grades[@i].AnswerId"
+                                           value="@answer.Id" />
+                                </td>
+                                <td>@Html.DisplayFor(modelItem => answer.Question.Score)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-success">حفظ الدرجات</button>
+                @Html.ActionLink("العودة إلى القائمة", "Index", "AdminResult", null, new { @class = "btn btn-secondary" })
+            </div>
+        }
+    </div>
+</div>

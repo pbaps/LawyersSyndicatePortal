@@ -1,0 +1,134 @@
+﻿@model LawyersSyndicatePortal.ViewModels.LawyerAttachmentsListViewModel
+@using System.Web.Security
+
+@{
+    ViewBag.Title = "إدارة المرفقات";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="container-fluid py-4 text-right" dir="rtl">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-lux">
+                <div class="card-header-lux">
+                    <h5 class="card-title-lux mb-0"><i class="fas fa-paperclip me-2"></i>إدارة المرفقات</h5>
+                </div>
+                <div class="card-body-lux">
+                    <div class="alert alert-warning d-flex align-items-center mb-4 p-3" role="alert">
+                        <i class="fas fa-exclamation-triangle me-3 fa-2x text-warning"></i>
+                        <div>
+                            <strong class="h5">تنبيه:</strong>
+                            <span class="fs-6">يجب أن تكون جميع المرفقات من نوع ملف PDF.</span>
+                        </div>
+                    </div>
+
+                    @using (Html.BeginForm("EditLawyerAttachments", "MyProfile", FormMethod.Post, new { enctype = "multipart/form-data", @class = "row g-3" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.LawyerIdNumber)
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger col-12" })
+
+                        <div id="attachmentsContainer" class="col-12">
+                            @if (Model.Attachments != null)
+                            {
+                                for (int i = 0; i < Model.Attachments.Count; i++)
+                                {
+                                    @Html.Partial("_LawyerAttachmentFields", Model.Attachments[i], new ViewDataDictionary { { "index", i }, { "AvailableAttachmentTypes", Model.AvailableAttachmentTypes } })
+                                }
+                            }
+                        </div>
+
+                        <div class="col-12 text-end mt-3">
+                            <button type="button" id="addAttachmentBtn" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus-circle me-2"></i>إضافة مرفق آخر
+                            </button>
+                        </div>
+
+                        <div class="col-12 text-center mt-4">
+                            <input type="submit" value="حفظ المرفقات" class="btn btn-primary btn-lg me-2" />
+                            @Html.ActionLink("العودة إلى الملف الشخصي", "Index", "MyProfile", null, new { @class = "btn btn-outline-secondary btn-lg" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            var addAttachmentUrl = '@Url.Action("AddLawyerAttachmentField", "MyProfile")';
+            var deleteAttachmentUrl = '@Url.Action("DeleteLawyerAttachment", "MyProfile")';
+
+            function reindexDynamicItems(containerId, prefixName) {
+                $('#' + containerId + ' .dynamic-item').each(function (i) {
+                    $(this).attr('data-index', i);
+                    $(this).find(':input').each(function () {
+                        var currentName = $(this).attr('name');
+                        if (currentName) {
+                            var newName = currentName.replace(new RegExp(prefixName + '\\[\\d+\\]'), prefixName + '[' + i + ']');
+                            $(this).attr('name', newName);
+                        }
+                        var currentId = $(this).attr('id');
+                        if (currentId) {
+                            var newId = currentId.replace(new RegExp(prefixName + '_\\d+__'), prefixName + '_' + i + '__');
+                            $(this).attr('id', newId);
+                        }
+                    });
+                    var panelTitle = $(this).find('.card-title-lux');
+                    if (panelTitle.length) {
+                        panelTitle.text('تفاصيل المرفق رقم ' + (i + 1));
+                    }
+                });
+                var form = $('form');
+                form.removeData('validator');
+                form.removeData('unobtrusiveValidation');
+                $.validator.unobtrusive.parse(form);
+            }
+
+            $('#addAttachmentBtn').click(function () {
+                var newIndex = $('#attachmentsContainer .dynamic-item').length;
+                $.post(addAttachmentUrl, { index: newIndex }, function (data) {
+                    $('#attachmentsContainer').append(data);
+                    reindexDynamicItems('attachmentsContainer', 'Attachments');
+                });
+            });
+
+            $(document).on('click', '.remove-attachment-item', function () {
+                var $itemToRemove = $(this).closest('.dynamic-item');
+                var attachmentId = $itemToRemove.data('attachment-id');
+
+                if (attachmentId && attachmentId > 0) {
+                    if (confirm('هل أنت متأكد أنك تريد حذف هذا المرفق بشكل دائم؟')) {
+                        $.ajax({
+                            url: deleteAttachmentUrl,
+                            type: 'POST',
+                            data: { id: attachmentId },
+                            success: function (response) {
+                                if (response.success) {
+                                    $itemToRemove.remove();
+                                    reindexDynamicItems('attachmentsContainer', 'Attachments');
+                                    alert('تم حذف المرفق بنجاح.');
+                                } else {
+                                    alert('فشل حذف المرفق: ' + response.message);
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("AJAX Error (DeleteAttachment):", status, error);
+                                alert('حدث خطأ أثناء محاولة حذف المرفق.');
+                            }
+                        });
+                    }
+                } else {
+                    $itemToRemove.remove();
+                    reindexDynamicItems('attachmentsContainer', 'Attachments');
+                }
+            });
+
+            reindexDynamicItems('attachmentsContainer', 'Attachments');
+        });
+    </script>
+}

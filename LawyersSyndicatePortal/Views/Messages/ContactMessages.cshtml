@@ -1,0 +1,78 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.Models.ContactMessage>
+
+@{
+    ViewBag.Title = "رسائل الزوار";
+}
+
+<div class="container mt-4">
+    <h2><i class="fas fa-inbox"></i> رسائل الزوار</h2>
+    <hr />
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info" role="alert">
+            <i class="fas fa-info-circle"></i> لا توجد رسائل واردة حاليًا.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th><i class="fas fa-user"></i> @Html.DisplayNameFor(model => model.FullName)</th>
+                    <th><i class="fas fa-envelope"></i> @Html.DisplayNameFor(model => model.Email)</th>
+                    <th><i class="fas fa-heading"></i> @Html.DisplayNameFor(model => model.Subject)</th>
+                    <th><i class="fas fa-clock"></i> @Html.DisplayNameFor(model => model.SentDate)</th>
+                    <th><i class="fas fa-check-circle"></i> @Html.DisplayNameFor(model => model.IsRead)</th>
+                    <th><i class="fas fa-reply"></i> @Html.DisplayNameFor(model => model.ReplyDate)</th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="@(item.IsRead ? "table-light" : "table-warning font-weight-bold")">
+                        <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                        <td>@Html.DisplayFor(modelItem => item.SentDate)</td>
+                        <td>
+                            @if (item.IsRead)
+                            {
+                                <i class="fas fa-check text-success" title="مقروءة"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-circle text-danger" title="غير مقروءة"></i>
+                            }
+                        </td>
+                        <td>
+                            @if (item.ReplyDate.HasValue)
+                            {
+                                <span class="badge badge-success">تم الرد</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-secondary">لم يتم الرد</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("AdmiinReplyToContactMessage", new { id = item.Id })" class="btn btn-sm btn-primary" title="الرد على الرسالة">
+                                <i class="fas fa-reply"></i> رد
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

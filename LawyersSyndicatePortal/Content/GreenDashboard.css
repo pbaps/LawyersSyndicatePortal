@@ -1,0 +1,28 @@
+﻿/*
+ * ملف سمة خضراء
+ */
+:root {
+    --bg-primary: #e8f5e9; /* خلفية خضراء فاتحة ناعمة */
+    --navbar-bg: #2e7d32; /* أخضر عميق لشريط التنقل */
+    --card-bg: #ffffff; /* أبيض نقي للبطاقات */
+    --primary-color: #388e3c; /* أخضر عميق وأنيق */
+    --secondary-color: #a5d6a7; /* أخضر فاتح وناعم لللمسات الجمالية */
+    --text-dark: #263238; /* فحم داكن للنص الرئيسي */
+    --text-muted: #546e7a; /* رمادي باهت للنص الثانوي */
+    --text-light: #ffffff; /* أبيض نقي للنص الفاتح */
+    --border-color: #e0e0e0; /* حدود رمادية ناعمة */
+    --box-shadow-subtle: 0 6px 18px rgba(0, 0, 0, 0.08);
+    --box-shadow-hover: 0 12px 25px rgba(0, 0, 0, 0.15);
+    --border-radius-lg: 15px;
+    --primary-color-focus-ring: rgba(56, 142, 60, 0.4);
+}
+
+/* أنماط خاصة بالسمة الخضراء */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-dark);
+}
+
+.navbar-lux {
+    background-color: var(--navbar-bg);
+}

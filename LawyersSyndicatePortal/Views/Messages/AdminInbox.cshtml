@@ -1,0 +1,145 @@
+﻿@model LawyersSyndicatePortal.ViewModels.MessageListViewModel
+
+@{
+    ViewBag.Title = "صندوق وارد الإدارة";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // استخدام الـ Layout الخاص بالمسؤولين
+}
+
+<div class="container py-5" dir="rtl">
+    <h2 class="text-right mb-4">@ViewBag.Title</h2>
+    <hr />
+
+    @* Success/Error Message *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-right" role="alert">
+            @Html.Raw(TempData["SuccessMessage"])
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-right" role="alert">
+            @Html.Raw(TempData["ErrorMessage"])
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* Search and Filter Form *@
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white text-right">
+            <h5 class="mb-0">بحث وتصفية الرسائل</h5>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("AdminInbox", "Messages", FormMethod.Get, new { @class = "row g-3 align-items-center" }))
+            {
+                <div class="col-md-8">
+                    <label for="searchString" class="visually-hidden">البحث عن رسالة</label>
+                    @Html.TextBox("searchString", Model.SearchString, new { @class = "form-control", placeholder = "ابحث بالاسم، الموضوع، أو نص الرسالة..." })
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> بحث</button>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (Model.Messages != null && Model.Messages.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered text-right">
+                <thead class="table-primary">
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Messages.FirstOrDefault().SenderUser.FullName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Messages.FirstOrDefault().Subject)</th>
+                        <th>@Html.DisplayNameFor(model => model.Messages.FirstOrDefault().SentDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.Messages.FirstOrDefault().IsRead)</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Messages)
+                    {
+                        <tr class="@(item.IsRead ? "" : "fw-bold")">
+                            @* تمييز الرسائل غير المقروءة بخط عريض *@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SenderUser.FullName)
+                                @if (item.SenderUser != null && item.SenderUser.IdNumber != null)
+                                {
+                                    <small class="text-muted">(@item.SenderUser.IdNumber)</small>
+                                }
+                            </td>
+                            <td>@Html.DisplayFor(modelItem => item.Subject)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SentDate)</td>
+                            <td>
+                                @if (item.IsRead)
+                                {
+                                    <i class="fas fa-check-circle text-success" title="مقروءة"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-envelope text-warning" title="غير مقروءة"></i>
+                                }
+                            </td>
+                            <td>
+                                @Html.ActionLink("التفاصيل", "Details", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
+                                @* زر الحذف (يمكن إضافته لاحقاً مع تأكيد) *@
+                                @* @Html.ActionLink("حذف", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" }) *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* Pagination *@
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        @Html.ActionLink("السابق", "AdminInbox", new { page = Model.CurrentPage - 1, pageSize = Model.PageSize, searchString = Model.SearchString }, new { @class = "page-link" })
+                    </li>
+                }
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        @Html.ActionLink(i.ToString(), "AdminInbox", new { page = i, pageSize = Model.PageSize, searchString = Model.SearchString }, new { @class = "page-link" })
+                    </li>
+                }
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        @Html.ActionLink("التالي", "AdminInbox", new { page = Model.CurrentPage + 1, pageSize = Model.PageSize, searchString = Model.SearchString }, new { @class = "page-link" })
+                    </li>
+                }
+            </ul>
+        </nav>
+
+        @* Page Size Dropdown *@
+        <div class="d-flex justify-content-center mt-3">
+            <label for="pageSizeSelect" class="me-2">عدد العناصر في الصفحة:</label>
+            @* تم تعديل هذا السطر لاستخدام Model.PageSizes مباشرة *@
+            @Html.DropDownList("pageSize", Model.PageSizes, new { @class = "form-select w-auto", onchange = "this.form.submit();", id = "pageSizeSelect" })
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> لا توجد رسائل واردة حالياً في صندوق وارد الإدارة.
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Hide success/error messages after 5 seconds
+            window.setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 5000); // 5 seconds
+        });
+    </script>
+}

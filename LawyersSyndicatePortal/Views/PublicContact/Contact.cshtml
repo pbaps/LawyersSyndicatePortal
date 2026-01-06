@@ -1,0 +1,96 @@
+﻿@model LawyersSyndicatePortal.Models.ContactMessage
+
+@{
+    // تحديد الـ Layout ليستخدم _PublicLayout.cshtml
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+    ViewBag.Title = "تواصل معنا";
+}
+
+<h2 class="text-center mb-4">تواصل معنا</h2>
+
+@using (Html.BeginForm("Contact", "PublicContact", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+        <div class="card-body">
+            <h4 class="card-title text-primary mb-4">نموذج رسالة الاتصال</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <!-- رسائل النجاح أو الخطأ -->
+            @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @ViewBag.SuccessMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @ViewBag.ErrorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- حقل الاسم الكامل -->
+            <div class="mb-3 row">
+                @Html.LabelFor(model => model.FullName, htmlAttributes: new { @class = "col-md-3 col-form-label" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control", placeholder = "ادخل اسمك الكامل" } })
+                    @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- حقل البريد الإلكتروني -->
+            <div class="mb-3 row">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "col-md-3 col-form-label" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "ادخل بريدك الإلكتروني" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- حقل الموضوع -->
+            <div class="mb-3 row">
+                @Html.LabelFor(model => model.Subject, htmlAttributes: new { @class = "col-md-3 col-form-label" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control", placeholder = "موضوع الرسالة" } })
+                    @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- حقل نص الرسالة -->
+            <div class="mb-3 row">
+                @Html.LabelFor(model => model.MessageBody, htmlAttributes: new { @class = "col-md-3 col-form-label" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(model => model.MessageBody, new { @class = "form-control", rows = 8, placeholder = "اكتب رسالتك هنا..." })
+                    @Html.ValidationMessageFor(model => model.MessageBody, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- زر الإرسال -->
+            <div class="mb-3 row">
+                <div class="offset-md-3 col-md-9">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane me-2"></i> إرسال الرسالة
+                    </button>
+                    @* يمكنك إضافة زر للعودة للصفحة الرئيسية إذا أردت *@
+                    @Html.ActionLink("العودة إلى الرئيسية", "Index", "Home", null, new { @class = "btn btn-secondary ms-2" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // يمكنك إضافة أي سكريبتات jQuery أو JavaScript خاصة بالتحقق من الصحة هنا
+            // على سبيل المثال، تهيئة أي مكونات واجهة مستخدم إضافية
+        });
+    </script>
+}

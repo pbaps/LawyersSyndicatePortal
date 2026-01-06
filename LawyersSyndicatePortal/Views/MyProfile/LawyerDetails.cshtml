@@ -1,0 +1,614 @@
+﻿@model LawyersSyndicatePortal.ViewModels.LawyerDetailsViewModel
+
+@{
+    ViewBag.Title = "بيانات المحامي";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // يمكنك تغيير هذا الـ Layout إذا كان لديك Layout آخر للمسؤولين
+}
+
+<h2>بيانات المحامي: @Model.LawyerFullName</h2>
+<hr />
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+    @* معلومات المحامي الأساسية *@
+    <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    المعلومات الأساسية
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.LawyerIdNumber)</dt>
+                    <dd>@Html.DisplayFor(model => model.LawyerIdNumber)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.LawyerFullName)</dt>
+                    <dd>@Html.DisplayFor(model => model.LawyerFullName)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.ProfessionalStatus)</dt>
+                    <dd>@Html.DisplayFor(model => model.ProfessionalStatus)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.MembershipNumber)</dt>
+                    <dd>@Html.DisplayFor(model => model.MembershipNumber)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.PracticeStartDate)</dt>
+                    <dd>@Html.DisplayFor(model => model.PracticeStartDate)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.TrainingStartDate)</dt>
+                    <dd>@Html.DisplayFor(model => model.TrainingStartDate)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.TrainerLawyerName)</dt>
+                    <dd>@Html.DisplayFor(model => model.TrainerLawyerName)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.Gender)</dt>
+                    <dd>@Html.DisplayFor(model => model.Gender)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.IsActive)</dt>
+                    <dd>@Html.DisplayFor(model => model.IsActive)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.IsTrainee)</dt>
+                    <dd>@Html.DisplayFor(model => model.IsTrainee)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    @* البيانات الشخصية *@
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    البيانات الشخصية
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.EmailAddress)</dt>
+                    <dd>@Html.DisplayFor(model => model.EmailAddress)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.OriginalGovernorate)</dt>
+                    <dd>@Html.DisplayFor(model => model.OriginalGovernorate)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.CurrentGovernorate)</dt>
+                    <dd>@Html.DisplayFor(model => model.CurrentGovernorate)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.AccommodationType)</dt>
+                    <dd>@Html.DisplayFor(model => model.AccommodationType)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.FullAddress)</dt>
+                    <dd>@Html.DisplayFor(model => model.FullAddress)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.MobileNumber)</dt>
+                    <dd>@Html.DisplayFor(model => model.MobileNumber)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.AltMobileNumber1)</dt>
+                    <dd>@Html.DisplayFor(model => model.AltMobileNumber1)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.AltMobileNumber2)</dt>
+                    <dd>@Html.DisplayFor(model => model.AltMobileNumber2)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.WhatsAppNumber)</dt>
+                    <dd>@Html.DisplayFor(model => model.WhatsAppNumber)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.LandlineNumber)</dt>
+                    <dd>@Html.DisplayFor(model => model.LandlineNumber)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    @* تفاصيل العائلة *@
+    <div class="panel panel-success">
+        <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    تفاصيل العائلة
+                </a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.MaritalStatus)</dt>
+                    <dd>@Html.DisplayFor(model => model.MaritalStatus)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.NumberOfSpouses)</dt>
+                    <dd>@Html.DisplayFor(model => model.NumberOfSpouses)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.HasChildren)</dt>
+                    <dd>@Html.DisplayFor(model => model.HasChildren)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.NumberOfChildren)</dt>
+                    <dd>@Html.DisplayFor(model => model.NumberOfChildren)</dd>
+                </dl>
+
+                @if (Model.Spouses != null && Model.Spouses.Any())
+                {
+                    <h4>الزوجات:</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.Spouses.FirstOrDefault().SpouseName)</th>
+                            <th>@Html.DisplayNameFor(m => m.Spouses.FirstOrDefault().SpouseIdNumber)</th>
+                            <th>@Html.DisplayNameFor(m => m.Spouses.FirstOrDefault().SpouseMobileNumber)</th>
+                        </tr>
+                        @foreach (var spouse in Model.Spouses)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(item => spouse.SpouseName)</td>
+                                <td>@Html.DisplayFor(item => spouse.SpouseIdNumber)</td>
+                                <td>@Html.DisplayFor(item => spouse.SpouseMobileNumber)</td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <p>لا توجد تفاصيل للزوجات.</p>
+                }
+
+                @if (Model.Children != null && Model.Children.Any())
+                {
+                    <h4>الأبناء:</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.Children.FirstOrDefault().ChildName)</th>
+                            <th>@Html.DisplayNameFor(m => m.Children.FirstOrDefault().DateOfBirth)</th>
+                            <th>@Html.DisplayNameFor(m => m.Children.FirstOrDefault().IdNumber)</th>
+                            <th>@Html.DisplayNameFor(m => m.Children.FirstOrDefault().Gender)</th>
+                        </tr>
+                        @foreach (var child in Model.Children)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(item => child.ChildName)</td>
+                                <td>@Html.DisplayFor(item => child.DateOfBirth)</td>
+                                <td>@Html.DisplayFor(item => child.IdNumber)</td>
+                                <td>@Html.DisplayFor(item => child.Gender)</td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <p>لا توجد تفاصيل للأبناء.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* الحالة الصحية *@
+    <div class="panel panel-warning">
+        <div class="panel-heading" role="tab" id="headingFour">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    الحالة الصحية
+                </a>
+            </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.LawyerCondition)</dt>
+                    <dd>@Html.DisplayFor(model => model.LawyerCondition)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.InjuryDetails)</dt>
+                    <dd>@Html.DisplayFor(model => model.InjuryDetails)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.TreatmentNeeded)</dt>
+                    <dd>@Html.DisplayFor(model => model.TreatmentNeeded)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.LawyerDiagnosis)</dt>
+                    <dd>@Html.DisplayFor(model => model.LawyerDiagnosis)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.HasFamilyMembersInjured)</dt>
+                    <dd>@Html.DisplayFor(model => model.HasFamilyMembersInjured)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.NumberOfFamilyMembersInjured)</dt>
+                    <dd>@Html.DisplayFor(model => model.NumberOfFamilyMembersInjured)</dd>
+                </dl>
+
+                @if (Model.FamilyMemberInjuries != null && Model.FamilyMemberInjuries.Any())
+                {
+                    <h4>أفراد العائلة المصابون:</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.FamilyMemberInjuries.FirstOrDefault().InjuredFamilyMemberName)</th>
+                            <th>@Html.DisplayNameFor(m => m.FamilyMemberInjuries.FirstOrDefault().RelationshipToLawyer)</th>
+                            <th>@Html.DisplayNameFor(m => m.FamilyMemberInjuries.FirstOrDefault().InjuryDetails)</th>
+                        </tr>
+                        @foreach (var injury in Model.FamilyMemberInjuries)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(item => injury.InjuredFamilyMemberName)</td>
+                                <td>@Html.DisplayFor(item => injury.RelationshipToLawyer)</td>
+                                <td>@Html.DisplayFor(item => injury.InjuryDetails)</td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <p>لا توجد تفاصيل لأفراد العائلة المصابين.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* تفاصيل المكتب *@
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingFive">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    تفاصيل المكتب
+                </a>
+            </h4>
+        </div>
+        <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.OfficeName)</dt>
+                    <dd>@Html.DisplayFor(model => model.OfficeName)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.OfficeAddress)</dt>
+                    <dd>@Html.DisplayFor(model => model.OfficeAddress)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.PropertyType)</dt>
+                    <dd>@Html.DisplayFor(model => model.PropertyType)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.PropertyStatus)</dt>
+                    <dd>@Html.DisplayFor(model => model.PropertyStatus)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.HasPartners)</dt>
+                    <dd>@Html.DisplayFor(model => model.HasPartners)</dd>
+
+                    <dt>@Html.DisplayNameFor(model => model.NumberOfPartners)</dt>
+                    <dd>@Html.DisplayFor(model => model.NumberOfPartners)</dd>
+                </dl>
+
+                @if (Model.Partners != null && Model.Partners.Any())
+                {
+                    <h4>الشركاء:</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.Partners.FirstOrDefault().PartnerName)</th>
+                            <th>@Html.DisplayNameFor(m => m.Partners.FirstOrDefault().MembershipNumber)</th>
+                        </tr>
+                        @foreach (var partner in Model.Partners)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(item => partner.PartnerName)</td>
+                                <td>@Html.DisplayFor(item => partner.MembershipNumber)</td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <p>لا توجد تفاصيل للشركاء.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* أضرار المنزل *@
+    <div class="panel panel-danger">
+        <div class="panel-heading" role="tab" id="headingSix">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                    أضرار المنزل
+                </a>
+            </h4>
+        </div>
+        <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.HasHomeDamage)</dt>
+                    <dd>@Html.DisplayFor(model => model.HasHomeDamage)</dd>
+
+                    @if (Model.HasHomeDamage)
+                    {
+                        <dt>@Html.DisplayNameFor(model => model.HomeDamageType)</dt>
+                        <dd>@Html.DisplayFor(model => model.HomeDamageType)</dd>
+
+                        <dt>@Html.DisplayNameFor(model => model.HomeDamageDetails)</dt>
+                        <dd>@Html.DisplayFor(model => model.HomeDamageDetails)</dd>
+                    }
+                </dl>
+                @if (!Model.HasHomeDamage)
+                {
+                    <p>لا توجد أضرار مسجلة للمنزل.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* أضرار المكتب *@
+    <div class="panel panel-danger">
+        <div class="panel-heading" role="tab" id="headingSeven">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                    أضرار المكتب
+                </a>
+            </h4>
+        </div>
+        <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.HasOfficeDamage)</dt>
+                    <dd>@Html.DisplayFor(model => model.HasOfficeDamage)</dd>
+
+                    @if (Model.HasOfficeDamage)
+                    {
+                        <dt>@Html.DisplayNameFor(model => model.OfficeDamageType)</dt>
+                        <dd>@Html.DisplayFor(model => model.OfficeDamageType)</dd>
+
+                        <dt>@Html.DisplayNameFor(model => model.OfficeDamageDetails)</dt>
+                        <dd>@Html.DisplayFor(model => model.OfficeDamageDetails)</dd>
+                    }
+                </dl>
+                @if (!Model.HasOfficeDamage)
+                {
+                    <p>لا توجد أضرار مسجلة للمكتب.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* تفاصيل الاعتقال *@
+    <div class="panel panel-dark">
+        @* يمكنك استخدام فئة لون مناسبة لـ panel-dark إذا كانت معرفة في Bootstrap أو CSS المخصص لديك *@
+        <div class="panel-heading" role="tab" id="headingEight">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                    تفاصيل الاعتقال
+                </a>
+            </h4>
+        </div>
+        <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.WasDetained)</dt>
+                    <dd>@Html.DisplayFor(model => model.WasDetained)</dd>
+
+                    @if (Model.WasDetained)
+                    {
+                        <dt>@Html.DisplayNameFor(model => model.DetentionDuration)</dt>
+                        <dd>@Html.DisplayFor(model => model.DetentionDuration)</dd>
+
+                        <dt>@Html.DisplayNameFor(model => model.DetentionStartDate)</dt>
+                        <dd>@Html.DisplayFor(model => model.DetentionStartDate)</dd>
+
+                        <dt>@Html.DisplayNameFor(model => model.IsStillDetained)</dt>
+                        <dd>@Html.DisplayFor(model => model.IsStillDetained)</dd>
+
+                        if (!Model.IsStillDetained)
+                        {
+                            <dt>@Html.DisplayNameFor(model => model.ReleaseDate)</dt>
+                            <dd>@Html.DisplayFor(model => model.ReleaseDate)</dd>
+                        }
+
+                        <dt>@Html.DisplayNameFor(model => model.DetentionType)</dt>
+                        <dd>@Html.DisplayFor(model => model.DetentionType)</dd>
+
+                        <dt>@Html.DisplayNameFor(model => model.DetentionLocation)</dt>
+                        <dd>@Html.DisplayFor(model => model.DetentionLocation)</dd>
+                    }
+                </dl>
+                @if (!Model.WasDetained)
+                {
+                    <p>لا توجد تفاصيل اعتقال مسجلة لهذا المحامي.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* معلومات الزملاء *@
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingColleagueInfo">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseColleagueInfo" aria-expanded="false" aria-controls="collapseColleagueInfo">
+                    معلومات الزملاء (شهداء، معتقلين، مصابين)
+                </a>
+            </h4>
+        </div>
+        <div id="collapseColleagueInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingColleagueInfo">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.KnowsOfMartyrColleagues)</dt>
+                    <dd>@Html.DisplayFor(model => model.KnowsOfMartyrColleagues)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.HasMartyrs)</dt>
+                    <dd>@Html.DisplayFor(model => model.HasMartyrs)</dd>
+                </dl>
+                @if (Model.MartyrColleagues != null && Model.MartyrColleagues.Any())
+                {
+                    <h4>الزملاء الشهداء:</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.MartyrColleagues.FirstOrDefault().MartyrName)</th>
+                            <th>@Html.DisplayNameFor(m => m.MartyrColleagues.FirstOrDefault().ContactNumber)</th>
+                        </tr>
+                        @foreach (var martyr in Model.MartyrColleagues)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(item => martyr.MartyrName)</td>
+                                <td>@Html.DisplayFor(item => martyr.ContactNumber)</td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <p>لا توجد تفاصيل لزملاء شهداء.</p>
+                }
+
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.KnowsOfDetainedColleagues)</dt>
+                    <dd>@Html.DisplayFor(model => model.KnowsOfDetainedColleagues)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.HasDetained)</dt>
+                    <dd>@Html.DisplayFor(model => model.HasDetained)</dd>
+                </dl>
+                @if (Model.DetainedColleagues != null && Model.DetainedColleagues.Any())
+                {
+                    <h4>الزملاء المعتقلون:</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.DetainedColleagues.FirstOrDefault().DetainedName)</th>
+                            <th>@Html.DisplayNameFor(m => m.DetainedColleagues.FirstOrDefault().ContactNumber)</th>
+                        </tr>
+                        @foreach (var detained in Model.DetainedColleagues)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(item => detained.DetainedName)</td>
+                                <td>@Html.DisplayFor(item => detained.ContactNumber)</td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <p>لا توجد تفاصيل لزملاء معتقلين.</p>
+                }
+
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.KnowsOfInjuredColleagues)</dt>
+                    <dd>@Html.DisplayFor(model => model.KnowsOfInjuredColleagues)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.HasInjured)</dt>
+                    <dd>@Html.DisplayFor(model => model.HasInjured)</dd>
+                </dl>
+                @if (Model.InjuredColleagues != null && Model.InjuredColleagues.Any())
+                {
+                    <h4>الزملاء المصابون:</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.InjuredColleagues.FirstOrDefault().InjuredName)</th>
+                            <th>@Html.DisplayNameFor(m => m.InjuredColleagues.FirstOrDefault().ContactNumber)</th>
+                        </tr>
+                        @foreach (var injured in Model.InjuredColleagues)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(item => injured.InjuredName)</td>
+                                <td>@Html.DisplayFor(item => injured.ContactNumber)</td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <p>لا توجد تفاصيل لزملاء مصابين.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* معلومات عامة *@
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingGeneralInfo">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseGeneralInfo" aria-expanded="false" aria-controls="collapseGeneralInfo">
+                    معلومات عامة
+                </a>
+            </h4>
+        </div>
+        <div id="collapseGeneralInfo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGeneralInfo">
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.PracticesShariaLaw)</dt>
+                    <dd>@Html.DisplayFor(model => model.PracticesShariaLaw)</dd>
+
+                    @if (Model.PracticesShariaLaw)
+                    {
+                        <dt>@Html.DisplayNameFor(model => model.ShariaLawPracticeStartDate)</dt>
+                        <dd>@Html.DisplayFor(model => model.ShariaLawPracticeStartDate)</dd>
+                    }
+
+                    <dt>@Html.DisplayNameFor(model => model.ReceivedAidFromSyndicate)</dt>
+                    <dd>@Html.DisplayFor(model => model.ReceivedAidFromSyndicate)</dd>
+                </dl>
+
+                @if (Model.ReceivedAids != null && Model.ReceivedAids.Any())
+                {
+                    <h4>المساعدات المستلمة:</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.ReceivedAids.FirstOrDefault().AidType)</th>
+                            <th>@Html.DisplayNameFor(m => m.ReceivedAids.FirstOrDefault().ReceivedDate)</th>
+                        </tr>
+                        @foreach (var aid in Model.ReceivedAids)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(item => aid.AidType)</td>
+                                <td>@Html.DisplayFor(item => aid.ReceivedDate)</td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <p>لا توجد مساعدات مستلمة مسجلة.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    @* NEW: المرفقات *@
+    <div class="panel panel-primary">
+        <div class="panel-heading" role="tab" id="headingAttachments">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseAttachments" aria-expanded="false" aria-controls="collapseAttachments">
+                    المرفقات
+                </a>
+            </h4>
+        </div>
+        <div id="collapseAttachments" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingAttachments">
+            <div class="panel-body">
+                @if (Model.LawyerAttachments != null && Model.LawyerAttachments.Any())
+                {
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.LawyerAttachments.FirstOrDefault().AttachmentType)</th>
+                            <th>@Html.DisplayNameFor(m => m.LawyerAttachments.FirstOrDefault().ExistingFileName)</th>
+                            <th>@Html.DisplayNameFor(m => m.LawyerAttachments.FirstOrDefault().Notes)</th>
+                            <th>تاريخ الرفع</th>
+                            <th>عرض/تحميل</th>
+                        </tr>
+                        @foreach (var attachment in Model.LawyerAttachments)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(item => attachment.AttachmentType)</td>
+                                <td>@Html.DisplayFor(item => attachment.ExistingFileName)</td>
+                                <td>@Html.DisplayFor(item => attachment.Notes)</td>
+                                @* تم تعديل هذا السطر لمعالجة DateType? بشكل صحيح *@
+                                <td>@(attachment.UploadDate.HasValue ? attachment.UploadDate.Value.ToString("yyyy-MM-dd") : "لا يوجد تاريخ")</td>
+                                <td>
+                                    <a href="@Url.Content(attachment.FilePath)" target="_blank" class="btn btn-sm btn-info">عرض/تحميل</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+                else
+                {
+                    <p>لا توجد مرفقات مسجلة لهذا المحامي.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+</div> @* End of panel-group *@
+
+<p>
+    @Html.ActionLink("العودة إلى قائمة المستخدمين", "Index", "Users", null, new { @class = "btn btn-default" })
+</p>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script>
+            // JavaScript for accordion collapse functionality (if not handled by Bootstrap JS automatically)
+            // This is usually handled by Bootstrap's collapse.js, ensure it's loaded.
+    </script>
+}

@@ -1,0 +1,137 @@
+﻿@model LawyersSyndicatePortal.ViewModels.ExamDetailsViewModel
+
+@{
+    ViewBag.Title = "تفاصيل الاختبار";
+}
+
+<style>
+    .card-header {
+        border-radius: .25rem .25rem 0 0;
+    }
+
+    .card-title {
+        font-weight: bold;
+    }
+
+    .list-group-item strong i {
+        margin-left: 5px;
+    }
+
+    .badge-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .badge-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .btn-lg {
+        font-size: 1.25rem;
+        padding: 10px 20px;
+    }
+
+    /* تنسيقات التنبيهات المخصصة */
+    .styled-alert {
+        padding: 15px;
+        margin-bottom: 1rem;
+        border-radius: .25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 0.875rem;
+    }
+
+    .alert-warning.styled-alert {
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+        color: #856404;
+    }
+
+    .alert-info.styled-alert {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+        color: #0c5460;
+    }
+
+    .styled-alert i {
+        font-size: 1.25rem;
+        margin-left: 10px;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-primary">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2 class="card-title mb-0">@Model.Exam.Title</h2>
+                </div>
+                <div class="card-body">
+                    <h5 class="text-center text-primary mb-4">تفاصيل الاختبار</h5>
+                    <hr />
+
+                    @* الجزء الذي طلبته، تم وضعه هنا في مكان بارز *@
+                <div class="mb-3">
+                    <h6 class="text-center   text-muted mt-4 mb-3 fw-bold">تنبيهات هامة</h6>
+                    <div id="examTimerAlert" class="styled-alert alert-warning text-center" role="alert">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <small class="fw-bold">
+                            ملاحظة: سيتم انهاء الاختبار و  إرسال إجاباتك  تلقائياً عند انتهاء الوقت المحدد للاختبار.
+                        </small>
+                    </div>
+                    <div id="questionTimerAlert" class="styled-alert alert-info text-center" role="alert">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <small class="fw-bold">
+                            ملاحظة: سيتم تخطي السؤال  تلقائياً عند انتهاء وقته.وستحسب درجنه صفر
+                        </small>
+                    </div>
+                    <div   class="stext-center bg-danger-subtle p-2 text-muted mt-4 mb-3 fw-bold" role="alert">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <small class="fw-bold">
+                            ملاحظة: سيتم البدء فعليا في الاختبار وبدء العد العكسي لمدة الاختبار بمجرد الضغط علة الزر ادناه (بدء الاختبار الفعلي)
+                        </small>
+                    </div>
+                </div>
+
+                    <ul class="list-group list-group-flush mb-4">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong><i class="fa fa-clock-o text-muted"></i> المدة الزمنية:</strong>
+                            <span class="badge badge-primary badge-pill">@Model.Exam.DurationMinutes دقيقة</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong><i class="fa fa-question-circle text-muted"></i> عدد الأسئلة:</strong>
+                            <span class="badge badge-primary badge-pill">@Model.TotalQuestions سؤال</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong><i class="fa fa-percent text-muted"></i> نسبة النجاح:</strong>
+                            <span class="badge badge-success badge-pill">@Model.Exam.PassingScorePercentage %</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <strong><i class="fa fa-star-o text-muted"></i> العلامة القصوى:</strong>
+                            <span class="badge badge-info badge-pill">@Model.Exam.MaxScore نقطة</span>
+                        </li>
+                    </ul>
+
+                    <div class="text-center mt-4">
+                        @* الزر الذي يبدأ الاختبار الفعلي بعد مراجعة التعليمات *@
+                        @using (Html.BeginForm("TakeExam", "ExamTaker", FormMethod.Get))
+                        {
+                            <input type="hidden" name="examId" value="@Model.Exam.Id" />
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fa fa-play-circle"></i> بدء الاختبار الفعلي
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

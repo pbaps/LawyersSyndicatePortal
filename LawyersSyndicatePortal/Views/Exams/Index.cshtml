@@ -1,0 +1,169 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.Models.Exam>
+
+@{
+    ViewBag.Title = "إدارة الامتحانات";
+}
+
+@section Styles {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="@Url.Content("~/Content/Examstylenew.css")" rel="stylesheet" type="text/css" />
+    <style>
+        .small-text {
+            font-size: 0.875rem; /* Equivalent to Bootstrap's .text-sm */
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+        }
+    </style>
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 mb-0">قائمة الامتحانات</h2>
+        @Html.ActionLink("إنشاء امتحان جديد", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            لا توجد امتحانات متاحة حالياً.
+        </div>
+    }
+    else
+    {
+        // Sort the exams by date to ensure the latest is at the top.
+        var sortedExams = Model.OrderByDescending(e => e.ExamDateTime).ToList();
+        var latestExam = sortedExams.FirstOrDefault();
+        var otherExams = sortedExams.Skip(1);
+
+        // Card for the Latest Exam
+        if (latestExam != null)
+        {
+            <div class="card shadow-sm mb-4 border-success">
+                <div class="card-header bg-info  ">
+                    <h5 class="card-title mb-0">أحدث امتحان: @latestExam.Title</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong><i class="fas fa-calendar-alt me-2"></i>تاريخ الامتحان:</strong>
+                        @latestExam.ExamDateTime.ToString("dd MMMM yyyy HH:mm")
+                    </p>
+                    <p class="card-text">
+                        <strong><i class="fas fa-clock me-2"></i>مدة الامتحان:</strong>
+                        @latestExam.DurationMinutes دقيقة
+                    </p>
+                    <p class="card-text">
+                        <strong><i class="fas fa-star me-2"></i>الدرجة القصوى:</strong>
+                        @latestExam.MaxScore
+                    </p>
+                    <p class="card-text">
+                        <strong><i class="fas fa-percent me-2"></i>نسبة النجاح:</strong>
+                        @latestExam.PassingScorePercentage%
+                    </p>
+                    <p class="card-text">
+                        <strong><i class="fas fa-info-circle me-2"></i>الحالة:</strong>
+                        @if (latestExam.IsPublished)
+                        {
+                            <span class="badge bg-success">منشور</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">غير منشور</span>
+                        }
+                    </p>
+                    <hr />
+                    <div class="action-icons d-flex flex-wrap gap-2">
+                        <a href="@Url.Action("Index", "ExamAttendees", new { examId = latestExam.Id })" class="btn btn-sm btn-secondary" title="إدارة الملتحقين"><i class="fas fa-user-friends"></i></a>
+                        <a href="@Url.Action("Index", "ExamQuestions", new { examId = latestExam.Id })" class="btn btn-sm btn-success" title="إدارة الأسئلة"><i class="fas fa-question-circle"></i></a>
+                        <a href="@Url.Action("Details", new { id = latestExam.Id })" class="btn btn-sm btn-info" title="عرض التفاصيل"><i class="fas fa-eye"></i></a>
+                        <a href="@Url.Action("Edit", new { id = latestExam.Id })" class="btn btn-sm btn-warning" title="تعديل الامتحان"><i class="fas fa-edit"></i></a>
+                        <a href="@Url.Action("Delete", new { id = latestExam.Id })" class="btn btn-sm btn-danger" title="حذف الامتحان"><i class="fas fa-trash-alt"></i></a>
+                    </div>
+                </div>
+            </div>
+        }
+
+        // Search Input
+        <div class="search-container">
+            <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" id="examSearchInput" class="form-control" placeholder="ابحث عن امتحان بالاسم..." />
+            </div>
+        </div>
+
+        // Table for the rest of the exams
+        if (otherExams.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="examsTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">@Html.DisplayNameFor(model => model.Title)</th>
+                            <th scope="col">@Html.DisplayNameFor(model => model.ExamDateTime)</th>
+                            <th scope="col">@Html.DisplayNameFor(model => model.DurationMinutes)</th>
+                            <th scope="col">@Html.DisplayNameFor(model => model.IsPublished)</th>
+                            <th scope="col">الدرجة القصوى</th>
+                            <th scope="col">نسبة النجاح</th>
+                            <th scope="col">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in otherExams)
+                        {
+                            <tr>
+                                <td class="small-text">@Html.DisplayFor(modelItem => item.Title)</td>
+                                <td class="small-text">@Html.DisplayFor(modelItem => item.ExamDateTime)</td>
+                                <td class="small-text">@Html.DisplayFor(modelItem => item.DurationMinutes) دقيقة</td>
+                                <td class="small-text">
+                                    @if (item.IsPublished)
+                                    {
+                                        <span class="badge bg-success">منشور</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">غير منشور</span>
+                                    }
+                                </td>
+                                <td class="small-text">@Html.DisplayFor(modelItem => item.MaxScore)</td>
+                                <td class="small-text">@Html.DisplayFor(modelItem => item.PassingScorePercentage)%</td>
+                                <td class="action-icons small-text">
+                                    <a href="@Url.Action("Index", "ExamAttendees", new { examId = item.Id })" class="btn btn-sm btn-secondary" title="إدارة الملتحقين"><i class="fas fa-user-friends"></i></a>
+                                    <a href="@Url.Action("Index", "ExamQuestions", new { examId = item.Id })" class="btn btn-sm btn-success" title="إدارة الأسئلة"><i class="fas fa-question-circle"></i></a>
+                                    <a href="@Url.Action("Details", new { id = item.Id })" class="btn btn-sm btn-info me-2" title="عرض التفاصيل"><i class="fas fa-eye"></i></a>
+                                    <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-sm btn-warning me-2" title="تعديل الامتحان"><i class="fas fa-edit"></i></a>
+                                    <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-sm btn-danger" title="حذف الامتحان"><i class="fas fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    }
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('examSearchInput');
+        const tableRows = document.querySelectorAll('#examsTable tbody tr');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase().trim();
+
+                tableRows.forEach(row => {
+                    const titleCell = row.querySelector('td:first-child');
+                    if (titleCell) {
+                        const titleText = titleCell.textContent.toLowerCase();
+                        if (titleText.includes(searchTerm)) {
+                            row.style.display = ''; // Show the row
+                        } else {
+                            row.style.display = 'none'; // Hide the row
+                        }
+                    }
+                });
+            });
+        }
+    });
+</script>

@@ -1,0 +1,253 @@
+﻿@model LawyersSyndicatePortal.ViewModels.NewLawyerReportViewModel
+@{
+    ViewBag.Title = "صفحة التقارير والاستعلامات";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    /* تنسيق خاص للبطاقات الفردية */
+    .report-card {
+        background: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .report-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+    .report-card-body {
+        padding: 2.5rem;
+    }
+
+    .report-card .icon-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: #fff;
+        background: #007bff; /* لون افتراضي */
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    }
+
+    /* ألوان مختلفة للأيقونات */
+    .icon-primary {
+        background: #007bff;
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+    }
+
+    .icon-info {
+        background: #17a2b8;
+        box-shadow: 0 4px 10px rgba(23, 162, 184, 0.2);
+    }
+
+    .icon-warning {
+        background: #ffc107;
+        box-shadow: 0 4px 10px rgba(255, 193, 7, 0.2);
+    }
+
+    .icon-success {
+        background: #28a745;
+        box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+    }
+
+    /* لون مميز للتقرير الشامل */
+    .icon-comprehensive {
+        background: #6f42c1; /* بنفسجي */
+        box-shadow: 0 4px 10px rgba(111, 66, 193, 0.2);
+    }
+
+    .report-title {
+        font-weight: bold;
+        font-size: 1.25rem;
+        margin-top: 1rem;
+        color: #343a40;
+    }
+
+    .report-text {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+</style>
+
+<div class="container-fluid py-4" dir="rtl">
+
+    <div class="row text-right">
+        <div class="col-12">
+            <div class="p-5 text-center text-white rounded-3 shadow-sm mb-5" style="background-color: #2c3e50;">
+                <h1 class="display-5 fw-bold mb-2" style="letter-spacing: 1px;">مركز التقارير والاستعلامات</h1>
+                <p class="lead mb-4" style="opacity: 0.8;">
+                    وصول سريع ومنظم إلى جميع البيانات التي تحتاجها.
+                </p>
+                <a href="#reports" class="btn btn-outline-light btn-lg">
+                    استعراض التقارير
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4" id="reports">
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100" style="border: 1px solid #6f42c1;">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-comprehensive mb-3">
+                        <i class="fas fa-table"></i>
+                    </div>
+                    <h5 class="report-title" style="color: #6f42c1;">التقرير الشامل الموحد</h5>
+                    <p class="report-text">
+                        تقرير يجمع (المحامي، العائلة، الأبناء، الزوجات) في سطر واحد مع إمكانية اختيار الأعمدة والتصدير.
+                    </p>
+                    @Html.ActionLink("دخول للتقرير الشامل", "ComprehensiveReport", "Reports", null, new { @class = "btn btn-dark mt-auto", style = "background-color: #6f42c1; border-color: #6f42c1;" })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-primary mb-3">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h5 class="report-title">البيانات الشخصية</h5>
+                    <p class="report-text">استعلام شامل عن المعلومات الأساسية للمحامين.</p>
+                    @Html.ActionLink("استعلام", "Index", "SpecializedReports", null, new { @class = "btn btn-primary mt-auto" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-success mb-3">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <h5 class="report-title">البيانات البنكية</h5>
+                    <p class="report-text">الوصول إلى المعلومات المالية والحسابات البنكية.</p>
+                    @Html.ActionLink("استعلام", "Index", "FinancialData", null, new { @class = "btn btn-success mt-auto" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-info mb-3">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h5 class="report-title">أبناء المحامين</h5>
+                    <p class="report-text">معلومات مفصلة عن أبناء المحامين المسجلين.</p>
+                    @Html.ActionLink("استعلام", "Index", "Children", null, new { @class = "btn btn-info mt-auto" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-info mb-3">
+                        <i class="fas fa-venus"></i>
+                    </div>
+                    <h5 class="report-title">زوجات المحامين</h5>
+                    <p class="report-text">استعراض بيانات زوجات المحامين المسجلات.</p>
+                    @Html.ActionLink("استعلام", "Index", "Spouses", null, new { @class = "btn btn-info mt-auto" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-info mb-3">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h5 class="report-title">عائلة المحامين</h5>
+                    <p class="report-text">التقارير الخاصة بأفراد عائلة المحامي بشكل عام.</p>
+                    @Html.ActionLink("استعلام", "Index", "FamilyReports", null, new { @class = "btn btn-info mt-auto" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-info mb-3">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h5 class="report-title">الزملاء المحامين</h5>
+                    <p class="report-text">استعلام عن معلومات الزملاء المحامين المسجلين.</p>
+                    @Html.ActionLink("استعلام", "Index", "ColleagueReports", null, new { @class = "btn btn-info mt-auto" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-warning mb-3">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h5 class="report-title">أضرار المكاتب والمنازل</h5>
+                    <p class="report-text">تقارير خاصة بالأضرار التي لحقت بالممتلكات.</p>
+                    @Html.ActionLink("استعلام", "Index", "OfficeAndDamageReports", null, new { @class = "btn btn-warning mt-auto" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-success mb-3">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h5 class="report-title">الحالة الصحية</h5>
+                    <p class="report-text">معلومات طبية وصحية عن المحامين.</p>
+                    @Html.ActionLink("استعلام", "Index", "NewHealthReports", null, new { @class = "btn btn-success mt-auto" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-danger mb-3" style="background: #dc3545;">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h5 class="report-title">المحامين المعتقلين</h5>
+                    <p class="report-text">استعراض بيانات المحامين الذين تم اعتقالهم.</p>
+                    @Html.ActionLink("استعلام", "Index", "NewDetentionReports", null, new { @class = "btn btn-danger mt-auto" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-info mb-3">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <h5 class="report-title">المساعدات والبيانات الأخرى</h5>
+                    <p class="report-text">تقارير عن المساعدات المستلمة وبيانات متنوعة.</p>
+                    @Html.ActionLink("استعلام", "Index", "GeneralInfoReports", null, new { @class = "btn btn-info mt-auto" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card report-card text-center h-100">
+                <div class="card-body report-card-body d-flex flex-column align-items-center">
+                    <div class="icon-circle icon-info mb-3">
+                        <i class="fas fa-paperclip"></i>
+                    </div>
+                    <h5 class="report-title">المرفقات</h5>
+                    <p class="report-text">استعراض المرفقات والوثائق الخاصة بالملفات.</p>
+                    @Html.ActionLink("استعلام", "Index", "LawyerAttachmentReports", null, new { @class = "btn btn-info mt-auto" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

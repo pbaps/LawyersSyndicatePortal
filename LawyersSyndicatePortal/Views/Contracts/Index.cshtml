@@ -1,0 +1,143 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.Models.PbaContract>
+
+@{
+    ViewBag.Title = "عرض العقود";
+}
+
+<div class="container py-4">
+    <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header bg-dark text-white text-center">
+            <h3 class="font-weight-light my-4">@ViewBag.Title</h3>
+        </div>
+        <div class="card-body">
+            <!-- أزرار الإجراءات -->
+            <div class="d-flex justify-content-between mb-4 flex-wrap">
+                @Html.ActionLink("إنشاء عقد جديد", "Create", null, new { @class = "btn btn-primary my-2" })
+                <div class="btn-group my-2">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        استيراد وتصدير
+                    </button>
+                    <div class="dropdown-menu">
+                        @Html.ActionLink("تصدير إلى Excel", "ExportToExcel", null, new { @class = "dropdown-item" })
+                        @Html.ActionLink("استيراد من Excel", "ImportFromExcel", null, new { @class = "dropdown-item" })
+                    </div>
+                </div>
+                <button class="btn btn-warning my-2" type="button" data-toggle="collapse" data-target="#searchForm" aria-expanded="false" aria-scontrols="searchForm">
+                    <i class="fas fa-search"></i> بحث متقدم
+                </button>
+            </div>
+
+            <!-- نموذج البحث المتقدم (قابل للطي) -->
+            <div class="collapse mb-4" id="searchForm">
+                @using (Html.BeginForm("Search", "Contracts", FormMethod.Get))
+                {
+                    <div class="card card-body bg-light">
+                        <div class="form-row">
+                            <div class="col-md-4 mb-3">
+                                <label for="employeeName">اسم الموظف</label>
+                                @Html.TextBox("employeeName", null, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="receiptNumber">رقم الإيصال</label>
+                                @Html.TextBox("receiptNumber", null, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="lawyerName">اسم المحامي</label>
+                                @Html.TextBox("lawyerName", null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4 mb-3">
+                                <label for="deedType">نوع السند</label>
+                                @Html.TextBox("deedType", null, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="firstPartyName">اسم الطرف الأول</label>
+                                @Html.TextBox("firstPartyName", null, new { @class = "form-control" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="secondPartyName">اسم الطرف الثاني</label>
+                                @Html.TextBox("secondPartyName", null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4 mb-3">
+                                <label for="contractAuthenticationDateFrom">تاريخ المصادقة (من)</label>
+                                @Html.TextBox("contractAuthenticationDateFrom", null, new { @class = "form-control", type = "date" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="contractAuthenticationDateTo">تاريخ المصادقة (إلى)</label>
+                                @Html.TextBox("contractAuthenticationDateTo", null, new { @class = "form-control", type = "date" })
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="syndicateBranch">فرع النقابة</label>
+                                @Html.TextBox("syndicateBranch", null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">بحث</button>
+                    </div>
+                }
+            </div>
+
+            <!-- جدول عرض العقود -->
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered text-right">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.EmployeeName)</th>
+                            <th>@Html.DisplayNameFor(model => model.ReceiptNumber)</th>
+                            <th>@Html.DisplayNameFor(model => model.FileName)</th>
+                            <th>@Html.DisplayNameFor(model => model.LawyerName)</th>
+                            <th>@Html.DisplayNameFor(model => model.DeedType)</th>
+                            <th>@Html.DisplayNameFor(model => model.FirstPartyName)</th>
+                            <th>@Html.DisplayNameFor(model => model.SecondPartyName)</th>
+                            <th>@Html.DisplayNameFor(model => model.ContractAuthenticationDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.SyndicateBranch)</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ReceiptNumber)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FileName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.LawyerName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.DeedType)</td>
+                                <td>@Html.DisplayFor(modelItem => item.FirstPartyName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.SecondPartyName)</td>
+                                <td>@Html.DisplayFor(modelItem => item.ContractAuthenticationDate)</td>
+                                <td>@Html.DisplayFor(modelItem => item.SyndicateBranch)</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        @Html.ActionLink("تعديل", "Edit", new { id = item.ContractId }, new { @class = "btn btn-sm btn-warning" })
+                                        @Html.ActionLink("تفاصيل", "Details", new { id = item.ContractId }, new { @class = "btn btn-sm btn-info" })
+                                        @Html.ActionLink("حذف", "Delete", new { id = item.ContractId }, new { @class = "btn btn-sm btn-danger" })
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- هذه الأسطر هي التي يجب إضافتها -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // لضمان عمل انهيار/توسيع نموذج البحث
+        $(document).ready(function () {
+            // تحقق مما إذا كانت مكتبات Bootstrap و jQuery محملة
+            if (typeof $().collapse === 'undefined' || typeof $().dropdown === 'undefined') {
+                console.warn("Bootstrap's collapse or dropdown JS is not loaded. Please include it in your layout.");
+            }
+        });
+    </script>
+}

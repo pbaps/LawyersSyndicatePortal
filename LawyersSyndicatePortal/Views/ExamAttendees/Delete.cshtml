@@ -1,0 +1,60 @@
+﻿@model LawyersSyndicatePortal.Models.ExamAttendee
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+@section Styles {
+    <!-- إضافة رابط ملف الستايل الجديد -->
+    <link href="@Url.Content("~/Content/Examstylenew.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="container-fluid mt-4">
+    <div class="card p-4">
+        <h2>حذف الملتحق</h2>
+
+        <h3 class="mt-3 text-danger">هل أنت متأكد من أنك تريد حذف هذا الملتحق؟</h3>
+        <div>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.LawyerIdNumber)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.LawyerIdNumber)
+                </dd>
+
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Lawyer.FullName)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Lawyer.FullName)
+                </dd>
+
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.MobileNumber)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.MobileNumber)
+                </dd>
+
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.CanAttend)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.CanAttend)
+                </dd>
+            </dl>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-actions mt-3">
+                    <input type="submit" value="حذف" class="btn btn-danger" />
+                    <!-- تحويل رابط العودة إلى القائمة إلى زر -->
+                    @Html.ActionLink("العودة إلى القائمة", "Index", new { examId = Model.ExamId }, new { @class = "btn btn-secondary ms-2" })
+                </div>
+            }
+        </div>
+    </div>
+</div>

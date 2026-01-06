@@ -1,0 +1,395 @@
+﻿@model LawyersSyndicatePortal.Models.PbaContract
+
+@{
+    ViewBag.Title = "تعديل عقد";
+}
+
+<style>
+    /* Custom styles to enhance the design */
+    body {
+        background-color: #f0f2f5;
+    }
+
+    .card {
+        border-radius: 1rem;
+    }
+
+    .card-header {
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+        border: none;
+        padding: 2rem 0;
+    }
+
+    .form-control {
+        border-radius: 0.5rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+        .form-control:focus {
+            border-color: #1d4ed8;
+            box-shadow: 0 0 0 0.25rem rgba(29, 78, 216, 0.25);
+        }
+
+    .btn-primary {
+        background-color: #1d4ed8;
+        border-color: #1d4ed8;
+        border-radius: 0.5rem;
+    }
+
+        .btn-primary:hover {
+            background-color: #1e3a8a;
+            border-color: #1e3a8a;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        border-radius: 0.5rem;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
+        }
+
+    .autocomplete-results {
+        max-height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ced4da;
+        border-top: none;
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+        position: absolute;
+        width: 100%;
+        background-color: #fff;
+    }
+
+        .autocomplete-results .list-group-item {
+            border: none;
+            padding: 0.75rem 1.25rem;
+        }
+
+            .autocomplete-results .list-group-item:hover {
+                background-color: #f8f9fa;
+                cursor: pointer;
+            }
+
+    .form-group-relative {
+        position: relative;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="font-weight-bold my-4">@ViewBag.Title</h3>
+                </div>
+                <div class="card-body p-5">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger alert alert-danger" })
+
+                            <!-- حقل مخفي لحمل معرف العقد (أساسي لعملية التعديل) -->
+                            @Html.HiddenFor(model => model.ContractId)
+
+                            <!-- معلومات المستند -->
+                            <h4 class="mb-4 text-primary">معلومات المستند</h4>
+                            <div class="form-row">
+                                <div class="col-md-6 form-group">
+                                    @Html.LabelFor(model => model.ReceiptNumber, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.ReceiptNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ReceiptNumber, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    @Html.LabelFor(model => model.FileName, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.FileName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <hr class="my-4" />
+
+                            <!-- معلومات المحامي -->
+                            <h4 class="mb-4 text-primary">معلومات المحامي</h4>
+                            <div class="form-row">
+                                <div class="col-md-6 form-group form-group-relative">
+                                    @Html.LabelFor(model => model.LawyerName, htmlAttributes: new { @class = "control-label" })
+                                    <div class="input-group">
+                                        @Html.EditorFor(model => model.LawyerName, new { htmlAttributes = new { @class = "form-control", id = "lawyerNameInput", autocomplete = "off" } })
+                                        <div class="input-group-append">
+                                            <span class="input-group-text d-none" id="loadingSpinner">
+                                                <i class="fas fa-spinner fa-spin"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div id="lawyerSearchResults" class="autocomplete-results d-none"></div>
+                                    @Html.ValidationMessageFor(model => model.LawyerName, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    @Html.LabelFor(model => model.LawyerMembershipNumber, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.LawyerMembershipNumber, new { htmlAttributes = new { @class = "form-control", id = "lawyerMembershipNumberInput", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.LawyerMembershipNumber, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <!-- حقل مخفي لتخزين رقم هوية المحامي (المفتاح الرئيسي) -->
+                            @Html.HiddenFor(model => model.LawyerId, new { id = "lawyerIdInput" })
+
+                            <hr class="my-4" />
+
+                            <!-- تفاصيل العقد -->
+                            <h4 class="mb-4 text-primary">تفاصيل العقد</h4>
+                            <div class="form-row">
+                                <div class="col-md-6 form-group form-group-relative">
+                                    @Html.LabelFor(model => model.DeedType, htmlAttributes: new { @class = "control-label" })
+                                    @Html.HiddenFor(model => model.DeedType, new { id = "deedTypeHidden" })
+                                    <input type="text" id="deedTypeInput" class="form-control" placeholder="اكتب للبحث..." autocomplete="off" />
+                                    <div id="deedTypeResults" class="autocomplete-results d-none"></div>
+                                    @Html.ValidationMessageFor(model => model.DeedType, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    @Html.LabelFor(model => model.ContractAuthenticationDate, htmlAttributes: new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.ContractAuthenticationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                                    @Html.ValidationMessageFor(model => model.ContractAuthenticationDate, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <hr class="my-4" />
+
+                            <!-- معلومات الأطراف -->
+                            <h4 class="mb-4 text-primary">معلومات الأطراف</h4>
+                            <div class="form-row">
+                                <div class="col-md-6 form-group">
+                                    @Html.LabelFor(model => model.FirstPartyName, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.FirstPartyName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.FirstPartyName, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    @Html.LabelFor(model => model.FirstPartyId, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.FirstPartyId, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.FirstPartyId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-6 form-group">
+                                    @Html.LabelFor(model => model.SecondPartyName, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.SecondPartyName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.SecondPartyName, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    @Html.LabelFor(model => model.SecondPartyId, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.SecondPartyId, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.SecondPartyId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <hr class="my-4" />
+
+                            <!-- تفاصيل المصادقة -->
+                            <h4 class="mb-4 text-primary">تفاصيل المصادقة</h4>
+                            <div class="form-row">
+                                <div class="col-md-6 form-group">
+                                    @Html.LabelFor(model => model.AuthenticatorName, htmlAttributes: new { @class = "control-label" })
+                                    @Html.EditorFor(model => model.AuthenticatorName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.AuthenticatorName, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    @Html.LabelFor(model => model.SyndicateBranch, htmlAttributes: new { @class = "control-label" })
+                                    @{
+                                        var syndicateBranches = new List<SelectListItem>
+                                                                                         {
+                                            new SelectListItem { Text = "مركز غزة", Value = "مركز غزة" },
+                                            new SelectListItem { Text = "فرع خانيونس", Value = "فرع خانيونس" },
+                                            new SelectListItem { Text = "فرع رفح", Value = "فرع رفح" },
+                                            new SelectListItem { Text = "فرع الوسطى", Value = "فرع الوسطى" },
+                                            new SelectListItem { Text = "فرع الشمال", Value = "فرع الشمال" }
+                                        };
+                                    }
+                                    @Html.DropDownListFor(model => model.SyndicateBranch, syndicateBranches, "اختر الفرع", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.SyndicateBranch, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group mt-4 text-center">
+                                <input type="submit" value="حفظ التعديلات" class="btn btn-primary btn-lg px-5" />
+                                @Html.ActionLink("العودة إلى القائمة", "Index", null, new { @class = "btn btn-secondary btn-lg ml-2 px-5" })
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const lawyerNameInput = $('#lawyerNameInput');
+            const lawyerMembershipNumberInput = $('#lawyerMembershipNumberInput');
+            const lawyerIdInput = $('#lawyerIdInput');
+            const lawyerSearchResults = $('#lawyerSearchResults');
+            const loadingSpinner = $('#loadingSpinner');
+            let typingTimer;
+            const doneTypingInterval = 300;
+
+            function searchLawyers(searchTerm) {
+                if (searchTerm.length < 2) {
+                    lawyerSearchResults.addClass('d-none').empty();
+                    return;
+                }
+                loadingSpinner.removeClass('d-none');
+
+                $.ajax({
+                    url: '@Url.Action("SearchLawyers", "Contracts")',
+                    type: 'POST',
+                    data: { searchTerm: searchTerm },
+                    success: function (results) {
+                        displayResults(results);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Failed to search lawyers: " + error);
+                        lawyerSearchResults.removeClass('d-none').empty().append($('<div>').addClass('list-group-item text-danger').text('حدث خطأ أثناء البحث.'));
+                    },
+                    complete: function () {
+                        loadingSpinner.addClass('d-none');
+                    }
+                });
+            }
+
+            function displayResults(results) {
+                lawyerSearchResults.empty();
+                if (results.length > 0) {
+                    results.forEach(lawyer => {
+                        const div = $('<div>').addClass('list-group-item list-group-item-action').text(`${lawyer.fullName} (${lawyer.membershipNumber})`);
+                        div.data('lawyer', lawyer);
+                        lawyerSearchResults.append(div);
+                    });
+                    lawyerSearchResults.removeClass('d-none');
+                } else {
+                    lawyerSearchResults.addClass('d-none');
+                }
+            }
+
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('#lawyerNameInput, #lawyerSearchResults').length) {
+                    lawyerSearchResults.addClass('d-none');
+                }
+            });
+
+            lawyerNameInput.on('keyup', function () {
+                clearTimeout(typingTimer);
+                if (lawyerNameInput.val()) {
+                    typingTimer = setTimeout(() => {
+                        searchLawyers(lawyerNameInput.val());
+                    }, doneTypingInterval);
+                } else {
+                    lawyerSearchResults.addClass('d-none');
+                }
+            });
+
+            lawyerSearchResults.on('click', '.list-group-item', function () {
+                const selectedLawyer = $(this).data('lawyer');
+                lawyerNameInput.val(selectedLawyer.fullName);
+                lawyerMembershipNumberInput.val(selectedLawyer.membershipNumber);
+                lawyerIdInput.val(selectedLawyer.idNumber);
+                lawyerSearchResults.addClass('d-none');
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            const deedTypeInput = $('#deedTypeInput');
+            const deedTypeResults = $('#deedTypeResults');
+            const deedTypeHidden = $('#deedTypeHidden');
+            let typingTimer;
+            const doneTypingInterval = 300;
+
+            const deedTypes = [
+                'إيجار',
+                'تنازل',
+                'شركة عادية',
+                'شركة مساهمة',
+                'عقد إعارة',
+                'عقد إيجار',
+                'عقد بيع',
+                'عقد بيع بالتقسيط',
+                'عقد بيع دولي',
+                'عقد بيع مبدئي',
+                'عقد تأسيس شركة',
+                'عقد توريد',
+                'عقد زواج',
+                'عقد شراكة',
+                'عقد قسمة تركة',
+                'عقد قرض',
+                'عقد مقاولة',
+                'عقد هبة',
+                'عقد عمل',
+                'عقد وكالة',
+                'عقد رهن',
+                'عقد رهن عقاري',
+                'قسمة رضائية',
+                'وكالة خاصة',
+                'وكالة عامة',
+            ].sort();
+
+            function searchDeedTypes(searchTerm) {
+                const filteredTypes = deedTypes.filter(type => type.includes(searchTerm));
+                displayDeedTypeResults(filteredTypes);
+            }
+
+            function displayDeedTypeResults(results) {
+                deedTypeResults.empty();
+                if (results.length > 0) {
+                    results.forEach(type => {
+                        const div = $('<div>').addClass('list-group-item list-group-item-action').text(type);
+                        deedTypeResults.append(div);
+                    });
+                    deedTypeResults.removeClass('d-none');
+                } else {
+                    deedTypeResults.addClass('d-none');
+                }
+            }
+
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('#deedTypeInput, #deedTypeResults').length) {
+                    deedTypeResults.addClass('d-none');
+                }
+            });
+
+            deedTypeInput.on('keyup', function () {
+                clearTimeout(typingTimer);
+                const searchTerm = $(this).val();
+                if (searchTerm.length > 0) {
+                    typingTimer = setTimeout(() => {
+                        searchDeedTypes(searchTerm);
+                    }, doneTypingInterval);
+                } else {
+                    deedTypeResults.addClass('d-none');
+                }
+            });
+
+            deedTypeResults.on('click', '.list-group-item', function () {
+                const selectedType = $(this).text();
+                deedTypeInput.val(selectedType);
+                deedTypeHidden.val(selectedType);
+                deedTypeResults.addClass('d-none');
+            });
+
+            // تعبئة حقل DeedType عند تحميل الصفحة
+            if (deedTypeHidden.val()) {
+                deedTypeInput.val(deedTypeHidden.val());
+            }
+        });
+    </script>
+}

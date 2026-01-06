@@ -1,0 +1,28 @@
+﻿/*
+ * ملف سمة زرقاء وذهبية
+ */
+:root {
+    --bg-primary: #F0F4F8; /* خلفية رمادية فاتحة / بيضاء */
+    --navbar-bg: #295A96; /* درجة من الأزرق لشريط التنقل */
+    --card-bg: #FFFFFF; /* أبيض نقي للبطاقات */
+    --primary-color: #1D4A80; /* أزرق عميق وأساسي */
+    --secondary-color: #FFD700; /* ذهبي لللمسات الجمالية */
+    --text-dark: #333333; /* رمادي داكن للنص الرئيسي */
+    --text-muted: #666666; /* رمادي متوسط للنص الثانوي */
+    --text-light: #FFFFFF; /* أبيض نقي للنص الفاتح */
+    --border-color: #C1C9D1; /* حدود رمادية فاتحة */
+    --box-shadow-subtle: 0 6px 18px rgba(0, 0, 0, 0.1);
+    --box-shadow-hover: 0 12px 25px rgba(0, 0, 0, 0.2);
+    --border-radius-lg: 15px;
+    --primary-color-focus-ring: rgba(29, 74, 128, 0.4);
+}
+
+/* أنماط خاصة بالسمة الزرقاء والذهبية */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-dark);
+}
+
+.navbar-lux {
+    background-color: var(--navbar-bg);
+}

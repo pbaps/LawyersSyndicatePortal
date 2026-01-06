@@ -1,0 +1,31 @@
+﻿@using Microsoft.AspNet.Identity
+
+@if (Request.IsAuthenticated)
+{
+    var claimsIdentity = User.Identity as System.Security.Claims.ClaimsIdentity;
+    var fullNameClaim = claimsIdentity?.FindFirst("FullName");
+    var displayName = fullNameClaim?.Value ?? User.Identity.GetUserName();
+
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="manageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                مرحباً <span class="badge bg-success">@displayName</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="manageDropdown">
+                <li>@Html.ActionLink("تعديل كلمة المرور  ", "VerifyIdentity", "LawyerPasswordRecovery", routeValues: null, htmlAttributes: new { title = "Manage", @class = "dropdown-item" })</li>
+                <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">تسجيل الخروج</a></li>
+            </ul>
+        </li>
+    }
+}
+else
+{
+<li class="nav-item">
+    <span class="badge bg-danger">
+        @Html.ActionLink("تسجيل الدخول", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "nav-link" })
+    </span>
+</li>
+}

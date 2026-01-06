@@ -1,0 +1,181 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.ViewModels.SpouseReportViewModel>
+
+@{
+    ViewBag.Title = "بيانات الزوجات";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    // Get current filter values from ViewBag
+    var lawyerFullName = ViewBag.lawyerFullName as string;
+    var lawyerIdNumber = ViewBag.lawyerIdNumber as string;
+    var currentGovernorate = ViewBag.currentGovernorate as string;
+    var originalGovernorate = ViewBag.originalGovernorate as string;
+    var professionalStatus = ViewBag.professionalStatus as string;
+    var resultCount = ViewBag.ResultsCount as int?;
+
+    // Dropdown lists
+    var governorateList = new List<SelectListItem>
+{
+        new SelectListItem { Value = "", Text = "كل المحافظات" },
+        new SelectListItem { Value = "شمال غزة", Text = "شمال غزة" },
+        new SelectListItem { Value = "مدينة غزة", Text = "مدينة غزة" },
+        new SelectListItem { Value = "الوسطى", Text = "الوسطى" },
+        new SelectListItem { Value = "خانيونس", Text = "خانيونس" },
+        new SelectListItem { Value = "رفح", Text = "رفح" },
+        new SelectListItem { Value = "الضفة الغربية", Text = "الضفة الغربية" },
+        new SelectListItem { Value = "خارج البلاد", Text = "خارج البلاد" }
+    };
+
+    var professionalStatusList = new List<SelectListItem>
+{
+        new SelectListItem { Value = "", Text = "كل الحالات" },
+        new SelectListItem { Value = "مزاول", Text = "مزاول" },
+        new SelectListItem { Value = "غير مزاول", Text = "غير مزاول" },
+        new SelectListItem { Value = "متدرب", Text = "متدرب" },
+        new SelectListItem { Value = "موقوف", Text = "موقوف" },
+        new SelectListItem { Value = "مشطوب", Text = "مشطوب" },
+        new SelectListItem { Value = "متقاعد", Text = "متقاعد" },
+        new SelectListItem { Value = "متوفي", Text = "متوفي" },
+        new SelectListItem { Value = "إلغاء إجازة المحاماة", Text = "إلغاء إجازة المحاماة" },
+        new SelectListItem { Value = "غير مسدد للرسوم", Text = "غير مسدد للرسوم" },
+        new SelectListItem { Value = "فارغ", Text = "فارغ" },
+        new SelectListItem { Value = "مزاول 2021", Text = "مزاول 2021" },
+        new SelectListItem { Value = "مسدد 2022", Text = "مسدد 2022" },
+        new SelectListItem { Value = "موظف", Text = "موظف" },
+        new SelectListItem { Value = "مقيد", Text = "مقيد" },
+        new SelectListItem { Value = "عليه تغيير مدرب", Text = "عليه تغيير مدرب" }
+    };
+}
+
+<div class="container-fluid py-5" dir="rtl">
+ 
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h2 class="h3 font-weight-bold mb-0">
+            <i class="fas fa-venus-mars text-primary me-2"></i> سجلات بيانات الزوجات
+        </h2>
+        @if (resultCount.HasValue)
+        {
+            <span class="badge bg-danger text-white fs-6 py-2 px-3 rounded-pill shadow-sm">
+                عدد النتائج: <strong class="ms-1">@resultCount.Value</strong>
+            </span>
+        }
+    </div>
+
+ 
+    <div class="card mb-4 shadow-lg rounded-3 border-0">
+        <div class="card-header bg-light border-0 py-3 rounded-top-3">
+            <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                <a class="text-dark text-decoration-none" data-bs-toggle="collapse" href="#filterCollapse" role="button" aria-expanded="true" aria-controls="filterCollapse">
+                    <i class="fas fa-filter me-2 text-secondary"></i> تصفية البيانات
+                </a>
+            </h5>
+        </div>
+        <div class="card-body collapse show" id="filterCollapse">
+            @using (Html.BeginForm("Index", "Spouses", FormMethod.Get, new { @class = "row g-3" }))
+            {
+                <div class="col-md-6 col-lg-3">
+                    <label for="lawyerFullName" class="form-label mb-1">اسم المحامي:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        <input type="text" name="lawyerFullName" id="lawyerFullName" class="form-control" value="@lawyerFullName" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <label for="lawyerIdNumber" class="form-label mb-1">رقم الهوية:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                        <input type="text" name="lawyerIdNumber" id="lawyerIdNumber" class="form-control" value="@lawyerIdNumber" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <label for="currentGovernorate" class="form-label mb-1">محافظة التواجد:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                        @Html.DropDownList("currentGovernorate", governorateList, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <label for="originalGovernorate" class="form-label mb-1">المحافظة الأصلية:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-map-marked-alt"></i></span>
+                        @Html.DropDownList("originalGovernorate", governorateList, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <label for="professionalStatus" class="form-label mb-1">الحالة المهنية:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                        @Html.DropDownList("professionalStatus", professionalStatusList, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg me-2">
+                        <i class="fas fa-search me-1"></i> تصفية
+                    </button>
+                    @Html.ActionLink("إعادة تعيين", "Index", null, new { @class = "btn btn-outline-secondary btn-lg" })
+                </div>
+            }
+        </div>
+    </div>
+ 
+    <div class="d-flex justify-content-start mb-3">
+        @Html.ActionLink("تصدير إلى Excel", "ExportToExcel", new
+        {
+            lawyerIdNumber = lawyerIdNumber,
+            lawyerFullName = lawyerFullName,
+            originalGovernorate = originalGovernorate,
+            currentGovernorate = currentGovernorate,
+            professionalStatus = professionalStatus
+        }, new { @class = "btn btn-success" })
+    </div>
+
+    
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center shadow-sm rounded-3 py-4" role="alert">
+            <i class="fas fa-info-circle me-2"></i> لا توجد بيانات زوجات لعرضها.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive rounded-3 shadow-lg">
+            <table class="table table-hover table-striped table-bordered mb-0">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th scope="col">@Html.DisplayNameFor(model => model.LawyerFullName)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.LawyerIdNumber)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.OriginalGovernorate)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.CurrentGovernorate)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.ProfessionalStatus)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.SpouseName)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.SpouseIdNumber)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.SpouseMobileNumber)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.LawyerFullName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.LawyerIdNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.OriginalGovernorate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.CurrentGovernorate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ProfessionalStatus)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SpouseName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SpouseIdNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.SpouseMobileNumber)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

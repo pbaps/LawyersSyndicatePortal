@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "استعلامات تفصيلية";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-5" dir="rtl">
+    <h2 class="text-center mb-5"><i class="fas fa-search text-primary ml-2"></i> استعلامات تفصيلية</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="list-group">
+                @* رابط لصفحة استعلامات العائلة العامة *@
+                @* هذا الرابط يشير إلى الإجراء Index في متحكم FamilyReports *@
+                @Html.ActionLink("استعلامات تفاصيل العائلة", "Index", "FamilyReports", null, new { @class = "list-group-item list-group-item-action list-group-item-info text-right" })
+
+                @* رابط لصفحة استعلامات الزوجات *@
+                @* هذا الرابط سيتطلب وجود متحكم يسمى SpousesController وله إجراء Index *@
+                @Html.ActionLink("استعلامات الزوجات", "Index", "Spouses", null, new { @class = "list-group-item list-group-item-action list-group-item-success text-right" })
+
+                @* رابط لصفحة استعلامات الأبناء *@
+                @* هذا الرابط سيتطلب وجود متحكم يسمى ChildrenController وله إجراء Index *@
+                @Html.ActionLink("استعلامات الأبناء", "Index", "Children", null, new { @class = "list-group-item list-group-item-action list-group-item-danger text-right" })
+            </div>
+        </div>
+    </div>
+</div>

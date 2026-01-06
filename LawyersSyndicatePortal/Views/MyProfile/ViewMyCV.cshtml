@@ -1,0 +1,487 @@
+﻿@model LawyersSyndicatePortal.ViewModels.LawyerDetailsViewModel
+
+@{
+    ViewBag.Title = "سيرتي الذاتية";
+    Layout = "~/Views/Shared/_UserLayout.cshtml"; // استخدام الـ Layout المخصص للمستخدمين
+}
+
+<style>
+    /* تنسيقات عامة للصفحة */
+    .cv-container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 900px; /* تحديد عرض أقصى لصفحة السيرة الذاتية */
+        margin: 20px auto; /* توسيط الصفحة */
+    }
+
+    .cv-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #0056b3;
+    }
+
+        .cv-header h1 {
+            color: #0056b3;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+    .cv-section {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+        .cv-section:last-child {
+            border-bottom: none; /* إزالة الخط السفلي من آخر قسم */
+        }
+
+        .cv-section h3 {
+            color: #0056b3;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+            .cv-section h3 i {
+                margin-left: 10px; /* مسافة بين الأيقونة والنص */
+                font-size: 1.2em;
+            }
+
+    .cv-info-item {
+        margin-bottom: 10px;
+    }
+
+        .cv-info-item strong {
+            color: #333;
+            display: inline-block;
+            width: 150px; /* لتنسيق المحاذاة */
+            text-align: right;
+            margin-left: 10px;
+        }
+
+        .cv-info-item span {
+            color: #555;
+        }
+
+    .cv-list-item {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-left: 3px solid #007bff;
+        border-radius: 5px;
+    }
+
+        .cv-list-item h4 {
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        .cv-list-item p {
+            margin-bottom: 0;
+            color: #666;
+        }
+
+    .cv-contact-info {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+        .cv-contact-info div {
+            margin: 0 15px 10px 15px;
+            text-align: center;
+            color: #555;
+        }
+
+        .cv-contact-info i {
+            color: #0056b3;
+            margin-left: 5px;
+        }
+
+    /* تنسيقات خاصة بالطباعة */
+    @@media print {
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fff !important;
+        }
+
+        .navbar, .footer, .btn, hr {
+            display: none !important; /* إخفاء العناصر غير الضرورية للطباعة */
+        }
+
+        .cv-container {
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: none !important;
+        }
+
+        .cv-section {
+            border-bottom: 1px dashed #ccc !important; /* خطوط متقطعة للطباعة */
+            padding-bottom: 10px !important;
+            margin-bottom: 15px !important;
+        }
+
+            .cv-section:last-child {
+                border-bottom: none !important;
+            }
+
+        .cv-info-item strong {
+            width: 120px !important; /* ضبط عرض التسميات للطباعة */
+        }
+
+        .cv-list-item {
+            background-color: transparent !important;
+            border-left: 1px solid #ccc !important;
+            border-radius: 0 !important;
+        }
+    }
+</style>
+
+<div class="cv-container">
+    <div class="cv-header">
+        <h1>@Model.LawyerFullName</h1>
+        <p class="lead">@Model.ProfessionalStatus</p>
+    </div>
+
+    <div class="cv-contact-info">
+        @if (!string.IsNullOrEmpty(Model.EmailAddress))
+        {
+            <div><i class="fas fa-envelope"></i> @Model.EmailAddress</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.MobileNumber))
+        {
+            <div><i class="fas fa-phone"></i> @Model.MobileNumber</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.WhatsAppNumber))
+        {
+            <div><i class="fab fa-whatsapp"></i> @Model.WhatsAppNumber</div>
+        }
+        @if (!string.IsNullOrEmpty(Model.FullAddress))
+        {
+            <div><i class="fas fa-map-marker-alt"></i> @Model.FullAddress</div>
+        }
+    </div>
+
+    <div class="text-center mb-4">
+        <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> طباعة السيرة الذاتية</button>
+        @Html.ActionLink("العودة إلى الملف الشخصي", "Index", "MyProfile", null, new { @class = "btn btn-default" })
+    </div>
+
+    @* معلومات المحامي الأساسية *@
+    <div class="cv-section">
+        <h3><i class="fas fa-user-tie"></i> معلومات أساسية</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="cv-info-item"><strong>رقم الهوية:</strong> <span>@Html.DisplayFor(model => model.LawyerIdNumber)</span></div>
+                <div class="cv-info-item"><strong>رقم العضوية:</strong> <span>@Html.DisplayFor(model => model.MembershipNumber)</span></div>
+                <div class="cv-info-item"><strong>تاريخ بدء المزاولة:</strong> <span>@Html.DisplayFor(model => model.PracticeStartDate)</span></div>
+                <div class="cv-info-item"><strong>الجنس:</strong> <span>@Html.DisplayFor(model => model.Gender)</span></div>
+            </div>
+            <div class="col-md-6">
+                <div class="cv-info-item"><strong>هل هو فعال:</strong> <span>@(Model.IsActive ? "نعم" : "لا")</span></div>
+                <div class="cv-info-item"><strong>هل هو متدرب:</strong> <span>@(Model.IsTrainee ? "نعم" : "لا")</span></div>
+                <div class="cv-info-item"><strong>تاريخ بدء التدريب:</strong> <span>@Html.DisplayFor(model => model.TrainingStartDate)</span></div>
+                <div class="cv-info-item"><strong>اسم المحامي المدرب:</strong> <span>@Html.DisplayFor(model => model.TrainerLawyerName)</span></div>
+            </div>
+        </div>
+    </div>
+
+    @* البيانات الشخصية *@
+    <div class="cv-section">
+        <h3><i class="fas fa-address-card"></i> بيانات شخصية</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="cv-info-item"><strong>المحافظة الأصلية:</strong> <span>@Html.DisplayFor(model => model.OriginalGovernorate)</span></div>
+                <div class="cv-info-item"><strong>محافظة التواجد حاليًا:</strong> <span>@Html.DisplayFor(model => model.CurrentGovernorate)</span></div>
+            </div>
+            <div class="col-md-6">
+                <div class="cv-info-item"><strong>طبيعة السكن:</strong> <span>@Html.DisplayFor(model => model.AccommodationType)</span></div>
+                <div class="cv-info-item"><strong>رقم جوال احتياطي 1:</strong> <span>@Html.DisplayFor(model => model.AltMobileNumber1)</span></div>
+                <div class="cv-info-item"><strong>رقم جوال احتياطي 2:</strong> <span>@Html.DisplayFor(model => model.AltMobileNumber2)</span></div>
+                <div class="cv-info-item"><strong>رقم الهاتف الأرضي:</strong> <span>@Html.DisplayFor(model => model.LandlineNumber)</span></div>
+            </div>
+        </div>
+    </div>
+
+    @* تفاصيل العائلة *@
+    <div class="cv-section">
+        <h3><i class="fas fa-users"></i> تفاصيل العائلة</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="cv-info-item"><strong>الحالة الاجتماعية:</strong> <span>@Html.DisplayFor(model => model.MaritalStatus)</span></div>
+                <div class="cv-info-item"><strong>عدد الزوجات:</strong> <span>@Html.DisplayFor(model => model.NumberOfSpouses)</span></div>
+            </div>
+            <div class="col-md-6">
+                <div class="cv-info-item"><strong>هل يوجد أبناء:</strong> <span>@(Model.HasChildren ? "نعم" : "لا")</span></div>
+                <div class="cv-info-item"><strong>عدد الأبناء:</strong> <span>@Html.DisplayFor(model => model.NumberOfChildren)</span></div>
+            </div>
+        </div>
+
+        @if (Model.Spouses != null && Model.Spouses.Any())
+        {
+            <h4><i class="fas fa-venus-mars"></i> الزوجات:</h4>
+            foreach (var spouse in Model.Spouses)
+            {
+                <div class="cv-list-item">
+                    <h4>@Html.DisplayFor(item => spouse.SpouseName)</h4>
+                    <p><strong>رقم الهوية:</strong> @Html.DisplayFor(item => spouse.SpouseIdNumber)</p>
+                    <p><strong>رقم الجوال:</strong> @Html.DisplayFor(item => spouse.SpouseMobileNumber)</p>
+                </div>
+            }
+        }
+
+        @if (Model.Children != null && Model.Children.Any())
+        {
+            <h4><i class="fas fa-child"></i> الأبناء:</h4>
+            foreach (var child in Model.Children)
+            {
+                <div class="cv-list-item">
+                    <h4>@Html.DisplayFor(item => child.ChildName)</h4>
+                    <p><strong>تاريخ الميلاد:</strong> @Html.DisplayFor(item => child.DateOfBirth)</p>
+                    <p><strong>رقم الهوية:</strong> @Html.DisplayFor(item => child.IdNumber)</p>
+                    <p><strong>الجنس:</strong> @Html.DisplayFor(item => child.Gender)</p>
+                </div>
+            }
+        }
+    </div>
+
+    @* الحالة الصحية *@
+    <div class="cv-section">
+        <h3><i class="fas fa-heartbeat"></i> الحالة الصحية</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="cv-info-item"><strong>الحالة الصحية للمحامي:</strong> <span>@Html.DisplayFor(model => model.LawyerCondition)</span></div>
+                <div class="cv-info-item"><strong>تفاصيل الإصابة:</strong> <span>@Html.DisplayFor(model => model.InjuryDetails)</span></div>
+            </div>
+            <div class="col-md-6">
+                <div class="cv-info-item"><strong>العلاج المطلوب:</strong> <span>@Html.DisplayFor(model => model.TreatmentNeeded)</span></div>
+                <div class="cv-info-item"><strong>التشخيص الطبي:</strong> <span>@Html.DisplayFor(model => model.LawyerDiagnosis)</span></div>
+            </div>
+        </div>
+
+        @if (Model.HasFamilyMembersInjured)
+        {
+            <div class="cv-info-item"><strong>هل يوجد أفراد عائلة مصابون:</strong> <span>نعم (@Html.DisplayFor(model => model.NumberOfFamilyMembersInjured))</span></div>
+            if (Model.FamilyMemberInjuries != null && Model.FamilyMemberInjuries.Any())
+            {
+                <h4><i class="fas fa-medkit"></i> أفراد العائلة المصابون:</h4>
+                foreach (var injury in Model.FamilyMemberInjuries)
+                {
+                    <div class="cv-list-item">
+                        <h4>@Html.DisplayFor(item => injury.InjuredFamilyMemberName)</h4>
+                        <p><strong>العلاقة بالمحامي:</strong> @Html.DisplayFor(item => injury.RelationshipToLawyer)</p>
+                        <p><strong>تفاصيل الإصابة:</strong> @Html.DisplayFor(item => injury.InjuryDetails)</p>
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <div class="cv-info-item"><strong>هل يوجد أفراد عائلة مصابون:</strong> <span>لا</span></div>
+        }
+    </div>
+
+    @* تفاصيل المكتب *@
+    <div class="cv-section">
+        <h3><i class="fas fa-building"></i> تفاصيل المكتب</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="cv-info-item"><strong>اسم المكتب:</strong> <span>@Html.DisplayFor(model => model.OfficeName)</span></div>
+                <div class="cv-info-item"><strong>عنوان المكتب:</strong> <span>@Html.DisplayFor(model => model.OfficeAddress)</span></div>
+            </div>
+            <div class="col-md-6">
+                <div class="cv-info-item"><strong>نوع العقار:</strong> <span>@Html.DisplayFor(model => model.PropertyType)</span></div>
+                <div class="cv-info-item"><strong>حالة العقار:</strong> <span>@Html.DisplayFor(model => model.PropertyStatus)</span></div>
+            </div>
+        </div>
+
+        @if (Model.HasPartners)
+        {
+            <div class="cv-info-item"><strong>هل يوجد شركاء:</strong> <span>نعم (@Html.DisplayFor(model => model.NumberOfPartners))</span></div>
+            if (Model.Partners != null && Model.Partners.Any())
+            {
+                <h4><i class="fas fa-handshake"></i> الشركاء:</h4>
+                foreach (var partner in Model.Partners)
+                {
+                    <div class="cv-list-item">
+                        <h4>@Html.DisplayFor(item => partner.PartnerName)</h4>
+                        <p><strong>رقم العضوية:</strong> @Html.DisplayFor(item => partner.MembershipNumber)</p>
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <div class="cv-info-item"><strong>هل يوجد شركاء:</strong> <span>لا</span></div>
+        }
+    </div>
+
+    @* أضرار المنزل *@
+    <div class="cv-section">
+        <h3><i class="fas fa-home"></i> أضرار المنزل</h3>
+        @if (Model.HasHomeDamage)
+        {
+            <div class="cv-info-item"><strong>هل تعرض المنزل لأضرار:</strong> <span>نعم</span></div>
+            <div class="cv-info-item"><strong>نوع الضرر:</strong> <span>@Html.DisplayFor(model => model.HomeDamageType)</span></div>
+            <div class="cv-info-item"><strong>تفاصيل الأضرار:</strong> <span>@Html.DisplayFor(model => model.HomeDamageDetails)</span></div>
+        }
+        else
+        {
+            <div class="cv-info-item"><strong>هل تعرض المنزل لأضرار:</strong> <span>لا</span></div>
+        }
+    </div>
+
+    @* أضرار المكتب *@
+    <div class="cv-section">
+        <h3><i class="fas fa-briefcase"></i> أضرار المكتب</h3>
+        @if (Model.HasOfficeDamage)
+        {
+            <div class="cv-info-item"><strong>هل تعرض المكتب لأضرار:</strong> <span>نعم</span></div>
+            <div class="cv-info-item"><strong>نوع الضرر:</strong> <span>@Html.DisplayFor(model => model.OfficeDamageType)</span></div>
+            <div class="cv-info-item"><strong>تفاصيل الأضرار:</strong> <span>@Html.DisplayFor(model => model.OfficeDamageDetails)</span></div>
+        }
+        else
+        {
+            <div class="cv-info-item"><strong>هل تعرض المكتب لأضرار:</strong> <span>لا</span></div>
+        }
+    </div>
+
+    @* تفاصيل الاعتقال *@
+    <div class="cv-section">
+        <h3><i class="fas fa-gavel"></i> تفاصيل الاعتقال</h3>
+        @if (Model.WasDetained)
+        {
+            <div class="cv-info-item"><strong>هل تعرض المحامي للاعتقال:</strong> <span>نعم</span></div>
+            <div class="cv-info-item"><strong>مدة الاعتقال:</strong> <span>@Html.DisplayFor(model => model.DetentionDuration)</span></div>
+            <div class="cv-info-item"><strong>تاريخ بدء الاعتقال:</strong> <span>@Html.DisplayFor(model => model.DetentionStartDate)</span></div>
+            <div class="cv-info-item"><strong>هل ما زال معتقلاً:</strong> <span>@(Model.IsStillDetained ? "نعم" : "لا")</span></div>
+            if (!Model.IsStillDetained)
+            {
+                <div class="cv-info-item"><strong>تاريخ الإفراج:</strong> <span>@Html.DisplayFor(model => model.ReleaseDate)</span></div>
+            }
+            <div class="cv-info-item"><strong>نوع الاعتقال:</strong> <span>@Html.DisplayFor(model => model.DetentionType)</span></div>
+            <div class="cv-info-item"><strong>مكان الاعتقال:</strong> <span>@Html.DisplayFor(model => model.DetentionLocation)</span></div>
+        }
+        else
+        {
+            <div class="cv-info-item"><strong>هل تعرض المحامي للاعتقال:</strong> <span>لا</span></div>
+        }
+    </div>
+
+    @* معلومات عن زملاء المحامين *@
+    <div class="cv-section">
+        <h3><i class="fas fa-users-cog"></i> معلومات عن زملاء المحامين</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="cv-info-item"><strong>هل تعلم بوجود أي شهداء من أعضاء الهيئة العامة؟:</strong> <span>@(Model.KnowsOfMartyrColleagues ? "نعم" : "لا")</span></div>
+                @if (Model.KnowsOfMartyrColleagues && Model.MartyrColleagues != null && Model.MartyrColleagues.Any())
+                {
+                    <h4><i class="fas fa-crosshairs"></i> الشهداء من الزملاء:</h4>
+                    foreach (var martyr in Model.MartyrColleagues)
+                    {
+                        <div class="cv-list-item">
+                            <h4>@Html.DisplayFor(item => martyr.MartyrName)</h4>
+                            <p><strong>رقم التواصل:</strong> @Html.DisplayFor(item => martyr.ContactNumber)</p>
+                        </div>
+                    }
+                }
+
+                <div class="cv-info-item mt-3"><strong>هل تعلم بوجود أي معتقلين من أعضاء الهيئة العامة؟:</strong> <span>@(Model.KnowsOfDetainedColleagues ? "نعم" : "لا")</span></div>
+                @if (Model.KnowsOfDetainedColleagues && Model.DetainedColleagues != null && Model.DetainedColleagues.Any())
+                {
+                    <h4><i class="fas fa-lock"></i> المعتقلون من الزملاء:</h4>
+                    foreach (var detained in Model.DetainedColleagues)
+                    {
+                        <div class="cv-list-item">
+                            <h4>@Html.DisplayFor(item => detained.DetainedName)</h4>
+                            <p><strong>رقم التواصل:</strong> @Html.DisplayFor(item => detained.ContactNumber)</p>
+                        </div>
+                    }
+                }
+
+                <div class="cv-info-item mt-3"><strong>هل تعلم بوجود أي مصابين من أعضاء الهيئة العامة بسبب الإبادة؟:</strong> <span>@(Model.KnowsOfInjuredColleagues ? "نعم" : "لا")</span></div>
+                @if (Model.KnowsOfInjuredColleagues && Model.InjuredColleagues != null && Model.InjuredColleagues.Any())
+                {
+                    <h4><i class="fas fa-hospital"></i> المصابون من الزملاء:</h4>
+                    foreach (var injured in Model.InjuredColleagues)
+                    {
+                        <div class="cv-list-item">
+                            <h4>@Html.DisplayFor(item => injured.InjuredName)</h4>
+                            <p><strong>رقم التواصل:</strong> @Html.DisplayFor(item => injured.ContactNumber)</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    @* معلومات عامة *@
+    <div class="cv-section">
+        <h3><i class="fas fa-info-circle"></i> معلومات عامة</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="cv-info-item"><strong>هل تمارس المهنة الشرعية؟:</strong> <span>@(Model.PracticesShariaLaw ? "نعم" : "لا")</span></div>
+                @if (Model.PracticesShariaLaw)
+                {
+                    <div class="cv-info-item"><strong>تاريخ الحصول على مزاولة المحاماة الشرعية:</strong> <span>@Html.DisplayFor(model => model.ShariaLawPracticeStartDate)</span></div>
+                }
+
+                <div class="cv-info-item mt-3"><strong>هل استلمت من النقابة مساعدات؟:</strong> <span>@(Model.ReceivedAidFromSyndicate ? "نعم" : "لا")</span></div>
+                @if (Model.ReceivedAidFromSyndicate && Model.ReceivedAids != null && Model.ReceivedAids.Any())
+                {
+                    <h4><i class="fas fa-hand-holding-heart"></i> المساعدات المستلمة:</h4>
+                    foreach (var aid in Model.ReceivedAids)
+                    {
+                        <div class="cv-list-item">
+                            <h4>@Html.DisplayFor(item => aid.AidType)</h4>
+                            <p><strong>تاريخ الاستلام:</strong> @Html.DisplayFor(item => aid.ReceivedDate)</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    @* المرفقات *@
+    <div class="cv-section">
+        <h3><i class="fas fa-paperclip"></i> المرفقات</h3>
+        @if (Model.LawyerAttachments != null && Model.LawyerAttachments.Any())
+        {
+            foreach (var attachment in Model.LawyerAttachments)
+            {
+                <div class="cv-list-item">
+                    <h4>@Html.DisplayFor(item => attachment.AttachmentType)</h4>
+                    <p><strong>اسم الملف:</strong> @Html.DisplayFor(item => attachment.ExistingFileName)</p>
+                    <p><strong>ملاحظات:</strong> @Html.DisplayFor(item => attachment.Notes)</p>
+                    <p><strong>تاريخ الرفع:</strong> @(attachment.UploadDate.HasValue ? attachment.UploadDate.Value.ToString("yyyy-MM-dd") : "لا يوجد تاريخ")</p>
+                    <p>
+                        <a href="@Url.Content(attachment.FilePath)" target="_blank" class="btn btn-sm btn-info">عرض/تحميل</a>
+                    </p>
+                </div>
+            }
+        }
+        else
+        {
+            <p>لا توجد مرفقات مسجلة لهذا المحامي.</p>
+        }
+    </div>
+
+</div> @* End of cv-container *@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @* تأكد من إضافة رابط Font Awesome CDN إذا لم يكن موجوداً في الـ Layout الخاص بك *@
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+}

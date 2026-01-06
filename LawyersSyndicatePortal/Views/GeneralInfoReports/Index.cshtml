@@ -1,0 +1,202 @@
+﻿@model LawyersSyndicatePortal.ViewModels.GeneralInfoReportViewModel
+@using System.Web.Mvc.Html
+@using System.Globalization
+@using System.Linq
+@using LawyersSyndicatePortal.ViewModels
+
+@*
+    المسار: LawyersSyndicatePortal/Views/GeneralInfoReports/Index.cshtml
+    هذه الصفحة مسؤولة عن تقارير المعلومات العامة لزملاء المهنة.
+    تسمح للمسؤولين بالبحث ديناميكيًا واختيار الأعمدة وتصدير النتائج إلى Excel.
+*@
+
+@{
+    ViewBag.Title = "تقارير المعلومات العامة";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    // قائمة لخيارات "هل يمارس المهنة الشرعية؟"
+    var practicesShariaLawOptions = new List<SelectListItem>
+{
+        new SelectListItem { Value = "", Text = "الكل" },
+        new SelectListItem { Value = "True", Text = "نعم" },
+        new SelectListItem { Value = "False", Text = "لا" }
+    };
+
+    // قائمة لخيارات "هل استلم مساعدات من النقابة؟"
+    var receivedAidOptions = new List<SelectListItem>
+{
+        new SelectListItem { Value = "", Text = "الكل" },
+        new SelectListItem { Value = "True", Text = "نعم" },
+        new SelectListItem { Value = "False", Text = "لا" }
+    };
+
+    // قائمة بأنواع المساعدات المحددة
+    var aidTypesList = new List<SelectListItem>
+{
+        new SelectListItem { Value = "", Text = "كل الأنواع" },
+        new SelectListItem { Value = "الدفعة المالية الاولى", Text = "الدفعة المالية الاولى" },
+        new SelectListItem { Value = "الدفعة المالية الثانية", Text = "الدفعة المالية الثانية" },
+        new SelectListItem { Value = "الدفعة المالية الثالثة", Text = "الدفعة المالية الثالثة" },
+        new SelectListItem { Value = "الدفعة المالية الرابعة", Text = "الدفعة المالية الرابعة" },
+        new SelectListItem { Value = "طرد غذائي", Text = "طرد غذائي" },
+        new SelectListItem { Value = "طرد صحي", Text = "طرد صحي" },
+        new SelectListItem { Value = "طرد خضار", Text = "طرد خضار" }
+    };
+}
+
+<div class="container-fluid py-4">
+
+    @* عنوان الصفحة الرئيسي *@
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-primary mb-4 text-right" dir="rtl">
+                <i class="fas fa-info-circle ml-2"></i> @ViewBag.Title
+            </h2>
+        </div>
+    </div>
+
+    @* لوحة البحث والمرشحات *@
+    <div class="card shadow-sm mb-4" dir="rtl">
+        <div class="card-header bg-white">
+            <h5 class="card-title mb-0 text-right">
+                <i class="fas fa-filter ml-2"></i> مرشحات البحث
+            </h5>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm("Search", "GeneralInfoReports", FormMethod.Post, new { id = "searchForm", @class = "row g-3" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @* حقول البحث *@
+                <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LawyerFullName, htmlAttributes: new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.LawyerFullName, new { @class = "form-control text-right" })
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LawyerIdNumber, htmlAttributes: new { @class = "form-label" })
+                        @Html.TextBoxFor(model => model.LawyerIdNumber, new { @class = "form-control text-right" })
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PracticesShariaLaw, htmlAttributes: new { @class = "form-label" })
+                        @Html.DropDownListFor(model => model.PracticesShariaLaw, practicesShariaLawOptions, new { @class = "form-select text-right" })
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ReceivedAidFromSyndicate, htmlAttributes: new { @class = "form-label" })
+                        @Html.DropDownListFor(model => model.ReceivedAidFromSyndicate, receivedAidOptions, new { @class = "form-select text-right" })
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AidType, htmlAttributes: new { @class = "form-label" })
+                        @Html.DropDownListFor(model => model.AidType, aidTypesList, new { @class = "form-select text-right" }) @* تم التغيير هنا *@
+                    </div>
+                </div>
+
+                @* اختيار الأعمدة *@
+                <div class="col-12 mt-3">
+                    <h6 class="text-right">
+                        <i class="fas fa-columns ml-2"></i> اختر الأعمدة المراد عرضها في التقرير:
+                    </h6>
+                    <div class="row" id="columnsSelection">
+                        @if (Model.AvailableColumns != null)
+                        {
+                            for (int i = 0; i < Model.AvailableColumns.Count; i++)
+                            {
+                                <div class="col-6 col-md-4 col-lg-2">
+                                    <div class="form-check form-switch form-check-inline text-right">
+                                        @Html.CheckBoxFor(m => m.AvailableColumns[i].IsSelected, new { @class = "form-check-input", role = "switch", id = $"column-{i}" })
+                                        @Html.HiddenFor(m => m.AvailableColumns[i].ColumnName)
+                                        @Html.HiddenFor(m => m.AvailableColumns[i].DisplayName)
+                                        <label class="form-check-label mr-2" for="column-@i">
+                                            @Model.AvailableColumns[i].DisplayName
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                @* أزرار الإجراءات *@
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary" id="searchBtn">
+                        <i class="fas fa-search ml-2"></i> بحث
+                    </button>
+                    <button type="button" class="btn btn-success" id="exportExcelBtn">
+                        <i class="fas fa-file-excel ml-2"></i> تصدير إلى Excel
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="clearBtn">
+                        <i class="fas fa-eraser ml-2"></i> مسح الحقول
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+    @* حاوية عرض نتائج البحث *@
+    <div id="reportResultsContainer">
+        @* سيتم تحديث هذا الجزء ديناميكيًا عبر AJAX *@
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // معالجة زر "بحث" عبر AJAX
+            $("#searchBtn").click(function (e) {
+                e.preventDefault(); // منع الإرسال الافتراضي للنموذج
+                var form = $("#searchForm");
+                var url = form.attr("action");
+                var requestData = form.serialize();
+
+                $("#reportResultsContainer").html('<div class="text-center mt-5"><i class="fas fa-spinner fa-spin fa-3x text-primary"></i><h4 class="mt-3 text-secondary">جاري البحث...</h4></div>');
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: requestData,
+                    success: function (result) {
+                        $("#reportResultsContainer").html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        $("#reportResultsContainer").html('<div class="alert alert-danger text-center mt-5" role="alert"><i class="fas fa-exclamation-triangle ml-2"></i> حدث خطأ أثناء البحث. يرجى المحاولة مرة أخرى.</div>');
+                        console.error("Error fetching search results:", error);
+                    }
+                });
+            });
+
+            // معالجة زر "تصدير إلى Excel"
+            $("#exportExcelBtn").click(function () {
+                var form = $("#searchForm");
+                var exportUrl = '@Url.Action("ExportToExcel", "GeneralInfoReports")'; // تأكد من اسم المتحكم الصحيح
+
+                // قم بتغيير الـ action والـ target للنموذج
+                form.attr("action", exportUrl);
+                form.attr("target", "_blank");
+
+                // أرسل النموذج
+                form.submit();
+
+                // أعد الـ action إلى قيمته الأصلية الثابتة بعد الإرسال مباشرة
+                // هذا يضمن أن زر البحث (AJAX) سيعمل بشكل صحيح لاحقًا
+                form.attr("action", '@Url.Action("Search", "GeneralInfoReports")'); // إعادة تعيين ثابتة
+                form.removeAttr("target"); // إزالة الـ target
+            });
+
+            // معالجة زر "مسح الحقول"
+            $("#clearBtn").click(function () {
+                $("#searchForm")[0].reset();
+                $("#columnsSelection input[type='checkbox']").prop('checked', false);
+                $("#reportResultsContainer").empty();
+            });
+        });
+    </script>
+}

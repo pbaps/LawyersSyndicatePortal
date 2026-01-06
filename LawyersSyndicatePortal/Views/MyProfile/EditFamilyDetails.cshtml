@@ -1,0 +1,188 @@
+﻿@model LawyersSyndicatePortal.ViewModels.FamilyDetailViewModel
+@using System.Web.Security // لإتاحة HttpUtility
+
+@{
+    ViewBag.Title = "تعديل تفاصيل العائلة";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="dashboard-wrapper">
+    <h2 class="page-title">
+        تعديل تفاصيل العائلة
+    </h2>
+
+    @* Success and Error Messages Section *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-card-glow alert-success-glow mb-4" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert-card-glow alert-danger-glow mb-4" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card-lux">
+        <div class="card-header-lux">
+            <h5 class="card-title-lux mb-0"><i class="fas fa-users me-2"></i>تعديل تفاصيل العائلة</h5>
+        </div>
+        <div class="card-body-lux">
+            @using (Html.BeginForm("EditFamilyDetails", "MyProfile", FormMethod.Post, new { @class = "row g-3" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger col-12" })
+                @Html.HiddenFor(model => model.Id)
+
+                <div class="col-md-6">
+                    <label for="MaritalStatus" class="form-label control-label">@Html.DisplayNameFor(model => model.MaritalStatus)</label>
+                    @Html.DropDownListFor(model => model.MaritalStatus, Model.MaritalStatuses, "الرجاء الاختيار", new { @class = "form-control", id = "maritalStatus" })
+                    @Html.ValidationMessageFor(model => model.MaritalStatus, "", new { @class = "text-danger" })
+                </div>
+
+                <div id="spousesSection" class="col-12" style="@(Model.MaritalStatus == "Married" ? "" : "display:none;")">
+                    <div class="card-lux mt-3">
+                        <div class="card-header-lux">
+                            <h5 class="card-title-lux mb-0"><i class="fas fa-user-friends me-2"></i>تفاصيل الزوجات</h5>
+                        </div>
+                        <div class="card-body-lux">
+                            <div class="form-group row mb-3">
+                                <label for="NumberOfSpouses" class="form-label control-label col-md-2">@Html.DisplayNameFor(model => model.NumberOfSpouses)</label>
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.NumberOfSpouses, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.NumberOfSpouses, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div id="spousesContainer">
+                                @if (Model.Spouses != null)
+                                {
+                                    for (int i = 0; i < Model.Spouses.Count; i++)
+                                    {
+                                        @Html.Partial("_SpouseFields", Model.Spouses[i], new ViewDataDictionary { { "index", i } })
+                                    }
+                                }
+                            </div>
+                            <div class="text-end mt-3">
+                                <button type="button" id="addSpouseBtn" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus-circle me-2"></i>إضافة زوجة</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4 mt-4">
+                    <div class="form-check form-switch">
+                        @Html.EditorFor(model => model.HasChildren, new { htmlAttributes = new { @class = "form-check-input", id = "hasChildren" } })
+                        <label for="hasChildren" class="form-check-label control-label">@Html.DisplayNameFor(model => model.HasChildren)</label>
+                        @Html.ValidationMessageFor(model => model.HasChildren, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div id="childrenSection" class="col-12" style="@(Model.HasChildren ? "" : "display:none;")">
+                    <div class="card-lux mt-3">
+                        <div class="card-header-lux">
+                            <h5 class="card-title-lux mb-0"><i class="fas fa-child me-2"></i>تفاصيل الأبناء</h5>
+                        </div>
+                        <div class="card-body-lux">
+                            <div class="form-group row mb-3">
+                                <label for="NumberOfChildren" class="form-label control-label col-md-2">@Html.DisplayNameFor(model => model.NumberOfChildren)</label>
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.NumberOfChildren, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.NumberOfChildren, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div id="childrenContainer">
+                                @if (Model.Children != null)
+                                {
+                                    for (int i = 0; i < Model.Children.Count; i++)
+                                    {
+                                        @Html.Partial("_ChildFields", Model.Children[i], new ViewDataDictionary { { "index", i } })
+                                    }
+                                }
+                            </div>
+                            <div class="text-end mt-3">
+                                <button type="button" id="addChildBtn" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus-circle me-2"></i>إضافة ابن/ابنة</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg me-2"><i class="fas fa-save me-2"></i>حفظ</button>
+                    @Html.ActionLink("العودة", "Index", "MyProfile", null, new { @class = "btn btn-outline-secondary btn-lg" })
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            var addSpouseUrl = '@Url.Action("AddSpouseField", "MyProfile")';
+            var addChildUrl = '@Url.Action("AddChildField", "MyProfile")';
+
+            function reindexDynamicItems(containerId, prefixName) {
+                $('#' + containerId + ' .dynamic-item').each(function (i) {
+                    $(this).find('.card-header h5').text('تفاصيل الزوجة رقم ' + (i + 1));
+                    $(this).find('[name^="' + prefixName + '\[').each(function () {
+                        var oldName = $(this).attr('name');
+                        var newName = oldName.replace(new RegExp(prefixName + '\\[\\d+\\]'), prefixName + '[' + i + ']');
+                        $(this).attr('name', newName);
+                    });
+                });
+            }
+
+            $('#maritalStatus').change(function () {
+                if ($(this).val() === 'Married') {
+                    $('#spousesSection').show();
+                } else {
+                    $('#spousesSection').hide();
+                }
+            }).change();
+
+            $('#hasChildren').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#childrenSection').show();
+                } else {
+                    $('#childrenSection').hide();
+                }
+            }).change();
+
+            $('#addSpouseBtn').click(function () {
+                var newIndex = $('#spousesContainer .dynamic-item').length;
+                $.post(addSpouseUrl, { index: newIndex }, function (data) {
+                    $('#spousesContainer').append(data);
+                    reindexDynamicItems('spousesContainer', 'Spouses');
+                });
+            });
+
+            $('#spousesContainer').on('click', '.removeSpouse', function () {
+                $(this).closest('.dynamic-item').remove();
+                reindexDynamicItems('spousesContainer', 'Spouses');
+            });
+
+            $('#addChildBtn').click(function () {
+                var newIndex = $('#childrenContainer .dynamic-item').length;
+                $.post(addChildUrl, { index: newIndex }, function (data) {
+                    $('#childrenContainer').append(data);
+                    reindexDynamicItems('childrenContainer', 'Children');
+                });
+            });
+
+            $('#childrenContainer').on('click', '.removeChild', function () {
+                $(this).closest('.dynamic-item').remove();
+                reindexDynamicItems('childrenContainer', 'Children');
+            });
+        });
+    </script>
+}

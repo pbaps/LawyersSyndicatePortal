@@ -1,0 +1,31 @@
+﻿@model IEnumerable<LawyersSyndicatePortal.Models.Exam>
+
+@{
+    ViewBag.Title = "تصحيح الامتحانات";
+}
+
+<div class="container mx-auto p-6">
+    <h2 class="text-3xl font-bold mb-6 text-gray-800">قائمة الامتحانات للتصحيح</h2>
+
+    @if (!Model.Any())
+    {
+        <p class="text-gray-600">لا توجد امتحانات تتطلب تصحيحًا يدويًا في الوقت الحالي.</p>
+    }
+    else
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var exam in Model)
+            {
+                <div class="bg-white shadow-md rounded-lg p-6 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2 text-gray-900">@exam.Title</h3>
+                        <p class="text-gray-600 text-sm mb-4">@exam.Description</p>
+                    </div>
+                    <div class="mt-4">
+                        @Html.ActionLink("ابدأ التصحيح", "GradeExam", "Grading", new { examId = exam.Id }, new { @class = "w-full inline-block text-center bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600 transition duration-300" })
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

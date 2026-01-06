@@ -1,0 +1,348 @@
+﻿@using LawyersSyndicatePortal.Utility
+@using Microsoft.AspNet.Identity
+@using System.Security.Claims
+@model IEnumerable<LawyersSyndicatePortal.Models.Lawyer>
+
+@{
+    ViewBag.Title = "إدارة المحامين";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int totalPages = ViewBag.TotalPages ?? 1;
+    int totalRecords = ViewBag.TotalRecords ?? 0;
+    string currentFilter = ViewBag.CurrentFilter;
+}
+
+<style>
+    /* الأنماط المخصصة الجديدة */
+    :root {
+        --primary-color: #0d6efd;
+        --primary-light: #e0f2fe;
+        --success-color: #198754;
+        --success-light: #d1fae5;
+        --info-color: #0dcaf0;
+        --info-light: #e0faff;
+    }
+
+    .card-summary {
+        border: none;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card-summary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-summary .icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+    .bg-primary-light {
+        background-color: var(--primary-light) !important;
+    }
+
+    .bg-success-light {
+        background-color: var(--success-light) !important;
+    }
+
+    .bg-info-light {
+        background-color: var(--info-light) !important;
+    }
+
+    .text-primary-custom {
+        color: var(--primary-color) !important;
+    }
+
+    .text-success-custom {
+        color: var(--success-color) !important;
+    }
+
+    .text-info-custom {
+        color: var(--info-color) !important;
+    }
+
+    .bg-primary-custom {
+        background-color: var(--primary-color) !important;
+    }
+
+    .bg-success-custom {
+        background-color: var(--success-color) !important;
+    }
+
+    .bg-info-custom {
+        background-color: var(--info-color) !important;
+    }
+
+    /* التأكد من أن خصائص overflow تعمل بشكل صحيح */
+    .table-responsive {
+        border-radius: 0.75rem;
+        overflow-x: auto; /* تأكد من وجود هذه الخاصية */
+        border: 1px solid #dee2e6;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    .table th, .table td {
+        white-space: nowrap;
+        vertical-align: middle;
+        text-align: right;
+    }
+
+    .table thead th {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .table-actions .btn {
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .alert .btn-close {
+        padding: 0.5rem;
+        margin-left: 0;
+        margin-right: auto;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">إدارة المحامين</h2>
+        <a href="@Url.Action("Create")" class="btn btn-primary px-4 py-2">
+            <i class="fas fa-plus me-2"></i> إضافة محامٍ جديد
+        </a>
+    </div>
+    <p class="text-muted mb-4">لوحة التحكم الرئيسية لإدارة حسابات المحامين في النظام.</p>
+
+    <hr class="mb-5" />
+
+    @* رسائل التنبيهات *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-end" role="alert">
+            @Html.Raw(TempData["SuccessMessage"])
+            <button type="button" class="btn-close m-0" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-end" role="alert">
+            @Html.Raw(TempData["ErrorMessage"])
+            <button type="button" class="btn-close m-0" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @* بطاقات الإحصائيات *@
+    <div class="row g-4 mb-5 text-end">
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-summary bg-primary-light">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="fw-bold mb-1 text-primary-custom">@ViewBag.TotalRecords</h4>
+                        <p class="mb-0 text-muted">إجمالي المحامين</p>
+                    </div>
+                    <div class="icon bg-primary-custom">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-summary bg-success-light">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h4 class="fw-bold mb-1 text-success-custom">@Model.Count()</h4>
+                        <p class="mb-0 text-muted">المحامون المعروضون حالياً</p>
+                    </div>
+                    <div class="icon bg-success-custom">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
+            <div class="card card-summary bg-light text-center w-100">
+                <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                    <p class="mb-2 text-muted">إجراءات سريعة</p>
+                    <div class="d-flex gap-2">
+                        <a href="@Url.Action("ExportToExcel", "Lawyers")" class="btn btn-success" title="تصدير إلى Excel">
+                            <i class="fas fa-file-excel me-2"></i> تصدير
+                        </a>
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importExcelModal" title="استيراد من Excel">
+                            <i class="fas fa-file-import me-2"></i> استيراد
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* نموذج البحث وخيارات العرض *@
+    <div class="mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        @using (Html.BeginForm("Index", "Lawyers", FormMethod.Get, new { @class = "flex-grow-1" }))
+        {
+            <div class="input-group">
+                <input type="text" name="SearchString" value="@currentFilter" class="form-control rounded-start-pill" placeholder="البحث بالاسم، رقم الهوية، الحالة المهنية، رقم العضوية..." aria-label="Search" />
+                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                @if (!string.IsNullOrEmpty(currentFilter))
+                {
+                    <a href="@Url.Action("Index", "Lawyers", new { pageSize = pageSize })" class="btn btn-outline-danger" title="مسح البحث"><i class="fas fa-times"></i></a>
+                }
+            </div>
+        }
+        <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
+            <label for="pageSizeSelect" class="form-label mb-0 text-nowrap">عرض:</label>
+            @Html.DropDownList("pageSize", (IEnumerable<SelectListItem>)ViewBag.PageSizes, new { @class = "form-select w-auto", @onchange = "this.form.submit();", id = "pageSizeSelect" })
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center shadow-sm" role="alert">
+            <i class="fas fa-info-circle me-2"></i> لا توجد محامون لعرضهم.
+        </div>
+    }
+    else
+    {
+        @* هنا تكمن الحاوية المسؤولة عن التمرير الأفقي *@
+        <div class="table-responsive rounded-3 shadow-sm">
+            <table class="table table-hover table-striped text-end align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.IdNumber)</th>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.FullName)</th>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.ProfessionalStatus)</th>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.MembershipNumber)</th>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.TrainingStartDate)</th>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.PracticeStartDate)</th>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.Gender)</th>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.IsActive)</th>
+                        <th scope="col" class="py-3">@Html.DisplayNameFor(model => model.TrainerLawyerName)</th>
+                        <th scope="col" class="py-3">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.IdNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.ProfessionalStatus)</td>
+                            <td>@Html.DisplayFor(modelItem => item.MembershipNumber)</td>
+                            <td>@(item.TrainingStartDate.HasValue ? item.TrainingStartDate.Value.ToShortDateString() : "غير محدد")</td>
+                            <td>@(item.PracticeStartDate.HasValue ? item.PracticeStartDate.Value.ToShortDateString() : "غير محدد")</td>
+                            <td>@Html.DisplayFor(modelItem => item.Gender)</td>
+                            <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
+                            <td>@Html.DisplayFor(modelItem => item.TrainerLawyerName)</td>
+                            <td class="table-actions">
+                                <a href="@Url.Action("Edit", new { id = item.IdNumber })" class="btn btn-info btn-sm rounded-circle" title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="@Url.Action("Details", new { id = item.IdNumber })" class="btn btn-secondary btn-sm rounded-circle" title="تفاصيل">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+                                <a href="@Url.Action("Delete", new { id = item.IdNumber })" class="btn btn-danger btn-sm rounded-circle" title="حذف">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                                <a href="@Url.Action("ManagePermissions", new { id = item.IdNumber })" class="btn btn-primary btn-sm rounded-circle" title="إدارة الصلاحيات">
+                                    <i class="fas fa-user-lock"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        @* عناصر التحكم في ترقيم الصفحات *@
+        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-2">
+            <div class="text-muted">
+                عرض @(Model.Any() ? ((currentPage - 1) * pageSize) + 1 : 0) - @(Math.Min(currentPage * pageSize, totalRecords)) من @totalRecords سجل.
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-end mb-0">
+                    <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                        @Html.ActionLink("السابق", "Index", new { page = currentPage - 1, pageSize = pageSize, searchString = currentFilter }, new { @class = "page-link" })
+                    </li>
+                    @for (int i = 1; i <= totalPages; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            @Html.ActionLink(i.ToString(), "Index", new { page = i, pageSize = pageSize, searchString = currentFilter }, new { @class = "page-link" })
+                        </li>
+                    }
+                    <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+                        @Html.ActionLink("التالي", "Index", new { page = currentPage + 1, pageSize = pageSize, searchString = currentFilter }, new { @class = "page-link" })
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+
+    @* نافذة منبثقة لاستيراد Excel *@
+    <div class="modal fade" id="importExcelModal" tabindex="-1" aria-labelledby="importExcelModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-end">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importExcelModalLabel">استيراد بيانات المحامين من Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                @using (Html.BeginForm("ImportExcel", "Lawyers", FormMethod.Post, new { enctype = "multipart/form-data", @class = "text-end" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">الرجاء اختيار ملف Excel للاستيراد:</label>
+                            <input type="file" name="file" id="file" class="form-control rounded-3" accept=".xlsx, .xls" required />
+                        </div>
+                        <p>
+                            <a href="@Url.Action("DownloadExcelTemplate", "Lawyers")" class="btn btn-link text-decoration-none">
+                                <i class="fas fa-download me-2"></i> تنزيل نموذج ملف Excel للاستيراد
+                            </a>
+                        </p>
+                        <div class="alert alert-info rounded-3" role="alert">
+                            <h6 class="alert-heading">ملاحظات هامة:</h6>
+                            <ul class="text-end list-unstyled mb-0">
+                                <li><strong>1. الرؤوس:</strong> يجب أن يحتوي الصف الأول على الرؤوس التالية بالضبط: "رقم الهوية", "الاسم الكامل", "الحالة المهنية", "رقم العضوية", "تاريخ بدء التدريب", "تاريخ بدء المزاولة", "الجنس", "نشط".</li>
+                                <li><strong>2. التنسيق:</strong> "تاريخ بدء التدريب" و "تاريخ بدء المزاولة" يجب أن يكونا بتنسيق تاريخ صحيح. "نشط" يجب أن تكون `TRUE` أو `FALSE`.</li>
+                                <li><strong>3. تحديث أو إضافة:</strong> إذا كان رقم الهوية موجودًا بالفعل، فسيتم تحديث بيانات المحامي. وإلا، فسيتم إضافة محامٍ جديد.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary rounded-pill">استيراد</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // إغلاق التنبيهات تلقائيًا
+            window.setTimeout(function () {
+                $(".alert").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 5000);
+        });
+    </script>
+}

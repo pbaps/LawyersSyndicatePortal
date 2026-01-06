@@ -1,0 +1,50 @@
+﻿@model LawyersSyndicatePortal.ViewModels.FamilyMemberInjuryViewModel
+
+@{
+    var index = ViewData["index"] != null ? (int)ViewData["index"] : 0;
+    var prefix = $"FamilyMemberInjuries[{index}]";
+    ViewData.TemplateInfo.HtmlFieldPrefix = prefix;
+}
+
+<div class="card-lux dynamic-item mb-3" data-index="@index">
+    <div class="card-header-lux d-flex justify-content-between align-items-center">
+        <h5 class="card-title-lux mb-0">
+            <i class="fas fa-user-injured me-2"></i>
+            تفاصيل المصاب رقم @(index + 1)
+        </h5>
+        <button type="button" class="btn-close removeFamilyMemberInjury" aria-label="Remove"></button>
+    </div>
+    <div class="card-body-lux">
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.HealthStatusId)
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="@(prefix)_InjuredFamilyMemberName" class="form-label control-label">@Html.DisplayNameFor(model => model.InjuredFamilyMemberName)</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    @Html.EditorFor(model => model.InjuredFamilyMemberName, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.InjuredFamilyMemberName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-6">
+                <label for="@(prefix)_RelationshipToLawyer" class="form-label control-label">@Html.DisplayNameFor(model => model.RelationshipToLawyer)</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-handshake"></i></span>
+                    @Html.EditorFor(model => model.RelationshipToLawyer, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.RelationshipToLawyer, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-12">
+                <label for="@(prefix)_InjuryDetails" class="form-label control-label">@Html.DisplayNameFor(model => model.InjuryDetails)</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-medkit"></i></span>
+                    @Html.TextAreaFor(model => model.InjuryDetails, new { @class = "form-control", rows = 3 })
+                </div>
+                @Html.ValidationMessageFor(model => model.InjuryDetails, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+</div>

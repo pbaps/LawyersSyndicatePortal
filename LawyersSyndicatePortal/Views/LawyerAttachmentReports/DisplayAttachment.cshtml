@@ -1,0 +1,76 @@
+﻿@model LawyersSyndicatePortal.Models.LawyerAttachment
+@{
+    ViewBag.Title = "استعراض المرفق: " + (Model != null ? Model.FileName : "غير معروف");
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // أو تخطيط بسيط إذا لم تحتاج لشريط التنقل الجانبي
+}
+
+<div class="container-fluid py-4" dir="rtl">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-primary mb-4 text-right">
+                <i class="fas fa-eye ml-2"></i> استعراض المرفق: @(Model != null ? Model.FileName : "المرفق غير متوفر")
+            </h2>
+            @if (Model == null)
+            {
+                <div class="alert alert-danger text-center" role="alert">
+                    <i class="fas fa-exclamation-triangle ml-2"></i> حدث خطأ: لم يتم تحميل بيانات المرفق.
+                </div>
+            }
+            else
+            {
+                <p class="text-right"><strong>معرف المرفق (للتصحيح):</strong> @Model.Id</p>
+                <p class="text-right"><strong>اسم الملف (للتصحيح):</strong> @Model.FileName</p>
+                <p class="text-right"><strong>نوع المحتوى (للتصحيح):</strong> @(Model.ContentType ?? "غير محدد")</p>
+                <p class="text-right"><strong>مسار الملف (للتصحيح):</strong> @(Model.FilePath ?? "غير محدد")</p>
+
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body text-center">
+                        @if (Model.ContentType != null && Model.ContentType.StartsWith("image/"))
+                        {
+                            <img src="@Url.Action("ViewAttachment", new { attachmentId = Model.Id })" class="img-fluid rounded shadow-sm" alt="المرفق" style="max-width: 100%; height: auto; border: 1px solid #ddd; padding: 5px;" />
+                        }
+                        else if (Model.ContentType == "application/pdf")
+                        {
+                            <iframe src="@Url.Action("ViewAttachment", new { attachmentId = Model.Id })" style="width:100%; height:800px; border:none;" class="rounded shadow-sm">
+                                <p>متصفحك لا يدعم عرض ملفات PDF المضمنة. يمكنك <a href="@Url.Action("ViewAttachment", new { attachmentId = Model.Id })" target="_blank">تنزيل الملف</a> بدلاً من ذلك.</p>
+                            </iframe>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning text-center" role="alert">
+                                <i class="fas fa-exclamation-triangle ml-2"></i> لا يمكن استعراض هذا النوع من الملفات مباشرة في المتصفح. نوع الملف: <strong>@(Model.ContentType ?? "غير محدد")</strong>
+                            </div>
+                            <p class="mt-3">
+                                <a href="@Url.Action("ViewAttachment", new { attachmentId = Model.Id })" target="_blank" class="btn btn-primary">
+                                    <i class="fas fa-download ml-2"></i> تنزيل الملف
+                                </a>
+                            </p>
+                        }
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a href="@Url.Action("Index", "LawyerAttachmentReports")" class="btn btn-secondary">
+                        <i class="fas fa-arrow-right ml-2"></i> العودة إلى تقارير المرفقات
+                    </a>
+                </div>
+
+                <div class="card shadow-sm mt-4">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0 text-right">
+                            <i class="fas fa-info-circle ml-2"></i> تفاصيل المرفق
+                        </h5>
+                    </div>
+                    <div class="card-body text-right">
+                        <p><strong>اسم الملف:</strong> @Model.FileName</p>
+                        <p><strong>نوع المرفق:</strong> @Model.AttachmentType</p>
+                        <p><strong>حجم الملف:</strong> @(Model.FileSize / 1024) KB</p>
+                        <p><strong>تاريخ الرفع:</strong> @(Model.UploadDate?.ToShortDateString() ?? "غير متوفر")</p>
+                        <p><strong>ملاحظات:</strong> @(string.IsNullOrEmpty(Model.Notes) ? "لا توجد ملاحظات" : Model.Notes)</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿@model LawyersSyndicatePortal.Models.UserRolesViewModel
+
+@{
+    ViewBag.Title = "إدارة أدوار المستخدم";
+}
+
+<h2 class="text-right">إدارة أدوار المستخدم: @Model.UserName</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        @using (Html.BeginForm("ManageUserRoles", "Roles", FormMethod.Post, new { @class = "text-right", role = "form", dir = "rtl" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.UserId)
+            @Html.HiddenFor(model => model.UserName)  
+
+                            <div class="form-horizontal">
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.UserAssignedRoles, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @foreach (var role in Model.AllRoles)
+                                        {
+                                            <div class="form-check">
+                                                <input type="checkbox"
+                                                       class="form-check-input"
+                                                       name="UserAssignedRoles"
+                                                       id="role_@role.Value"
+                                                       value="@role.Value"
+                                                       @(Model.UserAssignedRoles.Contains(role.Value) ? "checked" : "") />
+                                                <label class="form-check-label" for="role_@role.Value">
+                                                    @role.Text
+                                                </label>
+                                            </div>
+                                        }
+                                        @Html.ValidationMessageFor(model => model.UserAssignedRoles, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group mt-3">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <input type="submit" value="حفظ الأدوار" class="btn btn-success" />
+                                        @Html.ActionLink("العودة إلى المستخدمين", "Index", "Users", null, new { @class = "btn btn-secondary ml-2" })
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @section Scripts {
+                    @Scripts.Render("~/bundles/jqueryval")
+                }

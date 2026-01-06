@@ -1,0 +1,61 @@
+﻿@model LawyersSyndicatePortal.ViewModels.ManualGradingViewModel
+
+@{
+    ViewBag.Title = "تصحيح الأسئلة النصية";
+}
+
+<h2 class="text-center my-4">تصحيح الأسئلة النصية لاختبار: @Model.ExamTitle</h2>
+
+<div class="container">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["Error"]
+        </div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (!Model.AnswersToGrade.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            لا توجد أسئلة نصية غير مصححة في هذا الاختبار.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var answer in Model.AnswersToGrade)
+            {
+                <div class="col-md-12 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">سؤال من: @answer.LawyerFullName (@answer.LawyerIdNumber)</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>**السؤال:**</h6>
+                            <p>@answer.QuestionText</p>
+                            <h6>**إجابة المحامي:**</h6>
+                            <p class="border p-3 rounded bg-light">@answer.UserAnswer</p>
+                            <h6>**الدرجة الكلية للسؤال:** @answer.QuestionScore</h6>
+                            @using (Html.BeginForm("SaveGrade", "AdminResult", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("answerId", answer.AnswerId)
+                                <div class="form-group">
+                                    <label for="acquiredScore">الدرجة المكتسبة:</label>
+                                    <input type="number" class="form-control" id="acquiredScore" name="acquiredScore" step="0.5" min="0" max="@answer.QuestionScore" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">حفظ الدرجة</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

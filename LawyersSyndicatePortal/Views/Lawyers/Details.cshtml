@@ -1,0 +1,146 @@
+﻿@model LawyersSyndicatePortal.Models.Lawyer
+
+@{
+    ViewBag.Title = "تفاصيل المحامي";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark"><i class="fas fa-user-circle me-3 text-primary"></i>تفاصيل المحامي</h2>
+        <a href="@Url.Action("Index", "Lawyers")" class="btn btn-secondary px-4 py-2">
+            <i class="fas fa-arrow-right me-2"></i> العودة للقائمة
+        </a>
+    </div>
+    <p class="text-muted mb-4">يعرض هذا القسم كافة التفاصيل المتعلقة بالمحامي المحدد.</p>
+    <hr class="mb-5" />
+
+    @* رسائل النجاح والخطأ *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-right" role="alert" dir="rtl">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-right" role="alert" dir="rtl">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model == null)
+    {
+        <div class="card bg-light shadow-sm rounded-3 p-4">
+            <div class="alert alert-danger text-center mb-3" role="alert">
+                <h4 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i> خطأ!</h4>
+                <p class="mb-0">عذراً، لم يتم العثور على بيانات هذا المحامي.</p>
+            </div>
+            <div class="text-center">
+                <a href="@Url.Action("Index", "Lawyers")" class="btn btn-primary px-4 py-2 rounded-pill">
+                    <i class="fas fa-list-ul me-2"></i> العودة إلى قائمة المحامين
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm rounded-3">
+            <div class="card-header bg-primary text-white p-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">
+                    @Html.DisplayFor(model => model.FullName)
+                </h5>
+                <span class="badge bg-secondary p-2">@Html.DisplayFor(model => model.IdNumber)</span>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong class="text-dark">@Html.DisplayNameFor(model => model.ProfessionalStatus):</strong>
+                            <span class="text-muted">@Html.DisplayFor(model => model.ProfessionalStatus)</span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong class="text-dark">@Html.DisplayNameFor(model => model.MembershipNumber):</strong>
+                            <span class="text-muted">@Html.DisplayFor(model => model.MembershipNumber)</span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong class="text-dark">@Html.DisplayNameFor(model => model.TrainingStartDate):</strong>
+                            <span class="text-muted">
+                                @(Model.TrainingStartDate.HasValue ? Model.TrainingStartDate.Value.ToShortDateString() : "غير محدد")
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong class="text-dark">@Html.DisplayNameFor(model => model.PracticeStartDate):</strong>
+                            <span class="text-muted">
+                                @(Model.PracticeStartDate.HasValue ? Model.PracticeStartDate.Value.ToShortDateString() : "غير محدد")
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong class="text-dark">@Html.DisplayNameFor(model => model.Gender):</strong>
+                            <span class="text-muted">@Html.DisplayFor(model => model.Gender)</span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong class="text-dark">@Html.DisplayNameFor(model => model.IsActive):</strong>
+                            <span class="text-muted">@Html.DisplayFor(model => model.IsActive)</span>
+                        </p>
+                    </div>
+                    @if (Model.IsTrainee)
+                    {
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong class="text-dark">@Html.DisplayNameFor(model => model.TrainerLawyerName):</strong>
+                                <span class="text-muted">@Html.DisplayFor(model => model.TrainerLawyerName)</span>
+                            </p>
+                        </div>
+                    }
+                </div>
+
+                @* عرض المستخدمين المرتبطين (إذا وجدوا) *@
+                @if (Model.LinkedUsers != null && Model.LinkedUsers.Any())
+                {
+                    <hr class="my-4" />
+                    <h5 class="fw-bold mb-3"><i class="fas fa-users-cog me-2 text-info"></i> المستخدمون المرتبطون</h5>
+                    <ul class="list-group">
+                        @foreach (var user in Model.LinkedUsers)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-user-circle me-2 text-secondary"></i>
+                                    <strong>@user.FullName</strong> (@user.UserName)
+                                </div>
+                                @* زر إدارة الصلاحيات *@
+                                <a href="@Url.Action("ManagePermissions", "Lawyers", new { id = Model.IdNumber })" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-shield-alt me-1"></i> إدارة الصلاحيات
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-start gap-2 mt-4">
+            <a href="@Url.Action("Edit", new { id = Model.IdNumber })" class="btn btn-info px-4 py-2 rounded-pill">
+                <i class="fas fa-edit me-2"></i> تعديل
+            </a>
+            @if (Model.LinkedUsers != null && Model.LinkedUsers.Any())
+            {
+                <a href="@Url.Action("ManagePermissions", new { id = Model.IdNumber })" class="btn btn-primary px-4 py-2 rounded-pill">
+                    <i class="fas fa-shield-alt me-2"></i> إدارة الصلاحيات
+                </a>
+            }
+        </div>
+    }
+</div>

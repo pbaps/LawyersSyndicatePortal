@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "إنشاء الصلاحيات تلقائياً";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">إنشاء الصلاحيات تلقائياً</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                تأكيد إنشاء الصلاحيات
+            </div>
+            <div class="panel-body">
+                <p>
+                    هذه العملية ستقوم بالبحث في جميع متحكمات التطبيق (Controllers)
+                    عن الإجراءات التي تحمل مرشح الصلاحيات (PermissionAuthorizationFilter)
+                    وتضيفها إلى قاعدة البيانات كصلاحيات جديدة إذا لم تكن موجودة بالفعل.
+                </p>
+                <p class="text-danger">
+                    <strong>
+                        تحذير: تأكد من أن هذا الإجراء يتم تشغيله فقط عند الحاجة لضمان تزامن
+                        قائمة الصلاحيات مع المتحكمات.
+                    </strong>
+                </p>
+                @using (Html.BeginForm("GeneratePermissionsPost", "Permissions", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            <i class="fa fa-cogs"></i> تشغيل عملية الإنشاء
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("العودة إلى قائمة الأدوار", "Index", null, new { @class = "btn btn-default" })
+</div>

@@ -1,0 +1,205 @@
+﻿@model LawyersSyndicatePortal.Models.Question
+
+@{
+    ViewBag.Title = "تعديل السؤال";
+}
+
+<link href="@Url.Content("~/Content/Examstylenew.css")" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+<!--
+  *** CSS مخصص لفرض عرض أزرار الراديو بشكل صحيح ***
+  يستخدم هذا التنسيق المحدد لضمان إلغاء أي قواعد CSS أخرى تتعارض معه.
+-->
+<style>
+    /* تحديد الأزرار بناءً على النوع والفئة لزيادة الأولوية */
+    input.form-check-input[type="radio"] {
+        /* إجبار المتصفح على العودة إلى الشكل الافتراضي لأزرار الراديو */
+        -webkit-appearance: radio !important;
+        -moz-appearance: radio !important;
+        appearance: radio !important;
+        /* لجعلها أكثر وضوحًا */
+        border-radius: 50% !important; /* تأكيد أن الشكل دائري */
+        border: 2px solid #007bff;
+        height: 20px;
+        width: 20px;
+        margin-top: 5px;
+    }
+
+        /* يمكنك إضافة تنسيقات إضافية للحالة المحددة إذا لزم الأمر */
+        input.form-check-input[type="radio"]:checked {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+</style>
+
+<div class="container mt-4" dir="rtl">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>تعديل السؤال</h2>
+            <hr />
+            <!-- إضافة تنبيه لرسائل الخطأ من TempData -->
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+            @using (Html.BeginForm("Edit", "ExamQuestions", FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.ExamId)
+
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.Text, "نص السؤال", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(model => model.Text, new { @class = "form-control", rows = 4 })
+                        @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.QuestionType, "نوع السؤال", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EnumDropDownListFor(model => model.QuestionType, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.QuestionType, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.Score, "الدرجة", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Score, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+                        @Html.ValidationMessageFor(model => model.Score, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.DurationSeconds, "مدة السؤال (بالثواني)", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.DurationSeconds, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+                        @Html.ValidationMessageFor(model => model.DurationSeconds, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(model => model.RequiresManualGrading, "يحتاج تصحيح يدوي", htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9 mt-2">
+                        <div class="form-check">
+                            @Html.CheckBoxFor(model => model.RequiresManualGrading, new { @class = "form-check-input" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.RequiresManualGrading, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div id="options-container" style="display: none;">
+                    <h4>الخيارات</h4>
+                    <hr />
+                    <div id="options-list">
+                        <!-- الخيارات الموجودة سيتم عرضها هنا بواسطة JavaScript -->
+                    </div>
+                    <button type="button" class="btn btn-secondary" onclick="addOption()">
+                        <i class="fas fa-plus"></i> إضافة خيار
+                    </button>
+                    <small class="form-text text-muted mt-2">
+                        يرجى تحديد الخيار الصحيح بوضع علامة في الدائرة بجانبه.
+                    </small>
+                </div>
+
+                <div class="form-group mt-4">
+                    <div class="col-md-offset-3 col-md-9">
+                        <input type="submit" value="حفظ التغييرات" class="btn btn-success" />
+                        <a href="@Url.Action("Index", new { examId = Model.ExamId })" class="btn btn-secondary">العودة إلى القائمة</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        // دالة لإضافة خيار جديد
+        function addOption(optionId = 0, optionText = '', isCorrect = false) {
+            const list = document.getElementById('options-list');
+            const index = list.children.length;
+            const newOptionDiv = document.createElement('div');
+            newOptionDiv.classList.add('form-group', 'row', 'align-items-center', 'option-row');
+            newOptionDiv.innerHTML = `
+                <div class="col-md-8">
+                    <input type="text" name="Options[${index}].Text" value="${optionText}" class="form-control" placeholder="نص الخيار" required />
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <!-- هنا نستخدم زر الاختيار (Radio Button) -->
+                        <input type="radio" name="correctOptionIndex" value="${index}" class="form-check-input" ${isCorrect ? 'checked' : ''} />
+                        <label class="form-check-label">إجابة صحيحة</label>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeOption(this)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="Options[${index}].Id" value="${optionId}" />
+            `;
+            list.appendChild(newOptionDiv);
+        }
+
+        // دالة لحذف خيار
+        function removeOption(button) {
+            button.closest('.option-row').remove();
+            // إعادة فهرسة الخيارات بعد الحذف
+            reindexOptions();
+        }
+
+        // دالة لإعادة فهرسة الخيارات بعد الحذف
+        function reindexOptions() {
+            const list = document.getElementById('options-list');
+            const optionRows = list.querySelectorAll('.option-row');
+            optionRows.forEach((row, index) => {
+                const textInput = row.querySelector('input[name$=".Text"]');
+                const isCorrectRadio = row.querySelector('input[name="correctOptionIndex"]');
+                const idInput = row.querySelector('input[name$=".Id"]');
+
+                if (textInput) textInput.name = `Options[${index}].Text`;
+                if (isCorrectRadio) {
+                    isCorrectRadio.name = 'correctOptionIndex';
+                    isCorrectRadio.value = index;
+                }
+                if (idInput) idInput.name = `Options[${index}].Id`;
+            });
+        }
+
+        // إظهار وإخفاء قسم الخيارات بناءً على نوع السؤال
+        function toggleOptionsSection() {
+            const questionType = document.getElementById('QuestionType').value;
+            const optionsContainer = document.getElementById('options-container');
+            if (questionType === "0") { // 0 for MultipleChoice
+                optionsContainer.style.display = 'block';
+            } else {
+                optionsContainer.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // حل مشكلة المرجع الدائري عن طريق إنشاء كائن جديد للخيارات
+            // يحتوي فقط على الحقول الضرورية
+            const existingOptions = @Html.Raw(Json.Encode(Model.Options.Select(o => new { o.Id, o.Text, o.IsCorrect })));
+
+            if (existingOptions && existingOptions.length > 0) {
+                existingOptions.forEach((option) => {
+                    const isCorrect = option.IsCorrect;
+                    addOption(option.Id, option.Text, isCorrect);
+                });
+            }
+
+            toggleOptionsSection();
+        });
+
+        document.getElementById('QuestionType').addEventListener('change', toggleOptionsSection);
+    </script>
+}

@@ -1,0 +1,96 @@
+﻿@model LawyersSyndicatePortal.ViewModels.ExamListViewModel
+
+@{
+    ViewBag.Title = "الاختبارات المتاحة";
+}
+
+<style>
+    /* إضافة تأثير التوهج */
+    .exam-item-active {
+        background-color: #f0f8ff; /* لون خلفية خفيف لتمييز العنصر */
+        border: 2px solid #007bff; /* حدود زرقاء */
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* تأثير توهج أزرق خفيف */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .exam-item-active:hover {
+            transform: translateY(-5px); /* رفع العنصر قليلاً عند التمرير */
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.7); /* زيادة التوهج */
+        }
+</style>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2>الاختبارات</h2>
+            <p class="lead">قائمة بالامتحانات المتاحة والمكتملة لك.</p>
+        </div>
+    </div>
+
+    @* قسم الاختبارات المتاحة (النشطة) *@
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>الاختبارات المتاحة</h3>
+            <hr />
+        </div>
+        <div class="col-12">
+            @if (Model.ActiveExams != null && Model.ActiveExams.Any())
+            {
+                <div class="list-group">
+                    @foreach (var exam in Model.ActiveExams)
+                    {
+                        <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center exam-item-active">
+                            <div>
+                                <h5 class="mb-1">@exam.Title</h5>
+                                <p class="mb-1 text-muted">المدة: @exam.DurationMinutes دقيقة</p>
+                                <p class="mb-0">عدد الأسئلة: @exam.Questions.Count()</p>
+                            </div>
+                            <a href="@Url.Action("ExamDetails", "ExamTaker", new { examId = exam.Id })" class="btn btn-primary">
+                                ابدأ الاختبار
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    لا توجد اختبارات متاحة حاليًا.
+                </div>
+            }
+        </div>
+    </div>
+
+    @* قسم الاختبارات المكتملة *@
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>الاختبارات المكتملة</h3>
+            <hr />
+        </div>
+        <div class="col-12">
+            @if (Model.CompletedExams != null && Model.CompletedExams.Any())
+            {
+                <div class="list-group">
+                    @foreach (var exam in Model.CompletedExams)
+                    {
+                        <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">@exam.Title</h5>
+                                <p class="mb-0 text-success">تم الانتهاء منه.</p>
+                            </div>
+                            <a href="@Url.Action("ExamCompleted", "ExamTaker", new { id = exam.Id })" class="btn btn-success">
+                                عرض النتيجة
+                            </a>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning" role="alert">
+                    لم تكمل أي اختبار حتى الآن.
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,186 @@
+﻿@model PagedList.IPagedList<LawyersSyndicatePortal.Models.AuditLog>
+@using PagedList.Mvc
+@using System.Web.Mvc.Html
+@using System.Linq
+
+@{
+    ViewBag.Title = "سجلات التحديث الإدارية";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    /* أنماط إضافية لتحسين مظهر صفحة السجلات */
+    .table thead th {
+        vertical-align: middle;
+    }
+
+    .form-control {
+        border-radius: 5px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+        .pagination-container .pagination > li > a, .pagination-container .pagination > li > span {
+            border-radius: 5px;
+            margin: 0 2px;
+        }
+
+    .sort-link {
+        color: white;
+        text-decoration: none;
+    }
+
+        .sort-link:hover {
+            color: lightgray;
+            text-decoration: underline;
+        }
+</style>
+
+<div class="container-fluid py-5" dir="rtl">
+    <h2 class="text-center mb-5"><i class="fas fa-history text-primary ml-2"></i> سجلات التحديث الإدارية</h2>
+
+    <!-- نموذج البحث والتصفية وخيارات العرض -->
+    @using (Html.BeginForm("Index", "AuditLogs", FormMethod.Get, new { @class = "mb-4" }))
+    {
+        @Html.Hidden("sortOrder", ViewBag.CurrentSortOrder as string)
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="form-group">
+                    <label for="searchString">بحث بالاسم أو الإجراء:</label>
+                    @Html.TextBox("searchString", ViewBag.CurrentSearchString as string, new { @class = "form-control", @placeholder = "أدخل كلمة البحث..." })
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="form-group">
+                    <label for="startDate">تاريخ البدء:</label>
+                    @Html.TextBox("startDate", ViewBag.CurrentStartDate as string, new { @class = "form-control", @type = "date" })
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="form-group">
+                    <label for="endDate">تاريخ الانتهاء:</label>
+                    @Html.TextBox("endDate", ViewBag.CurrentEndDate as string, new { @class = "form-control", @type = "date" })
+                </div>
+            </div>
+            <div class="col-md-2 mb-3">
+                <div class="form-group">
+                    <label for="pageSize">عرض:</label>
+                    @Html.DropDownList("pageSize", new SelectList(new List<int> { 10, 50, 100 }, ViewBag.CurrentPageSize), new { @class = "form-control", onchange = "this.form.submit();" })
+                </div>
+            </div>
+            <div class="col-md-3 d-flex align-items-end mb-3">
+                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-search ml-2"></i> بحث</button>
+            </div>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            لا توجد سجلات تحديث لعرضها.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().AdminName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().Timestamp)
+                            <!-- رابط الترتيب حسب التاريخ -->
+                            <a href="@Url.Action("Index", new { sortOrder = ViewBag.TimestampSortParam, searchString = ViewBag.CurrentSearchString, startDate = ViewBag.CurrentStartDate, endDate = ViewBag.CurrentEndDate, pageSize = ViewBag.CurrentPageSize })" class="sort-link ml-2">
+                                <i class="fas fa-sort-amount-@(ViewBag.CurrentSortOrder == "TimestampAsc" ? "up" : "down")"></i>
+                            </a>
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().Action)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().TableName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().EntityId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.First().Details)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AdminName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Timestamp)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Action)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TableName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EntityId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Details)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- عناصر التحكم في الترقيم -->
+        <div class="pagination-container">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, searchString = ViewBag.CurrentSearchString, startDate = ViewBag.CurrentStartDate, endDate = ViewBag.CurrentEndDate, pageSize = ViewBag.CurrentPageSize, sortOrder = ViewBag.CurrentSortOrder }),
+                new PagedListRenderOptions
+                {
+                    DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                    DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                    DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                    DisplayEllipsesWhenNotShowingAllPageNumbers = true,
+                    DisplayLinkToIndividualPages = true,
+                    LiElementClasses = new[] { "page-item" },
+                    UlElementClasses = new[] { "pagination" }
+                })
+        </div>
+
+        <p class="text-center mt-3">
+            عرض صفحة @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) من @Model.PageCount
+        </p>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // هنا يمكنك إضافة أي أكواد JavaScript إضافية إذا لزم الأمر
+        });
+    </script>
+}

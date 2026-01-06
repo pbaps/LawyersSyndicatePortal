@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "تأكيد الطلب";
+   
+}
+
+<div class="container-fluid py-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg rounded-3">
+                <div class="card-header bg-success text-white text-center py-3 rounded-top-3">
+                    <h2 class="card-title mb-0">تم إرسال طلبك بنجاح</h2>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <i class="fas fa-check-circle text-success mb-4" style="font-size: 4rem;"></i>
+                    <p class="lead">
+                        تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني.
+                        يرجى التحقق من صندوق الوارد الخاص بك واتباع التعليمات لإعادة تعيين كلمة المرور.
+                    </p>
+                    <a href="@Url.Action("AdminRecoveryRequest", "LawyerPasswordRecovery")" class="btn btn-outline-primary mt-3">العودة إلى صفحة الاستعادة</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

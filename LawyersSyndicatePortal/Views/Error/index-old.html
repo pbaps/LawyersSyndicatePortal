@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="ar" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الموقع تحت الصيانة</title>
+    <!-- استيراد خط Cairo من Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center max-w-2xl mx-auto">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-blue-600 mx-auto mb-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 22h20L12 2zM12 9v4M12 17h.01" />
+        </svg>
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+            الموقع تحت الصيانة حاليًا
+        </h1>
+        <p class="text-lg text-slate-600 mb-6">
+            نحن نعمل على تحسين الموقع وتقديم أفضل تجربة ممكنة.
+        </p>
+
+        <!-- قسم عرض العداد -->
+        <div class="bg-slate-100 rounded-lg p-4 md:p-6 mb-8 inline-block shadow-inner">
+            <p class="text-lg font-semibold text-slate-700 mb-2">الوقت المتبقي لعودة الخدمة:</p>
+            <div class="flex justify-center items-center space-x-4 text-3xl md:text-5xl font-extrabold text-blue-600" dir="ltr">
+                <span id="days">00</span>
+                <span class="text-slate-400">:</span>
+                <span id="hours">00</span>
+                <span class="text-slate-400">:</span>
+                <span id="minutes">00</span>
+                <span class="text-slate-400">:</span>
+                <span id="seconds">00</span>
+            </div>
+
+            <!-- التسميات بالترتيب الجديد -->
+            <div class="flex justify-center items-center space-x-4 text-sm md:text-base text-slate-500 mt-2" dir="rtl">
+                <span>يوم</span>
+                <span> / </span>
+                <span>ساعة</span>
+                <span> / </span>
+                <span>دقيقة</span>
+                <span> / </span>
+                <span>ثانية</span>
+            </div>
+        </div>
+
+        <p class="text-lg text-slate-600">
+            سيتم إرجاع الخدمة قريباً جدًا. نعتذر عن أي إزعاج قد يسببه ذلك.
+        </p>
+    </div>
+
+    <script>
+        // قم بتعيين وقت الانتهاء هنا (التاريخ والوقت الذي تريد أن ينتهي فيه العداد).
+        const countdownDate = new Date("2025-09-02T15:00:00").getTime();
+
+        const x = setInterval(function () {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("days").innerHTML = "00";
+                document.getElementById("hours").innerHTML = "00";
+                document.getElementById("minutes").innerHTML = "00";
+                document.getElementById("seconds").innerHTML = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // إضافة صفر في البداية إذا كان الرقم أقل من 10
+            document.getElementById("days").innerHTML = (days < 10 ? "0" : "") + days;
+            document.getElementById("hours").innerHTML = (hours < 10 ? "0" : "") + hours;
+            document.getElementById("minutes").innerHTML = (minutes < 10 ? "0" : "") + minutes;
+            document.getElementById("seconds").innerHTML = (seconds < 10 ? "0" : "") + seconds;
+        }, 1000);
+    </script>
+</body>
+</html>

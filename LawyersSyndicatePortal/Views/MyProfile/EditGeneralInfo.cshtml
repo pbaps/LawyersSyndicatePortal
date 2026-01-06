@@ -1,0 +1,173 @@
+﻿@model LawyersSyndicatePortal.ViewModels.GeneralInfoViewModel
+
+@{
+    ViewBag.Title = "تعديل المعلومات العامة";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div class="container-fluid py-4 text-right" dir="rtl">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-lux">
+                <div class="card-header-lux d-flex justify-content-between align-items-center">
+                    <h5 class="card-title-lux mb-0"><i class="fas fa-user me-2"></i>تعديل المعلومات العامة</h5>
+                </div>
+                <div class="card-body-lux">
+                    @using (Html.BeginForm("EditGeneralInfo", "MyProfile", FormMethod.Post, new { @class = "row g-3" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.Id)
+
+                        <div class="col-12 mt-3">
+                            <div class="form-check form-switch">
+                                @Html.EditorFor(model => model.PracticesShariaLaw, new { htmlAttributes = new { @class = "form-check-input", id = "practicesShariaLaw" } })
+                                @Html.LabelFor(model => model.PracticesShariaLaw, new { @class = "form-check-label control-label" })
+                                @Html.ValidationMessageFor(model => model.PracticesShariaLaw, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div id="shariaLawPracticeStartDateSection" class="col-12" style="@(Model.PracticesShariaLaw ? "" : "display:none;")">
+                            <div class="card-lux mt-3">
+                                <div class="card-header-lux">
+                                    <h5 class="card-title-lux mb-0">تاريخ مزاولة المحاماة الشرعية</h5>
+                                </div>
+                                <div class="card-body-lux">
+                                    <div class="col-12">
+                                        <label for="@Html.IdFor(model => model.ShariaLawPracticeStartDate)" class="form-label control-label">@Html.DisplayNameFor(model => model.ShariaLawPracticeStartDate)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                            @Html.TextBoxFor(model => model.ShariaLawPracticeStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control datepicker" })
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.ShariaLawPracticeStartDate, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <div class="form-check form-switch">
+                                @Html.EditorFor(model => model.ReceivedAidFromSyndicate, new { htmlAttributes = new { @class = "form-check-input", id = "receivedAidFromSyndicate" } })
+                                @Html.LabelFor(model => model.ReceivedAidFromSyndicate, new { @class = "form-check-label control-label" })
+                                @Html.ValidationMessageFor(model => model.ReceivedAidFromSyndicate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div id="receivedAidsSection" class="col-12" style="@(Model.ReceivedAidFromSyndicate ? "" : "display:none;")">
+                            <div class="card-lux mt-3">
+                                <div class="card-header-lux d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title-lux mb-0">المساعدات المستلمة</h5>
+                                    <button type="button" id="addReceivedAid" class="btn btn-sm btn-success"><i class="fas fa-plus-circle me-2"></i>إضافة مساعدة</button>
+                                </div>
+                                <div class="card-body-lux">
+                                    <div id="receivedAidsContainer" class="row g-3">
+                                        @if (Model.ReceivedAids != null)
+                                        {
+                                            for (int i = 0; i < Model.ReceivedAids.Count; i++)
+                                            {
+                                                @Html.Partial("_ReceivedAidFields", Model.ReceivedAids[i], new ViewDataDictionary { { "index", i }, { "AvailableAidTypes", Model.AvailableAidTypes } })
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 text-center mt-4">
+                            <input type="submit" value="حفظ" class="btn btn-primary btn-lg me-2" />
+                            @Html.ActionLink("العودة إلى الملف الشخصي", "Index", "MyProfile", null, new { @class = "btn btn-outline-secondary btn-lg" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        function initSingleDatepicker(element) {
+            var $element = $(element);
+            if ($element.data('datepicker')) {
+                $element.datepicker('destroy');
+            }
+            $element.datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true,
+                language: 'ar'
+            });
+        }
+
+        function updateElementNames(container) {
+            $(container).find('.dynamic-item').each(function (index) {
+                $(this).find(':input').each(function () {
+                    var name = $(this).attr('name');
+                    if (name) {
+                        var newName = name.replace(/\[\d+\]/, '[' + index + ']');
+                        $(this).attr('name', newName);
+                    }
+                    var id = $(this).attr('id');
+                    if (id) {
+                        var newId = id.replace(/_\d+__/, '_' + index + '__');
+                        $(this).attr('id', newId);
+                    }
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            initSingleDatepicker($('#ShariaLawPracticeStartDate'));
+            $('#receivedAidsContainer .datepicker').each(function () {
+                initSingleDatepicker(this);
+            });
+
+            $('#practicesShariaLaw').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#shariaLawPracticeStartDateSection').show();
+                    initSingleDatepicker($('#ShariaLawPracticeStartDate'));
+                } else {
+                    $('#shariaLawPracticeStartDateSection').hide();
+                    $('#ShariaLawPracticeStartDate').val('');
+                }
+            });
+
+            $('#receivedAidFromSyndicate').change(function () {
+                if ($(this).is(':checked')) {
+                    $('#receivedAidsSection').show();
+                } else {
+                    $('#receivedAidsSection').hide();
+                    $('#receivedAidsContainer').empty();
+                }
+            });
+
+            $('#addReceivedAid').click(function () {
+                var index = $('#receivedAidsContainer .dynamic-item').length;
+                $.ajax({
+                    url: '@Url.Action("AddReceivedAidField", "MyProfile")',
+                    type: 'POST',
+                    data: { index: index },
+                    success: function (partialView) {
+                        var $newElement = $(partialView);
+                        $('#receivedAidsContainer').append($newElement);
+                        initSingleDatepicker($newElement.find('.datepicker'));
+                        updateElementNames('#receivedAidsContainer');
+                        $.validator.unobtrusive.parse($('#receivedAidsContainer'));
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("خطأ AJAX:", status, error);
+                    }
+                });
+            });
+
+            $(document).on('click', '.remove-aid-item', function () {
+                $(this).closest('.dynamic-item').remove();
+                updateElementNames('#receivedAidsContainer');
+            });
+
+            $('#practicesShariaLaw').change();
+            $('#receivedAidFromSyndicate').change();
+        });
+    </script>
+}

@@ -1,0 +1,161 @@
+﻿@model LawyersSyndicatePortal.Models.ContactMessage
+@using LawyersSyndicatePortal.ViewModels; @* لاستخدام ReplyMessageViewModel *@
+
+@{
+    ViewBag.Title = "تفاصيل رسالة الاتصال";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // استخدام الـ Layout الخاص بالادمن
+    ReplyMessageViewModel replyModel = ViewBag.ReplyModel as ReplyMessageViewModel;
+}
+
+<h2 class="text-center mb-4">تفاصيل رسالة الاتصال</h2>
+
+@* رسائل النجاح/الخطأ من TempData *@
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card shadow-sm p-4 mb-4 bg-white rounded">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">تفاصيل الرسالة</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">الاسم الكامل:</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.FullName)</dd>
+
+            <dt class="col-sm-3">البريد الإلكتروني:</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+            <dt class="col-sm-3">الموضوع:</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Subject)</dd>
+
+            <dt class="col-sm-3">تاريخ الإرسال:</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.SentDate)</dd>
+
+            <dt class="col-sm-3">مقروءة:</dt>
+            <dd class="col-sm-9">
+                @if (Model.IsRead)
+                {
+                    <span class="badge bg-success">نعم</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">لا</span>
+                }
+            </dd>
+
+            <dt class="col-sm-3">تاريخ الرد:</dt>
+            <dd class="col-sm-9">
+                @if (Model.ReplyDate.HasValue)
+                {
+                    <span class="badge bg-info">@Model.ReplyDate.Value.ToString("yyyy-MM-dd HH:mm")</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">لم يتم الرد بعد</span>
+                }
+            </dd>
+
+            <dt class="col-sm-3">نص الرسالة:</dt>
+            <dd class="col-sm-9">
+                <div class="alert alert-light border" style="white-space: pre-wrap; word-wrap: break-word;">
+                    @Html.DisplayFor(model => model.MessageBody)
+                </div>
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer text-end">
+        @Html.ActionLink("العودة إلى القائمة", "AdminContactMessages", "Messages", null, new { @class = "btn btn-secondary" })
+        @if (!Model.IsRead)
+        {
+            <button type="button" class="btn btn-success ms-2" onclick="markAsRead(@Model.Id)">
+                <i class="fas fa-eye me-1"></i> وضع علامة "مقروءة"
+            </button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-warning ms-2" onclick="markAsUnread(@Model.Id)">
+                <i class="fas fa-eye-slash me-1"></i> وضع علامة "غير مقروءة"
+            </button>
+        }
+    </div>
+</div>
+
+@* نموذج الرد على الرسالة *@
+<div class="card shadow-sm p-4 mb-4 bg-white rounded">
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0">الرد على الرسالة</h4>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("ReplyToContactMessage", "Messages", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Id, new { Name = "model.OriginalMessageId" }) @* تمرير معرف الرسالة الأصلية *@
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="mb-3 row">
+                <label class="col-md-3 col-form-label">المرسل الأصلي:</label>
+                <div class="col-md-9">
+                    <p class="form-control-plaintext">@Model.FullName (@Model.Email)</p>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                @Html.LabelFor(model => replyModel.ReplySubject, htmlAttributes: new { @class = "col-md-3 col-form-label" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => replyModel.ReplySubject, new { htmlAttributes = new { @class = "form-control", placeholder = "موضوع الرد" } })
+                    @Html.ValidationMessageFor(model => replyModel.ReplySubject, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                @Html.LabelFor(model => replyModel.ReplyBody, htmlAttributes: new { @class = "col-md-3 col-form-label" })
+                <div class="col-md-9">
+                    @Html.TextAreaFor(model => replyModel.ReplyBody, new { @class = "form-control", rows = 6, placeholder = "اكتب نص الرد هنا..." })
+                    @Html.ValidationMessageFor(model => replyModel.ReplyBody, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <div class="offset-md-3 col-md-9">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-reply me-2"></i> إرسال الرد
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        function markAsRead(id) {
+            if (confirm('هل أنت متأكد أنك تريد وضع علامة "مقروءة" على هذه الرسالة؟')) {
+                $.post('@Url.Action("MarkContactMessageAsRead", "Messages")', { id: id }, function (response) {
+                    location.reload(); // أعد تحميل الصفحة بعد التحديث
+                });
+            }
+        }
+
+        function markAsUnread(id) {
+            if (confirm('هل أنت متأكد أنك تريد وضع علامة "غير مقروءة" على هذه الرسالة؟')) {
+                $.post('@Url.Action("MarkContactMessageAsUnread", "Messages")', { id: id }, function (response) {
+                    location.reload(); // أعد تحميل الصفحة بعد التحديث
+                });
+            }
+        }
+    </script>
+}

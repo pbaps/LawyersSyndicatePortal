@@ -1,0 +1,110 @@
+﻿@model LawyersSyndicatePortal.Models.FamilyDetail
+
+@{
+    ViewBag.Title = "تفاصيل العائلة";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml"; // تأكد من المسار الصحيح
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="text-center">بيانات عائلة المحامي: @ViewBag.LawyerName</h2>
+        <h4 class="text-center">(@ViewBag.LawyerId)</h4>
+        <hr />
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <strong>المحافظة الأصلية:</strong> @ViewBag.OriginalGovernorate
+    </div>
+    <div class="col-md-4">
+        <strong>محافظة التواجد حاليًا:</strong> @ViewBag.CurrentGovernorate
+    </div>
+    <div class="col-md-4">
+        <strong>الحالة المهنية:</strong> @ViewBag.ProfessionalStatus
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <a data-toggle="collapse" href="#spousesPanel">
+                <i class="glyphicon glyphicon-user"></i>
+                &nbsp;بيانات الزوجات
+            </a>
+        </h3>
+    </div>
+    <div id="spousesPanel" class="panel-collapse collapse in">
+        <div class="panel-body">
+            @if (Model != null && Model.Spouses.Any())
+            {
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>رقم الهوية</th>
+                            <th>رقم الجوال</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var spouse in Model.Spouses)
+                        {
+                            <tr>
+                                <td>@spouse.SpouseName</td>
+                                <td>@spouse.SpouseIdNumber</td>
+                                <td>@spouse.SpouseMobileNumber</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>لا توجد بيانات زوجات مسجلة.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-primary mt-3">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <a data-toggle="collapse" href="#childrenPanel">
+                <i class="glyphicon glyphicon-baby-formula"></i>
+                &nbsp;بيانات الأبناء
+            </a>
+        </h3>
+    </div>
+    <div id="childrenPanel" class="panel-collapse collapse in">
+        <div class="panel-body">
+            @if (Model != null && Model.Children.Any())
+            {
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>رقم الهوية</th>
+                            <th>تاريخ الميلاد</th>
+                            <th>ملاحظات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var child in Model.Children)
+                        {
+                            <tr>
+                                <td>@child.ChildName</td>
+                                <td>@child.IdNumber</td>
+                                <td>@(child.DateOfBirth.HasValue ? child.DateOfBirth.Value.ToString("yyyy-MM-dd") : "غير محدد")</td>
+                                <td>@child.Gender</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>لا توجد بيانات أبناء مسجلة.</p>
+            }
+        </div>
+    </div>
+</div>

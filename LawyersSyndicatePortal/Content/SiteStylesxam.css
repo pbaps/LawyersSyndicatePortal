@@ -1,0 +1,116 @@
+﻿/* تضمين خطوط جوجل (اختياري) */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: #f8f9fa; /* لون خلفية خفيف */
+    direction: rtl;
+    text-align: right;
+}
+
+/* تنسيقات الجداول (إذا كنت تريد تنسيقاً موحداً للجداول) */
+.table-container {
+    overflow-x: auto;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb; /* إضافة حدود خفيفة للجدول بأكمله */
+}
+
+    .table-container table {
+        min-width: 100%;
+        line-height: normal;
+        border-collapse: collapse; /* دمج الحدود */
+    }
+
+    .table-container th {
+        padding: 0.75rem 1.25rem;
+        background-color: #e5e7eb; /* لون خلفية أغمق للعناوين */
+        text-align: right;
+        font-size: 0.875rem; /* زيادة حجم الخط قليلاً */
+        font-weight: 700;
+        color: #374151;
+        border-bottom: 2px solid #d1d5db; /* حدود سفلية أكثر وضوحاً */
+    }
+
+    .table-container td {
+        padding: 1rem 1.25rem; /* زيادة المسافة الداخلية */
+        border-bottom: 1px solid #f3f4f6; /* حدود سفلية أخف */
+        background-color: #ffffff;
+        font-size: 0.875rem;
+        color: #4b5563;
+        text-align: right;
+    }
+
+    .table-container .title-cell {
+        font-weight: 600;
+        color: #1f2937; /* جعل عنوان الاختبار أكثر بروزًا */
+    }
+
+    .table-container tbody tr:hover {
+        background-color: #f3f4f6; /* تأثير تحويم أكثر وضوحاً */
+    }
+
+/* تنسيق المؤقتات */
+.timer-display {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #dc3545; /* لون أحمر لتنبيه الوقت */
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .5;
+    }
+}
+
+/* تنسيق خيارات الإجابة */
+.options-list .form-check:hover {
+    background-color: #e9ecef !important;
+    cursor: pointer;
+}
+
+.options-list .form-check-label {
+    padding-right: 1.5rem; /* مسافة بين الراديو والنص */
+}
+
+/* إخفاء الراديو الافتراضي وتخصيصه */
+.form-check-input {
+    display: none;
+}
+
+    .form-check-input + .form-check-label::before {
+        content: '';
+        display: inline-block;
+        width: 1.25em;
+        height: 1.25em;
+        margin-left: .5em;
+        vertical-align: middle;
+        border: 2px solid #ced4da;
+        border-radius: 50%;
+        transition: all 0.2s ease-in-out;
+        background-color: #fff;
+    }
+
+    .form-check-input:checked + .form-check-label::before {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    .form-check-input:checked + .form-check-label::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 1rem;
+        transform: translateY(-50%);
+        width: 0.5rem;
+        height: 0.5rem;
+        background-color: #fff;
+        border-radius: 50%;
+    }

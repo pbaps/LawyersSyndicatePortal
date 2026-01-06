@@ -1,0 +1,99 @@
+﻿@model LawyersSyndicatePortal.Models.Exam
+
+@{
+    ViewBag.Title = "تفاصيل الامتحان";
+}
+
+<link href="@Url.Content("~/Content/Examstylenew.css")" rel="stylesheet" type="text/css" />
+
+<div class="container py-5">
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-header bg-info text-white text-center py-3">
+            <h2 class="h4 mb-0">تفاصيل الامتحان</h2>
+        </div>
+        <div class="card-body p-4">
+            <dl class="row">
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.ExamDateTime)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.ExamDateTime)
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.DurationMinutes)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.DurationMinutes)
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.PassingScorePercentage)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.PassingScorePercentage) %
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.MaxScore)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.MaxScore)
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.IsPublished)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.IsPublished)
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.IsRandomized)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.IsRandomized)
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.CanRetake)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.CanRetake)
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.RetakeDelayDays)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.RetakeDelayDays)
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">
+                    @Html.DisplayNameFor(model => model.IsResultVisible)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.IsResultVisible)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            @Html.ActionLink("تعديل", "Edit", new { id = Model.Id }, new { @class = "btn btn-outline-info me-2" })
+            @Html.ActionLink("العودة إلى القائمة", "Index", new { id = Model.Id }, new { @class = "btn btn-outline-secondary" })
+        </div>
+    </div>
+</div>

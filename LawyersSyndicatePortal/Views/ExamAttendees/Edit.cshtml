@@ -1,0 +1,82 @@
+﻿@model LawyersSyndicatePortal.Models.ExamAttendee
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@section Styles {
+    <!-- إضافة رابط ملف الستايل الجديد -->
+    <link href="@Url.Content("~/Content/Examstylenew.css")" rel="stylesheet" type="text/css" />
+}
+
+<div class="container-fluid mt-4">
+    <div class="card p-4">
+        <h2>تعديل بيانات الملتحق</h2>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+                <h4>معلومات الملتحق</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.ExamId)
+
+                <!-- حقل رقم الهوية -->
+                <div class="form-group row mb-3">
+                    @Html.LabelFor(model => model.LawyerIdNumber, "رقم الهوية", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.LawyerIdNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LawyerIdNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- حقل رقم الجوال -->
+                <div class="form-group row mb-3">
+                    @Html.LabelFor(model => model.MobileNumber, "رقم الجوال", htmlAttributes: new { @class = "col-md-2 col-form-label" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.MobileNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.MobileNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- حقل اختيار "هل يحق له الالتحاق؟" -->
+                <div class="form-group row mb-3">
+                    <div class="col-md-10 offset-md-2">
+                        <div class="form-check">
+                            @Html.EditorFor(model => model.CanAttend, new { htmlAttributes = new { @class = "form-check-input" } })
+                            @Html.LabelFor(model => model.CanAttend, "هل يحق له الالتحاق؟", htmlAttributes: new { @class = "form-check-label" })
+                        </div>
+                    </div>
+                </div>
+
+                <!-- حقل اختيار "هل الاختبار مرئي له؟" -->
+                <div class="form-group row mb-3">
+                    <div class="col-md-10 offset-md-2">
+                        <div class="form-check">
+                            @Html.EditorFor(model => model.IsExamVisible, new { htmlAttributes = new { @class = "form-check-input" } })
+                            @Html.LabelFor(model => model.IsExamVisible, "هل الاختبار مرئي له؟", htmlAttributes: new { @class = "form-check-label" })
+                        </div>
+                    </div>
+                </div>
+
+                <!-- زر الحفظ -->
+                <div class="form-group row">
+                    <div class="col-md-10 offset-md-2">
+                        <input type="submit" value="حفظ" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="mt-3">
+        <!-- تحويل رابط العودة إلى القائمة إلى زر -->
+        @Html.ActionLink("العودة إلى القائمة", "Index", new { examId = Model.ExamId }, new { @class = "btn btn-secondary" })
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

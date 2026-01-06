@@ -1,0 +1,185 @@
+﻿/* Custom CSS Variables for Dark Theme */
+:root {
+    --dark-bg: #1a1a2e;
+    --dark-card: #20203a;
+    --accent-gold: #ffc107;
+    --text-light: #f4f4f4;
+    --text-grey: #a0a0a0;
+    --border-color: #3e3e6f;
+}
+
+/* Base Body Styles */
+body {
+    padding-top: 60px; /* Adjusted padding-top to accommodate the fixed navbar */
+    padding-bottom: 20px;
+    font-family: 'Cairo', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+/* Universal text size adjustment to avoid conflict */
+p,
+li,
+a:not(.btn),
+span,
+div:not(.navbar-brand):not(.navbar-toggler-icon) {
+    font-size: 0.85rem;
+}
+
+/* Heading Sizes - Smaller and more balanced */
+h1, .h1 {
+    font-size: 1.8rem;
+    font-family: 'Cairo', sans-serif;
+}
+
+h2, .h2 {
+    font-size: 1.6rem;
+    font-family: 'Cairo', sans-serif;
+}
+
+h3, .h3 {
+    font-size: 1.4rem;
+    font-family: 'Cairo', sans-serif;
+}
+
+h4, .h4, h5, .h5, h6, .h6 {
+    font-size: 1.2rem;
+    font-family: 'Cairo', sans-serif;
+}
+
+/* Icon Spacing */
+.fas, .far, .fal, .fab, .fa {
+    margin-right: 0.5rem;
+    margin-left: initial;
+}
+
+/* Navbar styles for Dark Theme */
+.navbar-user-custom {
+    background-color: var(--dark-card);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1030;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 8px 16px; /* Adjusted padding for a better look */
+}
+
+    .navbar-user-custom .navbar-brand {
+        font-size: 1rem; /* Slightly larger for brand name */
+        color: var(--text-light);
+    }
+
+    .navbar-user-custom .nav-link {
+        font-size: 0.9rem; /* Slightly larger for nav links */
+        color: var(--text-light);
+        transition: color 0.3s ease;
+    }
+
+        .navbar-user-custom .nav-link:hover {
+            color: var(--accent-gold);
+        }
+
+.navbar-brand img {
+    height: 30px; /* Slightly larger logo size for better visibility */
+    margin-left: 10px;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+}
+
+.notification-bell i {
+    font-size: 1rem; /* Adjusted bell icon size */
+}
+
+.notification-bell .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 0.6em;
+    padding: 3px 5px;
+    background-color: #e74c3c !important;
+    color: #fff;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* Toast styles for Dark Theme */
+.toast {
+    background-color: var(--dark-card);
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+}
+
+.toast-header {
+    background-color: var(--dark-bg);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-light);
+    padding: 8px 12px;
+}
+
+    .toast-header .btn-close {
+        filter: invert(1);
+    }
+
+/* Footer styles for Dark Theme */
+footer {
+    background-color: var(--dark-card);
+    padding: 15px 0; /* Adjusted footer padding */
+    text-align: center;
+    border-top: 2px solid var(--border-color);
+    color: var(--text-grey);
+    font-size: 0.7em;
+}
+
+/* Content and Layout */
+.body-content {
+    padding-left: 15px; /* Adjusted padding */
+    padding-right: 15px;
+}
+
+/* Form and list alignment for RTL */
+form .control-label,
+.form-horizontal .control-label {
+    float: right;
+    text-align: right;
+    padding-right: 15px;
+    padding-left: 0;
+    width: auto;
+}
+
+form .col-md-9,
+.form-horizontal .col-md-9 {
+    float: left;
+}
+
+.form-horizontal .col-md-offset-3 {
+    margin-right: 25%;
+    margin-left: 0;
+    float: none;
+}
+
+.form-group:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.dl-horizontal dt {
+    float: right;
+    text-align: right;
+    clear: right;
+    padding-right: 15px;
+    padding-left: 0;
+}
+
+.dl-horizontal dd {
+    margin-left: 0;
+    margin-right: 180px;
+    text-align: right;
+}
+
+.container .text-right {
+    text-align: right;
+}

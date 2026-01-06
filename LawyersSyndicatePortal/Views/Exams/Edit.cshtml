@@ -1,0 +1,93 @@
+﻿@model LawyersSyndicatePortal.Models.Exam
+
+@{
+    ViewBag.Title = "تعديل امتحان";
+}
+
+<link href="@Url.Content("~/Content/Examstylenew.css")" rel="stylesheet" type="text/css" />
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-warning text-white text-center py-3">
+                    <h2 class="h4 mb-0">تعديل امتحان</h2>
+                </div>
+                <div class="card-body p-4">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.Id)
+
+                        <div class="mb-3">
+                            <label for="Title" class="form-label fw-bold">العنوان</label>
+                            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Description" class="form-label fw-bold">الوصف</label>
+                            @Html.TextAreaFor(model => model.Description, new { @class = "form-control", rows = 4 })
+                            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ExamDateTime" class="form-label fw-bold">تاريخ ووقت الامتحان</label>
+                            @Html.EditorFor(model => model.ExamDateTime, new { htmlAttributes = new { @class = "form-control", type = "datetime-local" } })
+                            @Html.ValidationMessageFor(model => model.ExamDateTime, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="DurationMinutes" class="form-label fw-bold">المدة بالدقائق</label>
+                            @Html.EditorFor(model => model.DurationMinutes, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.DurationMinutes, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="PassingScorePercentage" class="form-label fw-bold">نسبة النجاح (%)</label>
+                            @Html.EditorFor(model => model.PassingScorePercentage, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.PassingScorePercentage, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="MaxScore" class="form-label fw-bold">الدرجة القصوى</label>
+                            @Html.EditorFor(model => model.MaxScore, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.MaxScore, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            @Html.CheckBoxFor(model => model.IsPublished, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="IsPublished">تم النشر</label>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            @Html.CheckBoxFor(model => model.IsRandomized, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="IsRandomized">ترتيب عشوائي للأسئلة</label>
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            @Html.CheckBoxFor(model => model.CanRetake, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="CanRetake">يمكن إعادة الامتحان</label>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="RetakeDelayDays" class="form-label fw-bold">أيام التأخير قبل الإعادة</label>
+                            @Html.EditorFor(model => model.RetakeDelayDays, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.RetakeDelayDays, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-check form-switch mb-3">
+                            @Html.CheckBoxFor(model => model.IsResultVisible, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="IsResultVisible">إظهار النتيجة</label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg text-white">حفظ التغييرات</button>
+                            @Html.ActionLink("العودة إلى القائمة", "Index", null, new { @class = "btn btn-outline-secondary mt-2" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
